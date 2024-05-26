@@ -1,16 +1,19 @@
 package org.abapps.app.domain.entities
 
+import io.realm.kotlin.internal.interop.CodeDescription
+
 data class Item(
-    val itemCode: Int = 132,
+    val itemID: Long = 10000003869,
+    val itemCode: Int = 3465,
+    val upc: Int = 654,
     val alu: Int = 654,
-    val name: String = "marn",
-    val qty: Int = 2,
-    val orgPrice: Int = 20,
-    val itemDisc: Int = 20,
-    val price: Int = 20,
-    val extPrice: Int = 20,
-    val priceWOT: Int = 20,
-    val taxPerc: Int = 20,
-    val taxAmount: Int = 20,
-    val itemSerial: Int = 20,
+    val name: String = "طقم ملايه بولي قطن",
+    val name2: String = "uhukhkjhk",
+    val description: String = " خسعيابستي بمتس بهتسي بمتسيمنب تسيمن بتمينتب منسيت بمنيست بمنتسيم بنتيسمن تبمن",
+    val styleId: Int = 0,
+    val styleName: String = "احمر",
+    val onHand: Int = 51,
+    val freeCard: Boolean = true,
+    val freeCardPrice: Int = 10,
+    val price: Int = 1000,
 )
