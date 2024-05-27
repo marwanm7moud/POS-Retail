@@ -1,28 +1,22 @@
 package org.abapps.app.presentation.screens.newInvoice.composables
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
@@ -30,21 +24,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateMap
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import org.abapps.app.domain.entities.InvoiceItem
+import org.abapps.app.presentation.screens.composable.itemBox
+import org.abapps.app.presentation.screens.newInvoice.NewInvoiceItemUiState
 import org.abapps.app.util.calculateBiggestWidthOnEveryRow
 
 @Composable
-fun ItemsTable(invoiceItems: List<InvoiceItem>, modifier: Modifier) {
-    val headers = Headers.entries.toTypedArray()
+fun NewInvoiceItemTable(invoiceItems: List<NewInvoiceItemUiState>, modifier: Modifier) {
+    val headers = NewInvoiceItemHeaders.entries.toTypedArray()
     val biggestColumnWidths = calculateBiggestWidths(invoiceItems)
     var selectedItemIndex by remember { mutableStateOf(-1) }
 
@@ -84,19 +75,19 @@ fun ItemsTable(invoiceItems: List<InvoiceItem>, modifier: Modifier) {
                 ) {
                     headers.forEach { header ->
                         val content = when (header) {
-                            Headers.ItemCode -> item.itemCode.toString()
-                            Headers.Alu -> item.alu.toString()
-                            Headers.Name -> item.name
-                            Headers.Qty -> item.qty.toString()
-                            Headers.OrgPrice -> item.orgPrice.toString()
-                            Headers.ItemDisc -> item.itemDisc.toString()
-                            Headers.Price -> item.price.toString()
-                            Headers.ExtPrice -> item.extPrice.toString()
-                            Headers.PriceWOT -> item.priceWOT.toString()
-                            Headers.TaxPercentage -> item.taxPerc.toString()
-                            Headers.TaxAmount -> item.taxAmount.toString()
-                            Headers.ItemSerial -> item.itemSerial.toString()
-                            Headers.Number -> index.toString()
+                            NewInvoiceItemHeaders.ItemCode -> item.itemCode.toString()
+                            NewInvoiceItemHeaders.Alu -> item.alu.toString()
+                            NewInvoiceItemHeaders.Name -> item.name
+                            NewInvoiceItemHeaders.Qty -> item.qty.toString()
+                            NewInvoiceItemHeaders.OrgPrice -> item.orgPrice.toString()
+                            NewInvoiceItemHeaders.ItemDisc -> item.itemDisc.toString()
+                            NewInvoiceItemHeaders.Price -> item.price.toString()
+                            NewInvoiceItemHeaders.ExtPrice -> item.extPrice.toString()
+                            NewInvoiceItemHeaders.PriceWOT -> item.priceWOT.toString()
+                            NewInvoiceItemHeaders.TaxPercentage -> item.taxPerc.toString()
+                            NewInvoiceItemHeaders.TaxAmount -> item.taxAmount.toString()
+                            NewInvoiceItemHeaders.ItemSerial -> item.itemSerial.toString()
+                            NewInvoiceItemHeaders.Number -> index.toString()
                         }
                         itemBox(
                             content =  content,
@@ -115,55 +106,42 @@ fun ItemsTable(invoiceItems: List<InvoiceItem>, modifier: Modifier) {
 }
 
 @Composable
-fun calculateBiggestWidths(invoiceItems: List<InvoiceItem>): SnapshotStateMap<Headers, Int> {
-    val biggestColumnWidths = remember { mutableStateMapOf<Headers, Int>() }
-    biggestColumnWidths[Headers.ItemCode] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemCode.toString() } + Headers.ItemCode.title)
-    biggestColumnWidths[Headers.Number] =
-        calculateBiggestWidthOnEveryRow(listOf(Headers.Number.title, "19"))
-    biggestColumnWidths[Headers.Alu] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.alu.toString() } + Headers.Alu.title)
-    biggestColumnWidths[Headers.Name] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.name.toString() } + Headers.Name.title)
-    biggestColumnWidths[Headers.Qty] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.qty.toString() } + Headers.Qty.title)
-    biggestColumnWidths[Headers.OrgPrice] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.orgPrice.toString() } + Headers.OrgPrice.title)
-    biggestColumnWidths[Headers.ItemDisc] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemDisc.toString() } + Headers.ItemDisc.title)
-    biggestColumnWidths[Headers.Price] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.price.toString() } + Headers.Price.title)
-    biggestColumnWidths[Headers.ExtPrice] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.extPrice.toString() } + Headers.ExtPrice.title)
-    biggestColumnWidths[Headers.PriceWOT] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.priceWOT.toString() } + Headers.PriceWOT.title)
-    biggestColumnWidths[Headers.TaxPercentage] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.taxPerc.toString() } + Headers.TaxPercentage.title)
-    biggestColumnWidths[Headers.TaxAmount] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.taxAmount.toString() } + Headers.TaxAmount.title)
-    biggestColumnWidths[Headers.ItemSerial] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemSerial.toString() } + Headers.ItemSerial.title)
+private fun calculateBiggestWidths(invoiceItems: List<NewInvoiceItemUiState>): SnapshotStateMap<NewInvoiceItemHeaders, Int> {
+    val biggestColumnWidths = remember { mutableStateMapOf<NewInvoiceItemHeaders, Int>() }
+    biggestColumnWidths[NewInvoiceItemHeaders.ItemCode] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemCode.toString() } + NewInvoiceItemHeaders.ItemCode.title)
+    biggestColumnWidths[NewInvoiceItemHeaders.Number] =
+        calculateBiggestWidthOnEveryRow(listOf(NewInvoiceItemHeaders.Number.title, "19"))
+    biggestColumnWidths[NewInvoiceItemHeaders.Alu] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.alu.toString() } + NewInvoiceItemHeaders.Alu.title)
+    biggestColumnWidths[NewInvoiceItemHeaders.Name] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.name.toString() } + NewInvoiceItemHeaders.Name.title)
+    biggestColumnWidths[NewInvoiceItemHeaders.Qty] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.qty.toString() } + NewInvoiceItemHeaders.Qty.title)
+    biggestColumnWidths[NewInvoiceItemHeaders.OrgPrice] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.orgPrice.toString() } + NewInvoiceItemHeaders.OrgPrice.title)
+    biggestColumnWidths[NewInvoiceItemHeaders.ItemDisc] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemDisc.toString() } + NewInvoiceItemHeaders.ItemDisc.title)
+    biggestColumnWidths[NewInvoiceItemHeaders.Price] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.price.toString() } + NewInvoiceItemHeaders.Price.title)
+    biggestColumnWidths[NewInvoiceItemHeaders.ExtPrice] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.extPrice.toString() } + NewInvoiceItemHeaders.ExtPrice.title)
+    biggestColumnWidths[NewInvoiceItemHeaders.PriceWOT] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.priceWOT.toString() } + NewInvoiceItemHeaders.PriceWOT.title)
+    biggestColumnWidths[NewInvoiceItemHeaders.TaxPercentage] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.taxPerc.toString() } + NewInvoiceItemHeaders.TaxPercentage.title)
+    biggestColumnWidths[NewInvoiceItemHeaders.TaxAmount] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.taxAmount.toString() } + NewInvoiceItemHeaders.TaxAmount.title)
+    biggestColumnWidths[NewInvoiceItemHeaders.ItemSerial] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemSerial.toString() } + NewInvoiceItemHeaders.ItemSerial.title)
     return biggestColumnWidths
 }
 
 
-@Composable
-fun itemBox(content: String, modifier: Modifier = Modifier, textColor: Color = Color.White) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = content,
-            color = textColor,
-            maxLines = 1,
-            textAlign = TextAlign.Center,
-        )
-    }
-}
 
 
-enum class Headers(val title: String) {
+
+private enum class NewInvoiceItemHeaders(val title: String) {
     Number("No."),
     ItemCode("Item Code"),
     Alu("Alu"),

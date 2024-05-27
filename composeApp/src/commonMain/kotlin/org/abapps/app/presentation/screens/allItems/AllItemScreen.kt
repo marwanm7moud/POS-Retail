@@ -35,8 +35,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.beepbeep.designSystem.ui.composable.StAppBar
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.abapps.app.domain.entities.Item
-import org.abapps.app.presentation.screens.allItems.composables.ItemTable
+import org.abapps.app.presentation.screens.allItems.composables.AllItemTable
 import org.jetbrains.compose.resources.painterResource
 import pos_retail.composeapp.generated.resources.Res
 import pos_retail.composeapp.generated.resources.ic_back
@@ -46,14 +45,14 @@ class AllItemScreen : Screen {
     @Composable
     override fun Content() {
         val nav = LocalNavigator.currentOrThrow
-        var itemList: List<Item> by remember {
+        val itemList: List<ItemUiState> by remember {
             mutableStateOf(
                 listOf(
-                    Item(),
-                    Item(),
-                    Item(),
-                    Item(),
-                    Item()
+                    ItemUiState(),
+                    ItemUiState(),
+                    ItemUiState(),
+                    ItemUiState(),
+                    ItemUiState()
                 )
             )
         }
@@ -135,9 +134,9 @@ class AllItemScreen : Screen {
                 }
             },
         ) {
-            ItemTable(
+            AllItemTable(
                 modifier = Modifier.padding(top = it.calculateTopPadding()),
-                items = itemList,
+                invoiceItems = itemList,
                 selectedItemIndex = selectedItemIndex,
                 onClickItem = { index ->
                     if (selectedItemIndex.contains(index))

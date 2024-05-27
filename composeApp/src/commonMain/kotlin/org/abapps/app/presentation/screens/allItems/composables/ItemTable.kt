@@ -5,129 +5,244 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import org.abapps.app.domain.entities.Item
-import org.abapps.app.presentation.screens.newInvoice.composables.itemBox
+import org.abapps.app.presentation.screens.allItems.ItemUiState
+import org.abapps.app.presentation.screens.composable.itemBox
+import org.abapps.app.util.calculateBiggestWidthOnEveryRow
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ItemTable(
+fun AllItemTable(
     modifier: Modifier,
-    items: List<Item>,
+    invoiceItems: List<ItemUiState>,
     selectedItemIndex: List<Int>,
     onClickItem: (Int) -> Unit
 ) {
-    LazyColumn(
-        modifier = modifier
-            .padding(16.dp)
+    val headers = AllItemHeaders.entries.toTypedArray()
+    val biggestColumnWidths = calculateBiggestWidths(invoiceItems)
+
+    Column(
+        modifier = modifier.padding(16.dp)
             .clip(RoundedCornerShape(12.dp))
             .defaultMinSize(minHeight = 120.dp)
             .border(BorderStroke(0.5.dp, Color.LightGray), RoundedCornerShape(12.dp))
-    )
-    {
-        stickyHeader {
-            ItemsHeader()
-        }
-        items(items.size) { index ->
-            ItemRow(items[index], selected = selectedItemIndex.contains(index), onClickItem = { onClickItem(index) })
-            Spacer(Modifier.fillMaxWidth().background(Color.LightGray).height(0.5.dp))
-        }
-    }
-}
-
-@Composable
-private fun ItemRow(item: Item, selected: Boolean, onClickItem: () -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxSize()
-            .background(color = if (selected) Color(0xFF383a3d) else Color.Gray).clickable { onClickItem.invoke() }
-            .padding(vertical = 4.dp)) {
-        itemBox(
-            item.itemID.toString(),
-            modifier = Modifier.weight(1f)
-        )
-        itemBox(
-            item.itemCode.toString(),
-            modifier = Modifier.weight(1f)
-        )
-        itemBox(
-            item.upc.toString(),
-            modifier = Modifier.weight(1f)
-        )
-        itemBox(
-            item.alu.toString(),
-            modifier = Modifier.weight(1f)
-        )
-        itemBox(
-            item.name.toString(),
-            modifier = Modifier.weight(1f)
-        )
-        itemBox(
-            item.name2.toString(),
-            modifier = Modifier.weight(1f)
-        )
-        itemBox(
-            item.description.toString(),
-            modifier = Modifier.weight(1f)
-        )
-        itemBox(
-            item.styleId.toString(),
-            modifier = Modifier.weight(1f)
-        )
-        itemBox(
-            item.styleName.toString(),
-            modifier = Modifier.weight(1f)
-        )
-        itemBox(
-            item.onHand.toString(),
-            modifier = Modifier.weight(1f)
-        )
-        itemBox(
-            item.freeCard.toString(),
-            modifier = Modifier.weight(1f)
-        )
-        itemBox(
-            item.freeCardPrice.toString(),
-            modifier = Modifier.weight(1f)
-        )
-        itemBox(
-            item.price.toString(),
-            modifier = Modifier.weight(1f)
-        )
-    }
-}
-
-@Composable
-private fun ItemsHeader() {
-    Row(
-        modifier = Modifier.background(color = Color.LightGray).padding(vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .horizontalScroll(rememberScrollState(0))
     ) {
-        itemBox("Item ID", modifier = Modifier.weight(1f), textColor = Color.Gray)
-        itemBox("Item Code", modifier = Modifier.weight(1f), textColor = Color.Gray)
-        itemBox("UPC", modifier = Modifier.weight(1f), textColor = Color.Gray)
-        itemBox("Alu", modifier = Modifier.weight(1f), textColor = Color.Gray)
-        itemBox("Name", modifier = Modifier.weight(1f), textColor = Color.Gray)
-        itemBox("Name2", modifier = Modifier.weight(1f), textColor = Color.Gray)
-        itemBox("Description", modifier = Modifier.weight(1f), textColor = Color.Gray)
-        itemBox("Style ID", modifier = Modifier.weight(1f), textColor = Color.Gray)
-        itemBox("Style Name", modifier = Modifier.weight(1f), textColor = Color.Gray)
-        itemBox("On Hand", modifier = Modifier.weight(1f), textColor = Color.Gray)
-        itemBox("Free Card", modifier = Modifier.weight(1f), textColor = Color.Gray)
-        itemBox("Free Card Price", modifier = Modifier.weight(1f), textColor = Color.Gray)
-        itemBox("Price", modifier = Modifier.weight(1f), textColor = Color.Gray)
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.background(color = Color.LightGray).padding(vertical = 8.dp),
+        ) {
+            headers.forEach { header ->
+                itemBox(
+                    content =  header.title,
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .width(with(LocalDensity.current) {
+                            (biggestColumnWidths[header] ?: 0).toDp()
+                        })
+                )
+            }
+        }
+        LazyColumn {
+            items(invoiceItems.size) { index ->
+                val item = invoiceItems[index]
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.background(
+                        color = if (selectedItemIndex.contains(index)) Color(
+                            0xFF383a3d
+                        ) else Color.Gray
+                    ).clickable { onClickItem(index) }.padding(vertical = 4.dp)
+                ) {
+                    headers.forEach { header ->
+                        val content = when (header) {
+                            AllItemHeaders.ITEM_ID -> item.itemID.toString()
+                            AllItemHeaders.ITEM_CODE -> item.itemCode.toString()
+                            AllItemHeaders.UPC -> item.upc.toString()
+                            AllItemHeaders.ALU -> item.alu.toString()
+                            AllItemHeaders.NAME -> item.name.toString()
+                            AllItemHeaders.NAME2 -> item.name2.toString()
+                            AllItemHeaders.DESCRIPTION -> item.description.toString()
+                            AllItemHeaders.STYLE_ID -> item.styleId.toString()
+                            AllItemHeaders.STYLE_NAME -> item.styleName.toString()
+                            AllItemHeaders.ON_HAND -> item.onHand.toString()
+                            AllItemHeaders.FREE_CARD -> item.freeCard.toString()
+                            AllItemHeaders.FREE_CARD_PRICE -> item.freeCardPrice.toString()
+                            AllItemHeaders.PRICE -> item.price.toString()
+                            AllItemHeaders.QTY -> item.qty.toString()
+                            AllItemHeaders.ITEM_DISCOUNT -> item.itemDiscount.toString()
+                            AllItemHeaders.GRID1 -> item.grid1.toString()
+                            AllItemHeaders.GRID2 -> item.grid2.toString()
+                            AllItemHeaders.GRID3 -> item.grid3.toString()
+                            AllItemHeaders.VEND_ID -> item.vendId.toString()
+                            AllItemHeaders.VEND_NAME -> item.vendName.toString()
+                            AllItemHeaders.NON_INVN -> item.nonInvn.toString()
+                            AllItemHeaders.TAXABLE -> item.taxable.toString()
+                            AllItemHeaders.TAX_ID -> item.taxId.toString()
+                            AllItemHeaders.ITEM_TYPE -> item.itemType.toString()
+                            AllItemHeaders.SCLASS_ID -> item.sClassId.toString()
+                            AllItemHeaders.SUB_CLASS -> item.subClass.toString()
+                            AllItemHeaders.CLASS_ID -> item.classId.toString()
+                            AllItemHeaders.CLASS_NAME -> item.classId.toString()
+                            AllItemHeaders.DEPT_ID -> item.deptId.toString()
+                            AllItemHeaders.DEPARTMENT -> item.department.toString()
+                            AllItemHeaders.ACTIVE -> item.active.toString()
+                            AllItemHeaders.OPEN_PRICE -> item.openPrice.toString()
+                            AllItemHeaders.UDF1 -> item.UDF1.toString()
+                            AllItemHeaders.UDF2 -> item.UDF2.toString()
+                            AllItemHeaders.UDF3 -> item.UDF3.toString()
+                            AllItemHeaders.UDF4 -> item.UDF4.toString()
+                            AllItemHeaders.UDF5 -> item.UDF5.toString()
+                            AllItemHeaders.UDF6 -> item.UDF6.toString()
+                            AllItemHeaders.UDF7 -> item.UDF7.toString()
+                            AllItemHeaders.UDF8 -> item.UDF9.toString()
+                            AllItemHeaders.UDF9 -> item.UDF9.toString()
+                            AllItemHeaders.UDF10 -> item.UDF10.toString()
+                            AllItemHeaders.UDF11 -> item.UDF11.toString()
+                            AllItemHeaders.UDF12 -> item.UDF12.toString()
+                            AllItemHeaders.UDF13 -> item.UDF13.toString()
+                            AllItemHeaders.UDF14 -> item.UDF14.toString()
+                            AllItemHeaders.UDF15 -> item.UDF15.toString()
+                            AllItemHeaders.UDF16 -> item.UDF16.toString()
+                            AllItemHeaders.UDF17 -> item.UDF17.toString()
+                            AllItemHeaders.UDF18 -> item.UDF18.toString()
+                            AllItemHeaders.UDF19 -> item.UDF19.toString()
+                            AllItemHeaders.UDF20 -> item.UDF20.toString()
+                            AllItemHeaders.INDEX_ID -> item.indexId.toString()
+                        }
+                        itemBox(
+                            content =  content,
+                            modifier = Modifier
+                                .padding(4.dp)
+                                .width(with(LocalDensity.current) {
+                                    (biggestColumnWidths[header] ?: 0).toDp()
+                                })
+                        )
+                    }
+                }
+                Spacer(Modifier.fillMaxWidth().background(Color.LightGray).height(0.5.dp))
+            }
+        }
     }
+}
+
+@Composable
+private fun calculateBiggestWidths(invoiceItems: List<ItemUiState>): SnapshotStateMap<AllItemHeaders, Int> {
+    val biggestColumnWidths = remember { mutableStateMapOf<AllItemHeaders, Int>() }
+    biggestColumnWidths[AllItemHeaders.ITEM_ID] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemID.toString() } + AllItemHeaders.ITEM_ID.title)
+    biggestColumnWidths[AllItemHeaders.ITEM_CODE] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemCode.toString() } + AllItemHeaders.ITEM_CODE.title)
+    biggestColumnWidths[AllItemHeaders.UPC] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.upc.toString() } + AllItemHeaders.UPC.title)
+    biggestColumnWidths[AllItemHeaders.ALU] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.alu.toString() } + AllItemHeaders.ALU.title)
+    biggestColumnWidths[AllItemHeaders.NAME] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.name.toString() } + AllItemHeaders.NAME.title)
+    biggestColumnWidths[AllItemHeaders.NAME2] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.name2.toString() } + AllItemHeaders.NAME2.title)
+    biggestColumnWidths[AllItemHeaders.DESCRIPTION] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.description.toString() } + AllItemHeaders.DESCRIPTION.title)
+    biggestColumnWidths[AllItemHeaders.STYLE_ID] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.styleId.toString() } + AllItemHeaders.STYLE_ID.title)
+    biggestColumnWidths[AllItemHeaders.STYLE_NAME] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.styleName.toString() } + AllItemHeaders.STYLE_NAME.title)
+    biggestColumnWidths[AllItemHeaders.ON_HAND] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.onHand.toString() } + AllItemHeaders.ON_HAND.title)
+    biggestColumnWidths[AllItemHeaders.FREE_CARD] = calculateBiggestWidthOnEveryRow(listOf(AllItemHeaders.FREE_CARD.title))
+    biggestColumnWidths[AllItemHeaders.FREE_CARD_PRICE] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.freeCardPrice.toString() } + AllItemHeaders.FREE_CARD_PRICE.title)
+    biggestColumnWidths[AllItemHeaders.PRICE] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.price.toString() } + AllItemHeaders.PRICE.title)
+    biggestColumnWidths[AllItemHeaders.QTY] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.qty.toString() } + AllItemHeaders.QTY.title)
+    biggestColumnWidths[AllItemHeaders.ITEM_DISCOUNT] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemDiscount.toString() } + AllItemHeaders.ITEM_DISCOUNT.title)
+    biggestColumnWidths[AllItemHeaders.GRID1] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.grid1.toString() } + AllItemHeaders.GRID1.title)
+    biggestColumnWidths[AllItemHeaders.GRID2] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.grid2.toString() } + AllItemHeaders.GRID2.title)
+    biggestColumnWidths[AllItemHeaders.GRID3] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.grid3.toString() } + AllItemHeaders.GRID3.title)
+    biggestColumnWidths[AllItemHeaders.VEND_ID] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.vendId.toString() } + AllItemHeaders.VEND_ID.title)
+    biggestColumnWidths[AllItemHeaders.VEND_NAME] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.vendName.toString() } + AllItemHeaders.VEND_NAME.title)
+    biggestColumnWidths[AllItemHeaders.NON_INVN] = calculateBiggestWidthOnEveryRow(listOf(AllItemHeaders.NON_INVN.title))
+    biggestColumnWidths[AllItemHeaders.TAXABLE] = calculateBiggestWidthOnEveryRow(listOf(AllItemHeaders.TAXABLE.title) )
+    biggestColumnWidths[AllItemHeaders.TAX_ID] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.taxId.toString() } + AllItemHeaders.TAX_ID.title)
+    biggestColumnWidths[AllItemHeaders.ITEM_TYPE] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemType.toString() } + AllItemHeaders.ITEM_TYPE.title)
+
+    biggestColumnWidths[AllItemHeaders.SCLASS_ID] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.sClassId.toString() } + AllItemHeaders.SCLASS_ID.title)
+    biggestColumnWidths[AllItemHeaders.SUB_CLASS] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.subClass.toString() } + AllItemHeaders.SUB_CLASS.title)
+    biggestColumnWidths[AllItemHeaders.CLASS_ID] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.classId.toString() } + AllItemHeaders.CLASS_ID.title)
+    biggestColumnWidths[AllItemHeaders.CLASS_NAME] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.className.toString() } + AllItemHeaders.CLASS_NAME.title)
+    biggestColumnWidths[AllItemHeaders.DEPT_ID] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.deptId.toString() } + AllItemHeaders.DEPT_ID.title)
+    biggestColumnWidths[AllItemHeaders.DEPARTMENT] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.department.toString() } + AllItemHeaders.DEPARTMENT.title)
+    biggestColumnWidths[AllItemHeaders.ACTIVE] =calculateBiggestWidthOnEveryRow(listOf(AllItemHeaders.ACTIVE.title))
+    biggestColumnWidths[AllItemHeaders.OPEN_PRICE] = calculateBiggestWidthOnEveryRow(listOf(AllItemHeaders.OPEN_PRICE.title))
+    biggestColumnWidths[AllItemHeaders.INDEX_ID] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.indexId.toString() } + AllItemHeaders.INDEX_ID.title)
+
+    return biggestColumnWidths
+}
+
+private enum class AllItemHeaders(val title: String) {
+    ITEM_ID("Item_ID"),
+    ITEM_CODE("Item_Code"),
+    UPC("UPC"),
+    ALU("ALU"),
+    NAME("Name"),
+    NAME2("Secondary Name"),
+    DESCRIPTION("Description"),
+    STYLE_ID("Style ID"),
+    STYLE_NAME("Style Name"),
+    ON_HAND("On Hand"),
+    FREE_CARD("Free Card"),
+    FREE_CARD_PRICE("Free Card Price"),
+    PRICE("Price"),
+    QTY("Quantity"),
+    ITEM_DISCOUNT("Item Discount"),
+    GRID1("Grid1"),
+    GRID2("Grid2"),
+    GRID3("Grid3"),
+    VEND_ID("Vendor_ID"),
+    VEND_NAME("Vendor_Name"),
+    NON_INVN("Non_Invn"),
+    TAXABLE("Taxable"),
+    TAX_ID("Tax_ID"),
+    ITEM_TYPE("Item Type"),
+    SCLASS_ID("Subclass_ID"),
+    SUB_CLASS("Subclass"),
+    CLASS_ID("Class_ID"),
+    CLASS_NAME("Class_Name"),
+    DEPT_ID("Department_ID"),
+    DEPARTMENT("Department"),
+    ACTIVE("Active"),
+    OPEN_PRICE("Open_Price"),
+    UDF1("UDF1"),
+    UDF2("UDF2"),
+    UDF3("UDF3"),
+    UDF4("UDF4"),
+    UDF5("UDF5"),
+    UDF6("UDF6"),
+    UDF7("UDF7"),
+    UDF8("UDF8"),
+    UDF9("UDF9"),
+    UDF10("UDF10"),
+    UDF11("UDF11"),
+    UDF12("UDF12"),
+    UDF13("UDF13"),
+    UDF14("UDF14"),
+    UDF15("UDF15"),
+    UDF16("UDF16"),
+    UDF17("UDF17"),
+    UDF18("UDF18"),
+    UDF19("UDF19"),
+    UDF20("UDF20"),
+    INDEX_ID("Index_ID");
 }

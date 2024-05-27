@@ -1,6 +1,6 @@
-package org.abapps.app.domain.entities
+package org.abapps.app.presentation.screens.allItems
 
-data class Item(
+data class ItemUiState(
     val itemID: Long = 10000003869,
     val itemCode: Int = 3465,
     val upc: Int = 654,
@@ -14,10 +14,8 @@ data class Item(
     val freeCard: Boolean = true,
     val freeCardPrice: Int = 10,
     val price: Int = 1000,
-
     val qty: Int = 1,
     val itemDiscount: Int = 1,
-
     val grid1: String = "",
     val grid2: String = "",
     val grid3: String = "",

@@ -26,10 +26,9 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.beepbeep.designSystem.ui.composable.StAppBar
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.abapps.app.domain.entities.InvoiceItem
 import org.abapps.app.presentation.screens.allItems.AllItemScreen
 import org.abapps.app.presentation.screens.newInvoice.composables.CalculationsBar
-import org.abapps.app.presentation.screens.newInvoice.composables.ItemsTable
+import org.abapps.app.presentation.screens.newInvoice.composables.NewInvoiceItemTable
 import org.jetbrains.compose.resources.painterResource
 import pos_retail.composeapp.generated.resources.Res
 import pos_retail.composeapp.generated.resources.ic_back
@@ -38,7 +37,7 @@ class NewInvoiceScreen : Screen {
     @Composable
     override fun Content() {
         val nav = LocalNavigator.currentOrThrow
-        var invoiceItemList : List<InvoiceItem> by remember { mutableStateOf(listOf(InvoiceItem(),InvoiceItem(alu = 65551561465116596),InvoiceItem(),InvoiceItem(),InvoiceItem(),InvoiceItem(),InvoiceItem(),InvoiceItem())) }
+        val invoiceItemList : List<NewInvoiceItemUiState> by remember { mutableStateOf(listOf(NewInvoiceItemUiState(),NewInvoiceItemUiState(alu = 65551561465116596),NewInvoiceItemUiState(),NewInvoiceItemUiState(),NewInvoiceItemUiState(),NewInvoiceItemUiState(),NewInvoiceItemUiState(),NewInvoiceItemUiState())) }
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = Color.Transparent,
@@ -70,7 +69,7 @@ class NewInvoiceScreen : Screen {
         },
             bottomBar = { CalculationsBar() }
         ) {
-            ItemsTable(modifier = Modifier.padding(top = it.calculateTopPadding() , bottom = it.calculateBottomPadding()), invoiceItems = invoiceItemList)
+            NewInvoiceItemTable(modifier = Modifier.padding(top = it.calculateTopPadding() , bottom = it.calculateBottomPadding()), invoiceItems = invoiceItemList)
         }
     }
 
