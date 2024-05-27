@@ -40,6 +40,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.abapps.app.domain.entities.InvoiceItem
+import org.abapps.app.util.calculateBiggestWidthOnEveryRow
 
 @Composable
 fun ItemsTable(invoiceItems: List<InvoiceItem>, modifier: Modifier) {
@@ -55,26 +56,21 @@ fun ItemsTable(invoiceItems: List<InvoiceItem>, modifier: Modifier) {
             .border(BorderStroke(0.5.dp, Color.LightGray), RoundedCornerShape(12.dp))
             .horizontalScroll(rememberScrollState(0))
     ) {
-        // Header Row
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier.background(color = Color.LightGray).padding(vertical = 8.dp),
         ) {
             headers.forEach { header ->
-                Box(
+                itemBox(
+                   content =  header.title,
                     modifier = Modifier
                         .padding(4.dp)
                         .width(with(LocalDensity.current) {
                             (biggestColumnWidths[header] ?: 0).toDp()
-                        }),
-                    contentAlignment = Alignment.Center
-
-                ) {
-                    Text(text = header.title, color = Color.White)
-                }
+                        })
+                )
             }
         }
-        // Items Rows
         LazyColumn {
             items(invoiceItems.size) { index ->
                 val item = invoiceItems[index]
@@ -102,16 +98,14 @@ fun ItemsTable(invoiceItems: List<InvoiceItem>, modifier: Modifier) {
                             Headers.ItemSerial -> item.itemSerial.toString()
                             Headers.Number -> index.toString()
                         }
-                        Box(
+                        itemBox(
+                            content =  content,
                             modifier = Modifier
                                 .padding(4.dp)
                                 .width(with(LocalDensity.current) {
                                     (biggestColumnWidths[header] ?: 0).toDp()
-                                }),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(text = content, color = Color.White)
-                        }
+                                })
+                        )
                     }
                 }
                 Spacer(Modifier.fillMaxWidth().background(Color.LightGray).height(0.5.dp))
@@ -152,30 +146,11 @@ fun calculateBiggestWidths(invoiceItems: List<InvoiceItem>): SnapshotStateMap<He
     return biggestColumnWidths
 }
 
-@Composable
-fun calculateBiggestWidthOnEveryRow(list: List<String>): Int {
-    var biggestwidth by remember { mutableStateOf(0) }
-    for (string in list) {
-        Box(
-            modifier = Modifier
-                .padding(4.dp)
-                .onGloballyPositioned { coordinates ->
-                    if (coordinates.size.width >= biggestwidth)
-                        biggestwidth = coordinates.size.width
-                }
-
-        ) {
-            Text(text = string, color = Color.White)
-        }
-    }
-    return biggestwidth
-}
 
 @Composable
 fun itemBox(content: String, modifier: Modifier = Modifier, textColor: Color = Color.White) {
     Box(
-        modifier = modifier
-            .padding(4.dp),
+        modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -183,7 +158,6 @@ fun itemBox(content: String, modifier: Modifier = Modifier, textColor: Color = C
             color = textColor,
             maxLines = 1,
             textAlign = TextAlign.Center,
-            overflow = TextOverflow.Ellipsis
         )
     }
 }
