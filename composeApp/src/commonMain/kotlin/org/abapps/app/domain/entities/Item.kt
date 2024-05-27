@@ -14,6 +14,7 @@ data class Item(
     val freeCard: Boolean = true,
     val freeCardPrice: Int = 10,
     val price: Int = 1000,
+    val taxPerc: Int = 14,
 
     val qty: Int = 1,
     val itemDiscount: Int = 1,

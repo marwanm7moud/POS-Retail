@@ -1,4 +1,4 @@
-package org.abapps.app.presentation.screens.newInvoice.composables
+package org.abapps.app.presentation.screens.invoiceScreen.composables
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -30,20 +30,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import org.abapps.app.presentation.screens.composable.itemBox
-import org.abapps.app.presentation.screens.newInvoice.NewInvoiceItemUiState
+import org.abapps.app.presentation.screens.invoiceScreen.NewInvoiceItemUiState
 import org.abapps.app.util.calculateBiggestWidthOnEveryRow
 
 @Composable
-fun NewInvoiceItemTable(invoiceItems: List<NewInvoiceItemUiState>, modifier: Modifier) {
+fun NewInvoiceItemTable(
+    invoiceItems: List<NewInvoiceItemUiState>,
+    selectedItemIndex: Int,
+    onClickItem: (Int) -> Unit,
+    modifier: Modifier
+) {
     val headers = NewInvoiceItemHeaders.entries.toTypedArray()
     val biggestColumnWidths = calculateBiggestWidths(invoiceItems)
-    var selectedItemIndex by remember { mutableStateOf(-1) }
 
 
     Column(
         modifier = modifier.padding(16.dp)
             .clip(RoundedCornerShape(12.dp))
-            .defaultMinSize(minHeight = 120.dp)
+            //.defaultMinSize(minHeight = 120.dp)
             .border(BorderStroke(0.5.dp, Color.LightGray), RoundedCornerShape(12.dp))
             .horizontalScroll(rememberScrollState(0))
     ) {
@@ -53,7 +57,7 @@ fun NewInvoiceItemTable(invoiceItems: List<NewInvoiceItemUiState>, modifier: Mod
         ) {
             headers.forEach { header ->
                 itemBox(
-                   content =  header.title,
+                    content = header.title,
                     modifier = Modifier
                         .padding(4.dp)
                         .width(with(LocalDensity.current) {
@@ -62,48 +66,47 @@ fun NewInvoiceItemTable(invoiceItems: List<NewInvoiceItemUiState>, modifier: Mod
                 )
             }
         }
-        LazyColumn {
-            items(invoiceItems.size) { index ->
-                val item = invoiceItems[index]
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.background(
-                        color = if (selectedItemIndex == index) Color(
-                            0xFF383a3d
-                        ) else Color.Gray
-                    ).clickable { selectedItemIndex = index }.padding(vertical = 4.dp)
-                ) {
-                    headers.forEach { header ->
-                        val content = when (header) {
-                            NewInvoiceItemHeaders.ItemCode -> item.itemCode.toString()
-                            NewInvoiceItemHeaders.Alu -> item.alu.toString()
-                            NewInvoiceItemHeaders.Name -> item.name
-                            NewInvoiceItemHeaders.Qty -> item.qty.toString()
-                            NewInvoiceItemHeaders.OrgPrice -> item.orgPrice.toString()
-                            NewInvoiceItemHeaders.ItemDisc -> item.itemDisc.toString()
-                            NewInvoiceItemHeaders.Price -> item.price.toString()
-                            NewInvoiceItemHeaders.ExtPrice -> item.extPrice.toString()
-                            NewInvoiceItemHeaders.PriceWOT -> item.priceWOT.toString()
-                            NewInvoiceItemHeaders.TaxPercentage -> item.taxPerc.toString()
-                            NewInvoiceItemHeaders.TaxAmount -> item.taxAmount.toString()
-                            NewInvoiceItemHeaders.ItemSerial -> item.itemSerial.toString()
-                            NewInvoiceItemHeaders.Number -> index.toString()
-                        }
-                        itemBox(
-                            content =  content,
-                            modifier = Modifier
-                                .padding(4.dp)
-                                .width(with(LocalDensity.current) {
-                                    (biggestColumnWidths[header] ?: 0).toDp()
-                                })
-                        )
+        repeat(invoiceItems.size) { index ->
+            val item = invoiceItems[index]
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.background(
+                    color = if (selectedItemIndex == index) Color(
+                        0xFF383a3d
+                    ) else Color.Gray
+                ).clickable { onClickItem(index) }.padding(vertical = 4.dp)
+            ) {
+                headers.forEach { header ->
+                    val content = when (header) {
+                        NewInvoiceItemHeaders.ItemCode -> item.itemCode.toString()
+                        NewInvoiceItemHeaders.Alu -> item.alu.toString()
+                        NewInvoiceItemHeaders.Name -> item.name
+                        NewInvoiceItemHeaders.Qty -> item.qty.toString()
+                        NewInvoiceItemHeaders.OrgPrice -> item.orgPrice.toString()
+                        NewInvoiceItemHeaders.ItemDisc -> item.itemDisc.toString()
+                        NewInvoiceItemHeaders.Price -> item.price.toString()
+                        NewInvoiceItemHeaders.ExtPrice -> item.extPrice.toString()
+                        NewInvoiceItemHeaders.PriceWOT -> item.priceWOT.toString()
+                        NewInvoiceItemHeaders.TaxPercentage -> item.taxPerc.toString()
+                        NewInvoiceItemHeaders.TaxAmount -> item.taxAmount.toString()
+                        NewInvoiceItemHeaders.ItemSerial -> item.itemSerial.toString()
+                        NewInvoiceItemHeaders.Number -> (index+1).toString()
                     }
+                    itemBox(
+                        content = content,
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .width(with(LocalDensity.current) {
+                                (biggestColumnWidths[header] ?: 0).toDp()
+                            })
+                    )
                 }
-                Spacer(Modifier.fillMaxWidth().background(Color.LightGray).height(0.5.dp))
             }
+            Spacer(Modifier.fillMaxWidth().background(Color.LightGray).height(0.5.dp))
         }
     }
 }
+
 
 @Composable
 private fun calculateBiggestWidths(invoiceItems: List<NewInvoiceItemUiState>): SnapshotStateMap<NewInvoiceItemHeaders, Int> {
@@ -136,9 +139,6 @@ private fun calculateBiggestWidths(invoiceItems: List<NewInvoiceItemUiState>): S
         calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemSerial.toString() } + NewInvoiceItemHeaders.ItemSerial.title)
     return biggestColumnWidths
 }
-
-
-
 
 
 private enum class NewInvoiceItemHeaders(val title: String) {

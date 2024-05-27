@@ -1,4 +1,4 @@
-package org.abapps.app.presentation.screens.allItems.composables
+package org.abapps.app.presentation.screens.invoiceScreen.composables
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -19,20 +19,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import org.abapps.app.presentation.screens.allItems.ItemUiState
 import org.abapps.app.presentation.screens.composable.itemBox
+import org.abapps.app.presentation.screens.invoiceScreen.ItemUiState
 import org.abapps.app.util.calculateBiggestWidthOnEveryRow
+import kotlin.random.Random
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -163,7 +162,8 @@ private fun calculateBiggestWidths(invoiceItems: List<ItemUiState>): SnapshotSta
     biggestColumnWidths[AllItemHeaders.STYLE_ID] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.styleId.toString() } + AllItemHeaders.STYLE_ID.title)
     biggestColumnWidths[AllItemHeaders.STYLE_NAME] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.styleName.toString() } + AllItemHeaders.STYLE_NAME.title)
     biggestColumnWidths[AllItemHeaders.ON_HAND] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.onHand.toString() } + AllItemHeaders.ON_HAND.title)
-    biggestColumnWidths[AllItemHeaders.FREE_CARD] = calculateBiggestWidthOnEveryRow(listOf(AllItemHeaders.FREE_CARD.title))
+    biggestColumnWidths[AllItemHeaders.FREE_CARD] = calculateBiggestWidthOnEveryRow(listOf(
+        AllItemHeaders.FREE_CARD.title))
     biggestColumnWidths[AllItemHeaders.FREE_CARD_PRICE] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.freeCardPrice.toString() } + AllItemHeaders.FREE_CARD_PRICE.title)
     biggestColumnWidths[AllItemHeaders.PRICE] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.price.toString() } + AllItemHeaders.PRICE.title)
     biggestColumnWidths[AllItemHeaders.QTY] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.qty.toString() } + AllItemHeaders.QTY.title)
@@ -173,8 +173,10 @@ private fun calculateBiggestWidths(invoiceItems: List<ItemUiState>): SnapshotSta
     biggestColumnWidths[AllItemHeaders.GRID3] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.grid3.toString() } + AllItemHeaders.GRID3.title)
     biggestColumnWidths[AllItemHeaders.VEND_ID] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.vendId.toString() } + AllItemHeaders.VEND_ID.title)
     biggestColumnWidths[AllItemHeaders.VEND_NAME] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.vendName.toString() } + AllItemHeaders.VEND_NAME.title)
-    biggestColumnWidths[AllItemHeaders.NON_INVN] = calculateBiggestWidthOnEveryRow(listOf(AllItemHeaders.NON_INVN.title))
-    biggestColumnWidths[AllItemHeaders.TAXABLE] = calculateBiggestWidthOnEveryRow(listOf(AllItemHeaders.TAXABLE.title) )
+    biggestColumnWidths[AllItemHeaders.NON_INVN] = calculateBiggestWidthOnEveryRow(listOf(
+        AllItemHeaders.NON_INVN.title))
+    biggestColumnWidths[AllItemHeaders.TAXABLE] = calculateBiggestWidthOnEveryRow(listOf(
+        AllItemHeaders.TAXABLE.title) )
     biggestColumnWidths[AllItemHeaders.TAX_ID] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.taxId.toString() } + AllItemHeaders.TAX_ID.title)
     biggestColumnWidths[AllItemHeaders.ITEM_TYPE] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemType.toString() } + AllItemHeaders.ITEM_TYPE.title)
 
@@ -184,8 +186,10 @@ private fun calculateBiggestWidths(invoiceItems: List<ItemUiState>): SnapshotSta
     biggestColumnWidths[AllItemHeaders.CLASS_NAME] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.className.toString() } + AllItemHeaders.CLASS_NAME.title)
     biggestColumnWidths[AllItemHeaders.DEPT_ID] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.deptId.toString() } + AllItemHeaders.DEPT_ID.title)
     biggestColumnWidths[AllItemHeaders.DEPARTMENT] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.department.toString() } + AllItemHeaders.DEPARTMENT.title)
-    biggestColumnWidths[AllItemHeaders.ACTIVE] =calculateBiggestWidthOnEveryRow(listOf(AllItemHeaders.ACTIVE.title))
-    biggestColumnWidths[AllItemHeaders.OPEN_PRICE] = calculateBiggestWidthOnEveryRow(listOf(AllItemHeaders.OPEN_PRICE.title))
+    biggestColumnWidths[AllItemHeaders.ACTIVE] =calculateBiggestWidthOnEveryRow(listOf(
+        AllItemHeaders.ACTIVE.title))
+    biggestColumnWidths[AllItemHeaders.OPEN_PRICE] = calculateBiggestWidthOnEveryRow(listOf(
+        AllItemHeaders.OPEN_PRICE.title))
     biggestColumnWidths[AllItemHeaders.INDEX_ID] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.indexId.toString() } + AllItemHeaders.INDEX_ID.title)
 
     return biggestColumnWidths

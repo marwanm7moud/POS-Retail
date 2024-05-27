@@ -27,7 +27,7 @@ import com.beepbeep.designSystem.ui.composable.StAppBar
 import com.beepbeep.designSystem.ui.composable.animate.SlideAnimation
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.abapps.app.presentation.screens.composable.AppScaffold
-import org.abapps.app.presentation.screens.newInvoice.NewInvoiceScreen
+import org.abapps.app.presentation.screens.invoiceScreen.InvoiceScreen
 import org.abapps.app.presentation.util.EventHandler
 import org.abapps.app.util.getScreenModel
 import org.jetbrains.compose.resources.painterResource
@@ -44,7 +44,7 @@ class AllInvoicesScreen : Screen {
         EventHandler(screenModel.effect){effect, navigator ->
             when(effect){
                 is AllInvoicesUiEffect.NavigateToNewInvoice-> {
-                    navigator.push(NewInvoiceScreen())
+                    navigator.push(InvoiceScreen())
                 }
                 else -> {}
             }

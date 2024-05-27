@@ -1,10 +1,45 @@
-package org.abapps.app.presentation.screens.allItems
+package org.abapps.app.presentation.screens.invoiceScreen
+
+data class InvoiceUiState(
+    val isAddItem: Boolean = false,
+    val selectedItemsIndexFromAllItems: List<Int> = emptyList(),
+    val selectedItemIndexFromInvoice: Int = -1,
+    val invoiceItemList: List<NewInvoiceItemUiState> = emptyList(),
+    val allItemsList: List<ItemUiState> = listOf(
+        ItemUiState(),
+        ItemUiState(),
+        ItemUiState(),
+        ItemUiState(),
+        ItemUiState()
+    ),
+    val expandedCardStatus:ExpandedCardStatus? = null
+)
+
+enum class ExpandedCardStatus{
+    Items,
+    Brandon
+}
+
+data class NewInvoiceItemUiState(
+    val itemCode: Int = 132,
+    val alu: Long = 654,
+    val name: String = "marnasdasdasd",
+    val qty: Int = 1,
+    val orgPrice: Int = 20,
+    val itemDisc: Int = 20,
+    val price: Int = 20,
+    val extPrice: Int = 20,
+    val priceWOT: Int = 20,
+    val taxPerc: Int = 20,
+    val taxAmount: Int = 20,
+    val itemSerial: Int = 20,
+)
 
 data class ItemUiState(
     val itemID: Long = 10000003869,
     val itemCode: Int = 3465,
     val upc: Int = 654,
-    val alu: Int = 654,
+    val alu: Long = 654,
     val name: String = "طقم ملايه بولي قطن",
     val name2: String = "uhukhkjhk",
     val description: String = " خسعيابستي بمتس بهتسي بمتسيمنب تسيمن بتمينتب منسيت بمنيست بمنتسيم بنتيسمن تبمن",
@@ -14,6 +49,7 @@ data class ItemUiState(
     val freeCard: Boolean = true,
     val freeCardPrice: Int = 10,
     val price: Int = 1000,
+    val taxPerc: Int = 20,
     val qty: Int = 1,
     val itemDiscount: Int = 1,
     val grid1: String = "",
@@ -54,4 +90,20 @@ data class ItemUiState(
     val UDF19: String = "",
     val UDF20: String = "",
     val indexId: Int = 151321,
+)
+
+fun ItemUiState.toInvoiceItemUiState():NewInvoiceItemUiState = NewInvoiceItemUiState(
+    itemCode = itemCode,
+    alu = alu,
+    name = name,
+    qty = qty,
+    orgPrice = price,
+    itemDisc = itemDiscount,
+    price = price, //todo
+    extPrice = price,//todo
+    priceWOT = price,//todo
+    taxPerc = taxPerc,//todo
+    taxAmount = price,//todo
+    itemSerial = 0 ,//todo
+
 )

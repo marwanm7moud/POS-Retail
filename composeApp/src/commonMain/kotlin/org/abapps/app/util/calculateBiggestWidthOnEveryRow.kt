@@ -1,33 +1,34 @@
 package org.abapps.app.util
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.layout.SubcomposeLayout
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun calculateBiggestWidthOnEveryRow(list: List<String>): Int {
-    var biggestwidth by remember { mutableStateOf(0) }
-    for (string in list) {
-        Box(
-            modifier = Modifier
-                .padding(4.dp)
-                .onGloballyPositioned { coordinates ->
-                    if (coordinates.size.width >= biggestwidth)
-                        biggestwidth = coordinates.size.width
-                }
+    var maxWidth by remember { mutableStateOf(0) }
 
-        ) {
-            Text(text = string, color = Color.White)
+    SubcomposeLayout { constraints ->
+        val measurables = list.toSet().toList().map { text ->
+            subcompose(text) {
+                Text(text = text, fontSize = 16.sp)
+            }.first()
+        }
+
+        val placeables = measurables.map { measurable ->
+            val placeable = measurable.measure(constraints)
+            maxWidth = maxOf(maxWidth, placeable.width)
+            placeable
+        }
+        layout(0, 0) {
+
         }
     }
-    return biggestwidth
+
+    return maxWidth
 }
