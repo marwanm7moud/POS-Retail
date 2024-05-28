@@ -42,7 +42,9 @@ import org.abapps.app.presentation.util.EventHandler
 import org.abapps.app.resource.Resources
 import org.jetbrains.compose.resources.painterResource
 import pos_retail.composeapp.generated.resources.Res
+import pos_retail.composeapp.generated.resources.admin
 import pos_retail.composeapp.generated.resources.bank_transfer
+import pos_retail.composeapp.generated.resources.exit
 import pos_retail.composeapp.generated.resources.invoice
 import org.abapps.app.presentation.screens.composable.IconWithBackground as IconWithBackground1
 
