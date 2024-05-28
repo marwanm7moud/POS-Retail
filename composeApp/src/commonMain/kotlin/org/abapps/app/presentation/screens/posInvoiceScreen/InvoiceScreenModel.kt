@@ -1,4 +1,4 @@
-package org.abapps.app.presentation.screens.invoiceScreen
+package org.abapps.app.presentation.screens.posInvoiceScreen
 
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.CoroutineScope

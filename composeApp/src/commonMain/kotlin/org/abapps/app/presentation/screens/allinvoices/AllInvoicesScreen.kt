@@ -29,7 +29,7 @@ import org.abapps.app.presentation.base.ErrorState
 import org.abapps.app.presentation.screens.allinvoices.composables.InvoicesItemTable
 import org.abapps.app.presentation.screens.composable.HandleErrorState
 import org.abapps.app.presentation.screens.home.HomeScreen
-import org.abapps.app.presentation.screens.invoiceScreen.InvoiceScreen
+import org.abapps.app.presentation.screens.posInvoiceScreen.InvoiceScreen
 import org.abapps.app.presentation.util.EventHandler
 import org.abapps.app.util.getScreenModel
 import org.jetbrains.compose.resources.painterResource

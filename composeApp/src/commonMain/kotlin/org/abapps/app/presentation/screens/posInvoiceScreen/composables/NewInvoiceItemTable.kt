@@ -1,4 +1,4 @@
-package org.abapps.app.presentation.screens.invoiceScreen.composables
+package org.abapps.app.presentation.screens.posInvoiceScreen.composables
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -34,7 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import org.abapps.app.presentation.screens.composable.itemBox
-import org.abapps.app.presentation.screens.invoiceScreen.NewInvoiceItemUiState
+import org.abapps.app.presentation.screens.posInvoiceScreen.NewInvoiceItemUiState
 import org.abapps.app.util.calculateBiggestWidthOnEveryRow
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)

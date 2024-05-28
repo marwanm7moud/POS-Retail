@@ -1,4 +1,4 @@
-package org.abapps.app.presentation.screens.invoiceScreen.composables
+package org.abapps.app.presentation.screens.posInvoiceScreen.composables
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -19,7 +19,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateMap
@@ -29,9 +28,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import org.abapps.app.presentation.screens.composable.itemBox
-import org.abapps.app.presentation.screens.invoiceScreen.ItemUiState
+import org.abapps.app.presentation.screens.posInvoiceScreen.ItemUiState
 import org.abapps.app.util.calculateBiggestWidthOnEveryRow
-import kotlin.random.Random
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

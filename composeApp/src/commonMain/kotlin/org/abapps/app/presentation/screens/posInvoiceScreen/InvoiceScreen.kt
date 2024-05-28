@@ -1,4 +1,4 @@
-package org.abapps.app.presentation.screens.invoiceScreen
+package org.abapps.app.presentation.screens.posInvoiceScreen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -40,11 +40,11 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.abapps.app.presentation.base.ErrorState
 import org.abapps.app.presentation.screens.allinvoices.AllInvoicesScreen
 import org.abapps.app.presentation.screens.composable.HandleErrorState
-import org.abapps.app.presentation.screens.invoiceScreen.composables.AllItemTable
-import org.abapps.app.presentation.screens.invoiceScreen.composables.BrandonCard
-import org.abapps.app.presentation.screens.invoiceScreen.composables.CalculationsBar
-import org.abapps.app.presentation.screens.invoiceScreen.composables.ExpandableCard
-import org.abapps.app.presentation.screens.invoiceScreen.composables.NewInvoiceItemTable
+import org.abapps.app.presentation.screens.posInvoiceScreen.composables.AllItemTable
+import org.abapps.app.presentation.screens.posInvoiceScreen.composables.BrandonCard
+import org.abapps.app.presentation.screens.posInvoiceScreen.composables.CalculationsBar
+import org.abapps.app.presentation.screens.posInvoiceScreen.composables.ExpandableCard
+import org.abapps.app.presentation.screens.posInvoiceScreen.composables.NewInvoiceItemTable
 import org.abapps.app.presentation.util.EventHandler
 import org.abapps.app.util.getScreenModel
 import org.jetbrains.compose.resources.painterResource

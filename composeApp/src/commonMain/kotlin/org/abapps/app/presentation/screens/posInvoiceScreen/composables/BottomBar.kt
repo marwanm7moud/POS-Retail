@@ -1,4 +1,4 @@
-package org.abapps.app.presentation.screens.invoiceScreen.composables
+package org.abapps.app.presentation.screens.posInvoiceScreen.composables
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke

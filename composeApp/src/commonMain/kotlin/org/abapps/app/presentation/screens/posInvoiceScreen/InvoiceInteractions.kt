@@ -1,4 +1,4 @@
-package org.abapps.app.presentation.screens.invoiceScreen
+package org.abapps.app.presentation.screens.posInvoiceScreen
 
 interface InvoiceInteractions {
     fun onClickAddItem()
