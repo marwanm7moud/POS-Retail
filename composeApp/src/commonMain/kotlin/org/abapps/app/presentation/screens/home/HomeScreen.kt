@@ -18,14 +18,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import com.beepbeep.designSystem.ui.composable.animate.FadeAnimation
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.abapps.app.exitApplication
 import org.abapps.app.presentation.screens.allinvoices.AllInvoicesScreen
 import org.abapps.app.presentation.screens.composable.WarningDialogue
 import org.abapps.app.presentation.screens.transferInvoices.TransferInvoicesScreen
+import org.abapps.app.presentation.util.EventHandler
 import org.abapps.app.resource.Resources
 
 class HomeScreen : Screen {
@@ -33,7 +32,6 @@ class HomeScreen : Screen {
     override fun Content() {
         val homeScreenModel = getScreenModel<HomeScreenModel>()
         val state by homeScreenModel.state.collectAsState()
-        val nav = LocalNavigator.currentOrThrow
 
         FadeAnimation(state.warningDialogueIsVisible) {
             WarningDialogue(
@@ -46,6 +44,14 @@ class HomeScreen : Screen {
         }
         if (state.exitApp) exitApplication()
 
+        EventHandler(homeScreenModel.effect) { effect, navigator ->
+            when (effect) {
+                is HomeUiEffect.NavigateToInvoiceScreen -> navigator.push(AllInvoicesScreen())
+                HomeUiEffect.NavigateToSettingScreen -> {}
+                HomeUiEffect.NavigateToTransferScreen -> navigator.push(TransferInvoicesScreen())
+            }
+        }
+
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
@@ -55,7 +61,7 @@ class HomeScreen : Screen {
                     modifier = Modifier.fillMaxWidth(0.5f).height(56.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Theme.colors.primary),
                     shape = RoundedCornerShape(12.dp),
-                    onClick = { nav.push(AllInvoicesScreen()) }
+                    onClick = { }
                 ) {
                     Text("POS")
                 }
@@ -64,7 +70,7 @@ class HomeScreen : Screen {
                     modifier = Modifier.fillMaxWidth(0.5f).height(56.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Theme.colors.primary),
                     shape = RoundedCornerShape(12.dp),
-                    onClick = { nav.push(TransferInvoicesScreen()) }
+                    onClick = { }
                 ) {
                     Text("Transfer")
                 }
