@@ -7,11 +7,11 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 
-class StarTouchApp : Application() {
+class RetailApp : Application() {
     override fun onCreate() {
         super.onCreate()
         startKoin {
-            androidContext(this@StarTouchApp)
+            androidContext(this@RetailApp)
             androidLogger(
                 level = Level.INFO
             )

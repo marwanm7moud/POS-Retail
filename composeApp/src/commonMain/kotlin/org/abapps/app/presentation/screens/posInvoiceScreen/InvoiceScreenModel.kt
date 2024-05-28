@@ -25,7 +25,9 @@ class InvoiceScreenModel(
                     )
                 }
             },
-            onError = {}
+            onError = {
+                println(it.toString())
+            }
         )
     }
 
