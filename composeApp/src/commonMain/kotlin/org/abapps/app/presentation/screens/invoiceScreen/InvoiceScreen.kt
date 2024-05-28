@@ -38,6 +38,7 @@ import com.beepbeep.designSystem.ui.composable.StAppBar
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.abapps.app.presentation.screens.allinvoices.AllInvoicesScreen
 import org.abapps.app.presentation.screens.invoiceScreen.composables.AllItemTable
+import org.abapps.app.presentation.screens.invoiceScreen.composables.BrandonCard
 import org.abapps.app.presentation.screens.invoiceScreen.composables.CalculationsBar
 import org.abapps.app.presentation.screens.invoiceScreen.composables.ExpandableCard
 import org.abapps.app.presentation.screens.invoiceScreen.composables.NewInvoiceItemTable
@@ -175,7 +176,7 @@ class InvoiceScreen : Screen {
                             invoicesScreenModel.onClickExpandedCard(ExpandedCardStatus.Brandon)
                         }
                     ) {
-
+                        BrandonCard()
                     }
                     ExpandableCard(
                         title = "Items",

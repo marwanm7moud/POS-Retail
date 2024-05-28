@@ -54,6 +54,7 @@ fun StTextField(
     isError: Boolean = errorMessage.isNotEmpty(),
     enabled: Boolean = true,
     readOnly: Boolean = false,
+    minLines: Int = 1,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     var showPassword by remember { mutableStateOf(false) }
@@ -84,6 +85,7 @@ fun StTextField(
             },
             onValueChange = onValueChange,
             shape = shapeRadius,
+            minLines = minLines,
             textStyle = typography.body.copy(colors.contentPrimary),
             singleLine = singleLine,
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),

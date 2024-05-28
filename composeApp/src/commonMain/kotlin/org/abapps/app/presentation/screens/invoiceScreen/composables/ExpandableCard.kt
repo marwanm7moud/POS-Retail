@@ -62,7 +62,7 @@ fun ExpandableCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(modifier = Modifier, text = title)
+                Text(modifier = Modifier, text = title , color = Color.White.copy(alpha = 0.6f))
                 IconButton(
                     modifier = Modifier
                         .alpha(0.2f)

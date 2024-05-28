@@ -28,6 +28,7 @@ fun DropDownTextField(
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf(selectedItem) }
     ExposedDropdownMenuBox(
+        modifier = modifier,
         expanded = expanded,
         onExpandedChange = {
             expanded = !expanded
@@ -35,6 +36,7 @@ fun DropDownTextField(
     ) {
         StTextField(
             label = label,
+            textFieldModifier = Modifier.fillMaxWidth(),
             text = selectedOptionText.name,
             onValueChange = {},
             enabled = enabled,
