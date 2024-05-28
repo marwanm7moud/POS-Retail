@@ -1,6 +1,6 @@
 package org.abapps.app.presentation.screens.invoiceScreen
 
-data class InvoiceUiState(
+data class NewInvoiceUiState(
     val isAddItem: Boolean = false,
     val selectedItemsIndexFromAllItems: List<Int> = emptyList(),
     val selectedItemIndexFromInvoice: Int = -1,

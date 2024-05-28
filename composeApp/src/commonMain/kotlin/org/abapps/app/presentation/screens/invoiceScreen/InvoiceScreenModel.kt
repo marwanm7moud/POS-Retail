@@ -5,7 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import org.abapps.app.presentation.base.BaseScreenModel
 
 class InvoiceScreenModel() :
-    BaseScreenModel<InvoiceUiState, InvoiceUiEffect>(InvoiceUiState()), InvoiceInteractions {
+    BaseScreenModel<NewInvoiceUiState, InvoiceUiEffect>(NewInvoiceUiState()), InvoiceInteractions {
 
     override val viewModelScope: CoroutineScope get() = screenModelScope
 

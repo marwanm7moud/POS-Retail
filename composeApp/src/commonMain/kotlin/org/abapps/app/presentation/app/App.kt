@@ -2,7 +2,8 @@ package org.abapps.app.presentation.app
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -13,7 +14,6 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.abapps.app.presentation.screens.allinvoices.AllInvoicesScreen
-import org.abapps.app.presentation.screens.invoiceScreen.InvoiceScreen
 import org.abapps.app.resource.StarTouchTheme
 import org.abapps.app.util.getScreenModel
 import org.jetbrains.compose.resources.DrawableResource
@@ -39,7 +39,7 @@ object MainApp : Screen {
                     contentDescription = "",
                     contentScale = ContentScale.Crop
                 )
-                Navigator(InvoiceScreen()) {
+                Navigator(AllInvoicesScreen()) {
                     SlideTransition(it)
                 }
             }
