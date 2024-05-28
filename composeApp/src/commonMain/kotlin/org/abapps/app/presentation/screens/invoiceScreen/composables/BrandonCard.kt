@@ -18,7 +18,7 @@ import org.abapps.app.presentation.screens.composable.DropDownTextField
 @Composable
 fun BrandonCard() {
     Column(
-        modifier = Modifier.padding(horizontal = 8.dp , vertical = 8.dp),
+        modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -38,18 +38,7 @@ fun BrandonCard() {
                 ),
                 selectedItem = DropDownState(0, "gg"),
                 label = "INVC Type"
-            ) {
-
-            }
-        }
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Box(modifier = Modifier.weight(1f)) {
-                StTextField(
-                    label = "Customer",
-                    text = "",
-                    onValueChange = {},
-                )
-            }
+            ) {}
             Box(modifier = Modifier.weight(1f)) {
                 StTextField(
                     label = "Status",
@@ -60,6 +49,13 @@ fun BrandonCard() {
             }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Box(modifier = Modifier.weight(1f)) {
+                StTextField(
+                    label = "Customer",
+                    text = "",
+                    onValueChange = {},
+                )
+            }
             Box(modifier = Modifier.weight(1f)) {
                 StTextField(
                     label = "Source Type",
@@ -81,13 +77,6 @@ fun BrandonCard() {
 
             }
         }
-        StTextField(
-            label = "Comment",
-            textFieldModifier = Modifier.fillMaxWidth().height(96.dp),
-            text = "",
-            onValueChange = {},
-            readOnly = true
-        )
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             DropDownTextField(
                 modifier = Modifier.weight(1f),
@@ -120,5 +109,12 @@ fun BrandonCard() {
                 label = "Sales Person"
             ) {}
         }
+        StTextField(
+            label = "Comment",
+            textFieldModifier = Modifier.fillMaxWidth().height(96.dp),
+            text = "",
+            onValueChange = {},
+            readOnly = true
+        )
     }
 }
