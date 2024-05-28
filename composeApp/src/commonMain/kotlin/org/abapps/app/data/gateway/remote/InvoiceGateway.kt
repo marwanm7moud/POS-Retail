@@ -25,7 +25,7 @@ class InvoiceGateway(client: HttpClient) : BaseGateway(client), IInvoiceGateway 
                 parameter("customerId", customerId)
                 parameter("isAverageOrFifo", isAverageOrFifo)
             }
-        }.data?.map { it.toEntity() } ?: throw NotFoundException("Items not found")
+        }.data?.take(20)?.map { it.toEntity() } ?: throw NotFoundException("Items not found")
     }
 
 }
