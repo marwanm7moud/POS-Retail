@@ -2,6 +2,7 @@ package org.abapps.app.presentation.screens.posInvoiceScreen
 
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.CoroutineScope
+import org.abapps.app.data.util.RetailSetup
 import org.abapps.app.domain.usecase.ManageInvoiceUseCase
 import org.abapps.app.presentation.base.BaseScreenModel
 
@@ -15,7 +16,14 @@ class InvoiceScreenModel(
     override fun onClickAddItem() {
         updateState { it.copy(isAddItem = true) }
         tryToExecute(
-            function = { manageInvoice.getAllItems(1, 1, 10000000001, false) },
+            function = {
+                manageInvoice.getAllItems(
+                    RetailSetup.STORE_ID,
+                    RetailSetup.SUB_COMPANY_ID,
+                    RetailSetup.DEFAULT_CUSTOMER_ID,
+                    RetailSetup.FIFO || RetailSetup.AVERAGE
+                )
+            },
             onSuccess = { items ->
                 updateState {
                     it.copy(

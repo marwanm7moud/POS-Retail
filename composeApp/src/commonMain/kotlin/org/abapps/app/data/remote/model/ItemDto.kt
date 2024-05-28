@@ -13,7 +13,7 @@ data class ItemDto(
     val description: String? = null,
     val styleId: Long? = null,
     val styleName: String? = null,
-    val onHand: Int? = null,
+    val onHand: Float? = null,
     val freeCard: Boolean? = null,
     val freeCardPrice: Float? = null,
     val cost: Float? = null,

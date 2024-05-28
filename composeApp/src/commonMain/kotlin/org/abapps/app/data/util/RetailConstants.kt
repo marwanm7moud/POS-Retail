@@ -10,7 +10,7 @@ object AppLanguage {
 object RetailSetup {
     var STORE_ID = 1
     var SUB_COMPANY_ID = 1
-    var DEFAULT_CUSTOMER_ID = 0
+    var DEFAULT_CUSTOMER_ID = 0L
     var DEFAULT_SALES_ID = 0
     var USER_ID = 0
     var TOKEN = ""
