@@ -13,7 +13,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.abapps.app.presentation.screens.allinvoices.AllInvoicesScreen
+import org.abapps.app.presentation.screens.home.HomeScreen
 import org.abapps.app.resource.StarTouchTheme
 import org.abapps.app.util.getScreenModel
 import org.jetbrains.compose.resources.DrawableResource
@@ -39,7 +39,7 @@ object MainApp : Screen {
                     contentDescription = "",
                     contentScale = ContentScale.Crop
                 )
-                Navigator(AllInvoicesScreen()) {
+                Navigator(HomeScreen()) {
                     SlideTransition(it)
                 }
             }

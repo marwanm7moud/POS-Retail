@@ -1,4 +1,4 @@
-package org.abapps.app.presentation.screens.allinvoices
+package org.abapps.app.presentation.screens.transferInvoices
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
@@ -26,30 +26,28 @@ import com.beepbeep.designSystem.ui.composable.StAppBar
 import com.beepbeep.designSystem.ui.composable.animate.FadeAnimation
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.abapps.app.presentation.base.ErrorState
-import org.abapps.app.presentation.screens.allinvoices.composables.InvoicesItemTable
 import org.abapps.app.presentation.screens.composable.HandleErrorState
 import org.abapps.app.presentation.screens.home.HomeScreen
 import org.abapps.app.presentation.screens.invoiceScreen.InvoiceScreen
+import org.abapps.app.presentation.screens.transferInvoices.composables.TransferInvoicesTable
 import org.abapps.app.presentation.util.EventHandler
 import org.abapps.app.util.getScreenModel
 import org.jetbrains.compose.resources.painterResource
 import pos_retail.composeapp.generated.resources.Res
 import pos_retail.composeapp.generated.resources.ic_back
 
-class AllInvoicesScreen : Screen {
-
+class TransferInvoicesScreen : Screen {
     @Composable
     override fun Content() {
-
-        val screenModel = getScreenModel<AllInvoicesScreenModel>()
+        val screenModel = getScreenModel<TransferInvoicesScreenModel>()
         val state by screenModel.state.collectAsState()
 
         EventHandler(screenModel.effect){effect, navigator ->
             when(effect){
-                is AllInvoicesUiEffect.NavigateToNewInvoice-> {
+                is TransferInvoicesUiEffect.NavigateToNewInvoice-> {
                     navigator.push(InvoiceScreen())
                 }
-                is AllInvoicesUiEffect.NavigateToHomeScreen-> {
+                is TransferInvoicesUiEffect.NavigateToHomeScreen-> {
                     navigator.replace(HomeScreen())
                 }
             }
@@ -116,7 +114,7 @@ class AllInvoicesScreen : Screen {
                 }
             }
             AnimatedVisibility(!state.isLoading){
-                InvoicesItemTable(
+                TransferInvoicesTable(
                     modifier = Modifier.padding(top = it.calculateTopPadding()),
                     invoiceItems = state.invoicesList,
                     selectedItemIndex = state.selectedInvoiceIndex,
@@ -128,4 +126,5 @@ class AllInvoicesScreen : Screen {
             }
         }
     }
+
 }

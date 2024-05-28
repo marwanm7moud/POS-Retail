@@ -1,6 +1,6 @@
-package org.abapps.app.presentation.screens.allinvoices
+package org.abapps.app.presentation.screens.transferInvoices
 
-interface AllInvoicesInteraction {
+interface TransferInvoicesInteraction {
     fun onClickItem(index:Int)
     fun onClickItemDelete(index: Int)
     fun showErrorScreen()

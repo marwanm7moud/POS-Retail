@@ -1,18 +1,18 @@
-package org.abapps.app.presentation.screens.allinvoices
+package org.abapps.app.presentation.screens.transferInvoices
 
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.CoroutineScope
 import org.abapps.app.presentation.base.BaseScreenModel
 
-class AllInvoicesScreenModel() :
-    BaseScreenModel<AllInvoicesState, AllInvoicesUiEffect>(AllInvoicesState()),
-    AllInvoicesInteraction {
+class TransferInvoicesScreenModel() :
+    BaseScreenModel<TransferInvoicesState, TransferInvoicesUiEffect>(TransferInvoicesState()),
+    TransferInvoicesInteraction {
 
 
     override val viewModelScope: CoroutineScope get() = screenModelScope
 
     fun onClickFloatActionButton() {
-        sendNewEffect(AllInvoicesUiEffect.NavigateToNewInvoice)
+        sendNewEffect(TransferInvoicesUiEffect.NavigateToNewInvoice)
     }
 
     override fun onClickItem(index: Int) {
@@ -29,6 +29,6 @@ class AllInvoicesScreenModel() :
     }
 
     override fun onClickBack() {
-        sendNewEffect(AllInvoicesUiEffect.NavigateToHomeScreen)
+        sendNewEffect(TransferInvoicesUiEffect.NavigateToHomeScreen)
     }
 }
