@@ -270,7 +270,7 @@ private fun BrandonCard(
             Box(modifier = Modifier.weight(1f)) {
                 StTextField(
                     label = Resources.strings.sourceType,
-                    text = Resources.strings.invoice,
+                    text = "Invoice",
                     onValueChange = {},
                     readOnly = true
                 )
