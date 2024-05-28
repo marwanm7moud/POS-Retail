@@ -67,21 +67,21 @@ class HomeScreenModel(
         return coroutineScope {
             val subCompanySetupDeferred = async {
                 try {
-                    manageSetup.getSubCompanySetup("1")
+                    manageSetup.getSubCompanySetup(RetailSetup.SUB_COMPANY_ID.toString())
                 } catch (e: Exception) {
                     throw UnknownErrorException(e.message.toString())
                 }
             }
             val storeSetupDeferred = async {
                 try {
-                    manageSetup.getSetupStore("1")
+                    manageSetup.getSetupStore(RetailSetup.STORE_ID.toString())
                 } catch (e: Exception) {
                     throw UnknownErrorException(e.message.toString())
                 }
             }
             val invoiceSetupDeferred = async {
                 try {
-                    manageSetup.getInvoiceSetup("1")
+                    manageSetup.getInvoiceSetup(RetailSetup.STORE_ID.toString())
                 } catch (e: Exception) {
                     throw UnknownErrorException(e.message.toString())
                 }
