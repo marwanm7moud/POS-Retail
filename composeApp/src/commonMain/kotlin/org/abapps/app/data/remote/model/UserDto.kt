@@ -18,7 +18,7 @@ data class UserDto(
     val mobile: String? = null,
     val email: String? = null,
     val passCode: String? = null,
-    val active: Boolean,
+    val active: Boolean? = null,
     val createDate: String? = null,
     val modifiedDate: String? = null,
     val userId: Int? = null,
