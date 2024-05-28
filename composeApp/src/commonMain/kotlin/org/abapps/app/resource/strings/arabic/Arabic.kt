@@ -26,4 +26,5 @@ data class Arabic(
     override val doYouWantToCloseApp: String = "هل تريد اغلاق التطبيق ؟",
     override val no: String = "لا",
     override val yes: String = "نعم",
+    override val logo: String = "شعار",
 ) : IStringResources

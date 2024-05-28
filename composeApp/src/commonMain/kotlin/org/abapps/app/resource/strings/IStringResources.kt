@@ -24,4 +24,5 @@ interface IStringResources {
     val nullDataDescription: String
     val userNotFound: String
     val enterYourPasscode: String
+    val logo: String
 }

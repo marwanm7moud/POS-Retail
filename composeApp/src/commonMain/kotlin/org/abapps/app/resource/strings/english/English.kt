@@ -26,4 +26,5 @@ data class English(
     override val doYouWantToCloseApp: String = "Do you want to close app",
     override val no: String = "No",
     override val yes: String = "Yes",
+    override val logo: String = "Logo",
 ) : IStringResources
