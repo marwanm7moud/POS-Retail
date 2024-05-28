@@ -2,10 +2,16 @@ package org.abapps.app.presentation.screens.home
 
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import org.abapps.app.data.util.AppLanguage
 import org.abapps.app.data.util.RetailSetup
+import org.abapps.app.domain.entities.InvoiceSetup
+import org.abapps.app.domain.entities.StoreSetup
+import org.abapps.app.domain.entities.SubCompanySetup
 import org.abapps.app.domain.usecase.AdminSystemUseCase
 import org.abapps.app.domain.usecase.ManageSetupUseCase
+import org.abapps.app.domain.util.UnknownErrorException
 import org.abapps.app.presentation.base.BaseScreenModel
 import org.abapps.app.presentation.base.ErrorState
 import org.abapps.app.resource.strings.IStringResources
@@ -31,24 +37,68 @@ class HomeScreenModel(
     private fun getSetup() {
         updateState { it.copy(isLoading = true, errorState = null, errorMessage = "") }
         tryToExecute(
-            function = { manageSetup.getSubCompanySetup("1") },
-            onSuccess = { subCompanySetup ->
+            function = { getCombinedSetup() },
+            onSuccess = { combinedSetupResult ->
                 updateState { it.copy(isLoading = false, errorState = null, errorMessage = "") }
                 RetailSetup.apply {
-                    VAT = subCompanySetup.vat
-                    LEN_DECIMAL = subCompanySetup.lenDecimal
-                    ROUND_PRICE = subCompanySetup.roundPrice
-                    TAX_EFFECT = subCompanySetup.calcDiscountBeforeTax
-                    TAX_EFFECT_WITH_ITEM = subCompanySetup.calcDiscItemOnPriceWot
-                    FIFO = subCompanySetup.calcCostFifo
-                    LIFO = subCompanySetup.calcCostLifo
-                    AVERAGE = subCompanySetup.calcCostAverage
-                    LAST_COST = subCompanySetup.calcCostLastCost
+                    VAT = combinedSetupResult.subCompanySetup.vat
+                    LEN_DECIMAL = combinedSetupResult.subCompanySetup.lenDecimal
+                    ROUND_PRICE = combinedSetupResult.subCompanySetup.roundPrice
+                    TAX_EFFECT = combinedSetupResult.subCompanySetup.calcDiscountBeforeTax
+                    TAX_EFFECT_WITH_ITEM =
+                        combinedSetupResult.subCompanySetup.calcDiscItemOnPriceWot
+                    FIFO = combinedSetupResult.subCompanySetup.calcCostFifo
+                    LIFO = combinedSetupResult.subCompanySetup.calcCostLifo
+                    AVERAGE = combinedSetupResult.subCompanySetup.calcCostAverage
+                    LAST_COST = combinedSetupResult.subCompanySetup.calcCostLastCost
+                    NUMBER_OF_DAY_RETURN = combinedSetupResult.invoiceSetup.noOfDayReturn
+                    ALLOW_NEGATIVE_QTY =
+                        combinedSetupResult.invoiceSetup.allawSellWithNegativeOnHand
+                    DEFAULT_LANGUAGE = combinedSetupResult.storeSetup.defaultLang
+                    DEFAULT_SALES_ID = combinedSetupResult.invoiceSetup.defaultSeller
+                    DEFAULT_CUSTOMER_ID = combinedSetupResult.invoiceSetup.defaultCust
                 }
             },
             onError = ::onError
         )
     }
+
+    private suspend fun getCombinedSetup(): CombinedSetupResult {
+        return coroutineScope {
+            val subCompanySetupDeferred = async {
+                try {
+                    manageSetup.getSubCompanySetup("1")
+                } catch (e: Exception) {
+                    throw UnknownErrorException(e.message.toString())
+                }
+            }
+            val storeSetupDeferred = async {
+                try {
+                    manageSetup.getSetupStore("1")
+                } catch (e: Exception) {
+                    throw UnknownErrorException(e.message.toString())
+                }
+            }
+            val invoiceSetupDeferred = async {
+                try {
+                    manageSetup.getInvoiceSetup("1")
+                } catch (e: Exception) {
+                    throw UnknownErrorException(e.message.toString())
+                }
+            }
+
+            val subCompanySetup = subCompanySetupDeferred.await()
+            val storeSetup = storeSetupDeferred.await()
+            val invoiceSetup = invoiceSetupDeferred.await()
+
+            CombinedSetupResult(
+                subCompanySetup = subCompanySetup,
+                storeSetup = storeSetup,
+                invoiceSetup = invoiceSetup
+            )
+        }
+    }
+
 
     override fun onClickInvoice() {
         sendNewEffect(HomeUiEffect.NavigateToInvoiceScreen)
@@ -187,6 +237,7 @@ class HomeScreenModel(
         updateState {
             it.copy(
                 errorState = errorState,
+                isLoading = false,
                 errorMessage = when (errorState) {
                     is ErrorState.UnknownError -> errorState.message.toString()
                     is ErrorState.ServerError -> errorState.message.toString()
@@ -205,6 +256,7 @@ class HomeScreenModel(
         updateState {
             it.copy(
                 errorHomeDetailsState = errorState,
+                isLoading = false,
                 errorMessage = when (errorState) {
                     is ErrorState.UnknownError -> errorState.message.toString()
                     is ErrorState.ServerError -> errorState.message.toString()
@@ -219,3 +271,10 @@ class HomeScreenModel(
         }
     }
 }
+
+
+data class CombinedSetupResult(
+    val subCompanySetup: SubCompanySetup,
+    val storeSetup: StoreSetup,
+    val invoiceSetup: InvoiceSetup
+)

@@ -8,13 +8,12 @@ object AppLanguage {
 }
 
 object RetailSetup {
-    var STORE_ID = 0
-    var SUB_COMPANY_ID = 0
+    var STORE_ID = 1
+    var SUB_COMPANY_ID = 1
     var DEFAULT_CUSTOMER_ID = 0
     var DEFAULT_SALES_ID = 0
     var USER_ID = 0
     var TOKEN = ""
-    var PRICE_LVL_ID = 0
     var WORK_STATION_ID = 0
     var USER_LANGUAGE = LanguageCode.EN.value
     var DEFAULT_LANGUAGE = LanguageCode.EN.value
