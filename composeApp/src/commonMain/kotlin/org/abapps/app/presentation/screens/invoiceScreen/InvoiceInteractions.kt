@@ -7,4 +7,5 @@ interface InvoiceInteractions {
     fun onClickItemFromAllItems(index:Int)
     fun onClickItemFromInvoice(index:Int)
     fun onClickExpandedCard(expandedCardStatus:ExpandedCardStatus)
+    fun onClickItemDelete(index: Int)
 }

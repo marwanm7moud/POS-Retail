@@ -1,22 +1,26 @@
 package org.abapps.app.presentation.screens.invoiceScreen.composables
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
@@ -33,15 +37,20 @@ import org.abapps.app.presentation.screens.composable.itemBox
 import org.abapps.app.presentation.screens.invoiceScreen.NewInvoiceItemUiState
 import org.abapps.app.util.calculateBiggestWidthOnEveryRow
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun NewInvoiceItemTable(
     invoiceItems: List<NewInvoiceItemUiState>,
     selectedItemIndex: Int,
     onClickItem: (Int) -> Unit,
+    onClickItemDelete: (Int) -> Unit,
+    onClickItemEdit: (Int) -> Unit,
+    onClickItemDiscount: (Int) -> Unit,
     modifier: Modifier
 ) {
     val headers = NewInvoiceItemHeaders.entries.toTypedArray()
     val biggestColumnWidths = calculateBiggestWidths(invoiceItems)
+
 
 
     Column(
@@ -68,40 +77,89 @@ fun NewInvoiceItemTable(
         }
         repeat(invoiceItems.size) { index ->
             val item = invoiceItems[index]
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.background(
-                    color = if (selectedItemIndex == index) Color(
-                        0xFF383a3d
-                    ) else Color.Gray
-                ).clickable { onClickItem(index) }.padding(vertical = 4.dp)
-            ) {
-                headers.forEach { header ->
-                    val content = when (header) {
-                        NewInvoiceItemHeaders.ItemCode -> item.itemCode.toString()
-                        NewInvoiceItemHeaders.Alu -> item.alu.toString()
-                        NewInvoiceItemHeaders.Name -> item.name
-                        NewInvoiceItemHeaders.Qty -> item.qty.toString()
-                        NewInvoiceItemHeaders.OrgPrice -> item.orgPrice.toString()
-                        NewInvoiceItemHeaders.ItemDisc -> item.itemDisc.toString()
-                        NewInvoiceItemHeaders.Price -> item.price.toString()
-                        NewInvoiceItemHeaders.ExtPrice -> item.extPrice.toString()
-                        NewInvoiceItemHeaders.PriceWOT -> item.priceWOT.toString()
-                        NewInvoiceItemHeaders.TaxPercentage -> item.taxPerc.toString()
-                        NewInvoiceItemHeaders.TaxAmount -> item.taxAmount.toString()
-                        NewInvoiceItemHeaders.ItemSerial -> item.itemSerial.toString()
-                        NewInvoiceItemHeaders.Number -> (index+1).toString()
+            var expanded by remember { mutableStateOf(false) }
+            Box {
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = {
+                        expanded = false
                     }
-                    itemBox(
-                        content = content,
-                        modifier = Modifier
-                            .padding(4.dp)
-                            .width(with(LocalDensity.current) {
-                                (biggestColumnWidths[header] ?: 0).toDp()
-                            })
+                ) {
+                    DropdownMenuItem(
+                        onClick = {
+                            expanded = false
+                            onClickItemDelete(index)
+                        },
+                        text = {
+                            Text(text = "Delete")
+                        },
                     )
+                    DropdownMenuItem(
+                        onClick = {
+                            expanded = false
+                            onClickItemEdit(index)
+                        },
+                        text = {
+                            Text(text = "Edit")
+                        },
+                    )
+                    DropdownMenuItem(
+                        onClick = {
+                            expanded = false
+                            onClickItemDiscount(index)
+                        },
+                        text = {
+                            Text(text = "Discount")
+                        },
+                    )
+
+                }
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.background(
+                        color = if (selectedItemIndex == index) Color(
+                            0xFF383a3d
+                        ) else Color.Gray
+                    ).combinedClickable(
+                        onClick = {
+                            onClickItem(index)
+                        },
+                        onLongClick = {
+                            onClickItem(index)
+                            expanded = !expanded
+                        }
+                    )
+                        .padding(vertical = 4.dp)
+                ) {
+                    headers.forEach { header ->
+                        val content = when (header) {
+                            NewInvoiceItemHeaders.ItemCode -> item.itemCode.toString()
+                            NewInvoiceItemHeaders.Alu -> item.alu.toString()
+                            NewInvoiceItemHeaders.Name -> item.name
+                            NewInvoiceItemHeaders.Qty -> item.qty.toString()
+                            NewInvoiceItemHeaders.OrgPrice -> item.orgPrice.toString()
+                            NewInvoiceItemHeaders.ItemDisc -> item.itemDisc.toString()
+                            NewInvoiceItemHeaders.Price -> item.price.toString()
+                            NewInvoiceItemHeaders.ExtPrice -> item.extPrice.toString()
+                            NewInvoiceItemHeaders.PriceWOT -> item.priceWOT.toString()
+                            NewInvoiceItemHeaders.TaxPercentage -> item.taxPerc.toString()
+                            NewInvoiceItemHeaders.TaxAmount -> item.taxAmount.toString()
+                            NewInvoiceItemHeaders.ItemSerial -> item.itemSerial.toString()
+                            NewInvoiceItemHeaders.Number -> (index + 1).toString()
+                        }
+                        itemBox(
+                            content = content,
+                            modifier = Modifier
+                                .padding(4.dp)
+                                .width(with(LocalDensity.current) {
+                                    (biggestColumnWidths[header] ?: 0).toDp()
+                                })
+                        )
+                    }
                 }
             }
+            
+
             Spacer(Modifier.fillMaxWidth().background(Color.LightGray).height(0.5.dp))
         }
     }

@@ -53,5 +53,9 @@ class InvoiceScreenModel() :
             updateState { it.copy(expandedCardStatus = expandedCardStatus) }
     }
 
+    override fun onClickItemDelete(index: Int) {
+        updateState { it.copy(invoiceItemList = it.invoiceItemList - it.invoiceItemList[index]) }
+    }
+
 
 }

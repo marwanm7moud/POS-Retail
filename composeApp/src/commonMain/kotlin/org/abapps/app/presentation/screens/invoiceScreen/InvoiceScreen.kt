@@ -25,8 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -54,17 +52,6 @@ class InvoiceScreen : Screen {
         val invoicesScreenModel = getScreenModel<InvoiceScreenModel>()
         val state by invoicesScreenModel.state.collectAsState()
 
-        val itemList: List<ItemUiState> by remember {
-            mutableStateOf(
-                listOf(
-                    ItemUiState(),
-                    ItemUiState(),
-                    ItemUiState(),
-                    ItemUiState(),
-                    ItemUiState()
-                )
-            )
-        }
 
 
         EventHandler(invoicesScreenModel.effect) { effect, navigator ->
@@ -158,7 +145,7 @@ class InvoiceScreen : Screen {
             AnimatedVisibility(state.isAddItem) {
                 AllItemTable(
                     modifier = Modifier.padding(top = it.calculateTopPadding()),
-                    invoiceItems = itemList,
+                    invoiceItems = state.allItemsList,
                     selectedItemIndex = state.selectedItemsIndexFromAllItems,
                     onClickItem = invoicesScreenModel::onClickItemFromAllItems
                 )
@@ -189,7 +176,10 @@ class InvoiceScreen : Screen {
                             modifier = Modifier,
                             invoiceItems = state.invoiceItemList,
                             selectedItemIndex = state.selectedItemIndexFromInvoice,
-                            onClickItem = invoicesScreenModel::onClickItemFromInvoice
+                            onClickItem = invoicesScreenModel::onClickItemFromInvoice,
+                            onClickItemDiscount = {},
+                            onClickItemDelete = invoicesScreenModel::onClickItemDelete,
+                            onClickItemEdit = {},
                         )
                     }
                 }
