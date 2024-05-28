@@ -25,4 +25,5 @@ interface IStringResources {
     val userNotFound: String
     val enterYourPasscode: String
     val logo: String
+    val logonError: String
 }

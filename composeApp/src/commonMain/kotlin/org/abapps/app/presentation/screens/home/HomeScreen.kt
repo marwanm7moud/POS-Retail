@@ -1,6 +1,7 @@
 package org.abapps.app.presentation.screens.home
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -37,6 +39,7 @@ import org.abapps.app.presentation.screens.composable.SetLayoutDirection
 import org.abapps.app.presentation.screens.composable.WarningDialogue
 import org.abapps.app.presentation.screens.composable.modifier.bounceClick
 import org.abapps.app.presentation.screens.composable.snackbar.rememberStackedSnackbarHostState
+import org.abapps.app.presentation.screens.settings.SettingsScreen
 import org.abapps.app.presentation.screens.transferInvoices.TransferInvoicesScreen
 import org.abapps.app.presentation.util.EventHandler
 import org.abapps.app.resource.Resources
@@ -70,7 +73,7 @@ class HomeScreen : Screen {
         EventHandler(homeScreenModel.effect) { effect, navigator ->
             when (effect) {
                 is HomeUiEffect.NavigateToInvoiceScreen -> navigator.push(AllInvoicesScreen())
-                HomeUiEffect.NavigateToSettingScreen -> {}
+                HomeUiEffect.NavigateToSettingScreen -> navigator.push(SettingsScreen())
                 HomeUiEffect.NavigateToTransferScreen -> navigator.push(TransferInvoicesScreen())
             }
         }
@@ -118,38 +121,53 @@ class HomeScreen : Screen {
             }
 
             SetLayoutDirection(layoutDirection = LayoutDirection.Ltr) {
-                FlowRow(
+                Box(
                     modifier = Modifier.fillMaxSize(),
-                    maxItemsInEachRow = 2,
+                    contentAlignment = Alignment.Center
                 ) {
-                    IconWithBackground1(
-                        icon = painterResource(Res.drawable.invoice),
-                        contentDescription = Resources.strings.invoice,
-                        modifier = Modifier.size(80.kms)
-                            .bounceClick { homeScreenModel.onClickInvoice() },
-                        iconSize = 65.kms,
-                    )
-                    IconWithBackground1(
-                        icon = painterResource(Res.drawable.bank_transfer),
-                        contentDescription = Resources.strings.transfer,
-                        modifier = Modifier.size(80.kms)
-                            .bounceClick { homeScreenModel.onClickTransfer() },
-                        iconSize = 65.kms,
-                    )
-                    IconWithBackground1(
-                        icon = painterResource(Res.drawable.admin),
-                        contentDescription = Resources.strings.settings,
-                        modifier = Modifier.size(80.kms)
-                            .bounceClick { homeScreenModel.onClickSettings() },
-                        iconSize = 65.kms,
-                    )
-                    IconWithBackground1(
-                        icon = painterResource(Res.drawable.exit),
-                        contentDescription = Resources.strings.exit,
-                        modifier = Modifier.size(80.kms)
-                            .bounceClick { homeScreenModel.onClickExitApp() },
-                        iconSize = 65.kms,
-                    )
+                    FlowRow(
+                        modifier = Modifier.align(Alignment.Center),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        maxItemsInEachRow = 2,
+                    ) {
+                        IconWithBackground1(
+                            icon = painterResource(Res.drawable.bank_transfer),
+                            contentDescription = Resources.strings.transfer,
+                            modifier = Modifier.size(160.kms)
+                                .bounceClick { homeScreenModel.onClickTransfer() },
+                            iconSize = 130.kms,
+                            radiusSize = 16.dp,
+                            backgroundColor = Theme.colors.contentPrimary,
+                        )
+                        IconWithBackground1(
+                            icon = painterResource(Res.drawable.invoice),
+                            contentDescription = Resources.strings.invoice,
+                            modifier = Modifier.size(160.kms)
+                                .bounceClick { homeScreenModel.onClickInvoice() },
+                            iconSize = 130.kms,
+                            radiusSize = 16.dp,
+                            backgroundColor = Theme.colors.contentPrimary,
+                        )
+                        IconWithBackground1(
+                            icon = painterResource(Res.drawable.admin),
+                            contentDescription = Resources.strings.settings,
+                            modifier = Modifier.size(160.kms)
+                                .bounceClick { homeScreenModel.onClickSettings() },
+                            iconSize = 130.kms,
+                            radiusSize = 16.dp,
+                            backgroundColor = Theme.colors.contentPrimary,
+                        )
+                        IconWithBackground1(
+                            icon = painterResource(Res.drawable.exit),
+                            contentDescription = Resources.strings.exit,
+                            modifier = Modifier.size(160.kms)
+                                .bounceClick { homeScreenModel.onClickExitApp() },
+                            iconSize = 130.kms,
+                            radiusSize = 16.dp,
+                            backgroundColor = Theme.colors.contentPrimary,
+                        )
+                    }
                 }
             }
         }

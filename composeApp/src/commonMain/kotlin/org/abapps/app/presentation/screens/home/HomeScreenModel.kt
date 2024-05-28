@@ -2,23 +2,31 @@ package org.abapps.app.presentation.screens.home
 
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.CoroutineScope
+import org.abapps.app.data.util.AppLanguage
 import org.abapps.app.domain.usecase.AdminSystemUseCase
 import org.abapps.app.presentation.base.BaseScreenModel
 import org.abapps.app.presentation.base.ErrorState
 import org.abapps.app.resource.strings.IStringResources
+import org.abapps.app.util.LanguageCode
+import org.abapps.app.util.LocalizationManager
 
 class HomeScreenModel(
     private val adminSystem: AdminSystemUseCase
 ) : BaseScreenModel<HomeState, HomeUiEffect>(HomeState()),
     HomeInteractionListener {
     override val viewModelScope: CoroutineScope get() = screenModelScope
-    private lateinit var localMessage: IStringResources
-    override fun onClickInvoice() {
+    private var localMessage: IStringResources = LocalizationManager.getStringResources(
+        LanguageCode.entries.find { code ->
+            code.value == AppLanguage.code.value
+        } ?: LanguageCode.EN
+    )
 
+    override fun onClickInvoice() {
+        sendNewEffect(HomeUiEffect.NavigateToInvoiceScreen)
     }
 
     override fun onClickTransfer() {
-
+        sendNewEffect(HomeUiEffect.NavigateToTransferScreen)
     }
 
     fun retry() {
@@ -72,7 +80,37 @@ class HomeScreenModel(
     }
 
     override fun onClickSettingsOk() {
-
+        updateState {
+            it.copy(
+                errorState = null,
+                errorMessage = "",
+                settingsDialogueState = it.settingsDialogueState.copy(isLoading = true)
+            )
+        }
+        if (adminSystem.checkPermissionWithPassword(state.value.settingsDialogueState.password)) {
+            updateState {
+                it.copy(
+                    settingsDialogueState = it.settingsDialogueState.copy(
+                        isLoading = false,
+                        isVisible = false
+                    )
+                )
+            }
+            launchDelayed(1000) {
+                updateState {
+                    it.copy(
+                        settingsDialogueState = SettingsDialogueState()
+                    )
+                }
+            }
+            sendNewEffect(HomeUiEffect.NavigateToSettingScreen)
+        } else updateState {
+            it.copy(
+                errorMessage = localMessage.logonError,
+                errorState = ErrorState.PermissionDenied(localMessage.logonError),
+                settingsDialogueState = it.settingsDialogueState.copy(isLoading = false),
+            )
+        }
     }
 
     override fun showErrorDialogue() {

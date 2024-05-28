@@ -27,4 +27,5 @@ data class Arabic(
     override val no: String = "لا",
     override val yes: String = "نعم",
     override val logo: String = "شعار",
+    override val logonError: String = "خطأ في التسجيل"
 ) : IStringResources
