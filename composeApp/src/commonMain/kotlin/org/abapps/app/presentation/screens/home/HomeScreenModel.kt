@@ -3,7 +3,9 @@ package org.abapps.app.presentation.screens.home
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.CoroutineScope
 import org.abapps.app.data.util.AppLanguage
+import org.abapps.app.data.util.RetailSetup
 import org.abapps.app.domain.usecase.AdminSystemUseCase
+import org.abapps.app.domain.usecase.ManageSetupUseCase
 import org.abapps.app.presentation.base.BaseScreenModel
 import org.abapps.app.presentation.base.ErrorState
 import org.abapps.app.resource.strings.IStringResources
@@ -11,7 +13,8 @@ import org.abapps.app.util.LanguageCode
 import org.abapps.app.util.LocalizationManager
 
 class HomeScreenModel(
-    private val adminSystem: AdminSystemUseCase
+    private val adminSystem: AdminSystemUseCase,
+    private val manageSetup: ManageSetupUseCase,
 ) : BaseScreenModel<HomeState, HomeUiEffect>(HomeState()),
     HomeInteractionListener {
     override val viewModelScope: CoroutineScope get() = screenModelScope
@@ -20,6 +23,32 @@ class HomeScreenModel(
             code.value == AppLanguage.code.value
         } ?: LanguageCode.EN
     )
+
+    init {
+        getSetup()
+    }
+
+    private fun getSetup() {
+        updateState { it.copy(isLoading = true, errorState = null, errorMessage = "") }
+        tryToExecute(
+            function = { manageSetup.getSubCompanySetup("1") },
+            onSuccess = { subCompanySetup ->
+                updateState { it.copy(isLoading = false, errorState = null, errorMessage = "") }
+                RetailSetup.apply {
+                    VAT = subCompanySetup.vat
+                    LEN_DECIMAL = subCompanySetup.lenDecimal
+                    ROUND_PRICE = subCompanySetup.roundPrice
+                    TAX_EFFECT = subCompanySetup.calcDiscountBeforeTax
+                    TAX_EFFECT_WITH_ITEM = subCompanySetup.calcDiscItemOnPriceWot
+                    FIFO = subCompanySetup.calcCostFifo
+                    LIFO = subCompanySetup.calcCostLifo
+                    AVERAGE = subCompanySetup.calcCostAverage
+                    LAST_COST = subCompanySetup.calcCostLastCost
+                }
+            },
+            onError = ::onError
+        )
+    }
 
     override fun onClickInvoice() {
         sendNewEffect(HomeUiEffect.NavigateToInvoiceScreen)
@@ -30,7 +59,7 @@ class HomeScreenModel(
     }
 
     fun retry() {
-
+        getSetup()
     }
 
     override fun onUserNameChanged(username: String) {
@@ -158,6 +187,24 @@ class HomeScreenModel(
         updateState {
             it.copy(
                 errorState = errorState,
+                errorMessage = when (errorState) {
+                    is ErrorState.UnknownError -> errorState.message.toString()
+                    is ErrorState.ServerError -> errorState.message.toString()
+                    is ErrorState.UnAuthorized -> errorState.message.toString()
+                    is ErrorState.NotFound -> errorState.message.toString()
+                    is ErrorState.ValidationNetworkError -> errorState.message.toString()
+                    is ErrorState.NetworkError -> errorState.message.toString()
+                    is ErrorState.ValidationError -> errorState.message.toString()
+                    else -> "Something wrong happened please try again !"
+                }
+            )
+        }
+    }
+
+    private fun onError(errorState: ErrorState) {
+        updateState {
+            it.copy(
+                errorHomeDetailsState = errorState,
                 errorMessage = when (errorState) {
                     is ErrorState.UnknownError -> errorState.message.toString()
                     is ErrorState.ServerError -> errorState.message.toString()
