@@ -87,7 +87,7 @@ private fun NoContent(
     description: String = Resources.strings.nullDataDescription,
 ) {
     ErrorPage(
-        image = painterResource(DrawableResource("not_found.xml")),
+        image = painterResource(DrawableResource("drawable/not_found.xml")),
         title = title,
         description = description,
     )
@@ -98,7 +98,7 @@ private fun NoContent(
 @Composable
 private fun NoInternet(onClick: () -> Unit = {}) {
     ErrorPage(
-        image = painterResource(DrawableResource("no_internet.xml")),
+        image = painterResource(DrawableResource("drawable/no_internet.xml")),
         title = Resources.strings.noInternetMessage,
         description = Resources.strings.noInternetDescription,
         retryButton = {
@@ -119,7 +119,7 @@ private fun ErrorHappened(
     onClick: () -> Unit = {},
 ) {
     ErrorPage(
-        image = painterResource(DrawableResource("cute.xml")),
+        image = painterResource(DrawableResource("drawable/cute.xml")),
         title = title,
         description = Resources.strings.somethingWrongHappened,
         retryButton = {

@@ -6,6 +6,7 @@ data class AllInvoicesState(
     val errorMessage: String = "",
     val errorState: ErrorState? = null,
     val isLoading: Boolean = false,
+    val showErrorScreen: Boolean = false,
     val invoicesList: List<InvoiceUiState> = listOf(
         InvoiceUiState(),
         InvoiceUiState(),

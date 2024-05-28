@@ -21,4 +21,10 @@ class AllInvoicesScreenModel() :
     override fun onClickItemDelete(index: Int) {
         updateState { it.copy(invoicesList = it.invoicesList - it.invoicesList[index]) }
     }
+    fun retry(){
+        //todo
+    }
+    override fun showErrorScreen() {
+        updateState { it.copy(showErrorScreen = true) }
+    }
 }

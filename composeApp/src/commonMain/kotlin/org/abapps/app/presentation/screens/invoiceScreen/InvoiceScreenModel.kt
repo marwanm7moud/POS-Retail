@@ -27,6 +27,9 @@ class InvoiceScreenModel() :
             )
         }
     }
+    fun retry() {
+       //todo
+    }
 
     override fun onClickBack() {
         if (state.value.isAddItem)
@@ -55,6 +58,10 @@ class InvoiceScreenModel() :
 
     override fun onClickItemDelete(index: Int) {
         updateState { it.copy(invoiceItemList = it.invoiceItemList - it.invoiceItemList[index]) }
+    }
+
+    override fun showErrorScreen() {
+        updateState { it.copy(showErrorScreen = true) }
     }
 
 

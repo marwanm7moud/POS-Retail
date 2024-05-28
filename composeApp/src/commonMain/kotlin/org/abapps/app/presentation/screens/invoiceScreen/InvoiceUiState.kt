@@ -1,6 +1,12 @@
 package org.abapps.app.presentation.screens.invoiceScreen
 
+import org.abapps.app.presentation.base.ErrorState
+
 data class NewInvoiceUiState(
+    val errorMessage: String = "",
+    val errorState: ErrorState? = null,
+    val isLoading: Boolean = false,
+    val showErrorScreen: Boolean = false,
     val isAddItem: Boolean = false,
     val selectedItemsIndexFromAllItems: List<Int> = emptyList(),
     val selectedItemIndexFromInvoice: Int = -1,

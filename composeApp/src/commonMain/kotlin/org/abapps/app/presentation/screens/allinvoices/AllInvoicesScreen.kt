@@ -1,10 +1,12 @@
 package org.abapps.app.presentation.screens.allinvoices
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
@@ -12,6 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -20,8 +23,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import com.beepbeep.designSystem.ui.composable.StAppBar
+import com.beepbeep.designSystem.ui.composable.animate.FadeAnimation
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.abapps.app.presentation.base.ErrorState
 import org.abapps.app.presentation.screens.allinvoices.composables.InvoicesItemTable
+import org.abapps.app.presentation.screens.composable.HandleErrorState
 import org.abapps.app.presentation.screens.invoiceScreen.InvoiceScreen
 import org.abapps.app.presentation.util.EventHandler
 import org.abapps.app.util.getScreenModel
@@ -41,6 +47,9 @@ class AllInvoicesScreen : Screen {
                 }
                 else -> {}
             }
+        }
+        LaunchedEffect(state.errorState) {
+            if (state.errorState != null) screenModel.showErrorScreen()
         }
 
         Scaffold(modifier = Modifier.fillMaxSize(), containerColor = Color.Transparent,
@@ -75,15 +84,40 @@ class AllInvoicesScreen : Screen {
                 }
             })
         {
-            InvoicesItemTable(
-                modifier = Modifier.padding(top = it.calculateTopPadding()),
-                invoiceItems = state.invoicesList,
-                selectedItemIndex = state.selectedInvoiceIndex,
-                onClickItem = screenModel::onClickItem,
-                onClickItemEdit = {},
-                onClickItemDelete = screenModel::onClickItemDelete,
-                onClickItemCopy = {}
-            )
+
+            FadeAnimation(state.showErrorScreen) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    HandleErrorState(
+                        title = state.errorMessage,
+                        error = state.errorState
+                            ?: ErrorState.UnknownError("Something wrong happened please try again later!"),
+                        onClick = screenModel::retry
+                    )
+                }
+            }
+
+            FadeAnimation(visible = state.isLoading) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+            AnimatedVisibility(!state.isLoading){
+                InvoicesItemTable(
+                    modifier = Modifier.padding(top = it.calculateTopPadding()),
+                    invoiceItems = state.invoicesList,
+                    selectedItemIndex = state.selectedInvoiceIndex,
+                    onClickItem = screenModel::onClickItem,
+                    onClickItemEdit = {},
+                    onClickItemDelete = screenModel::onClickItemDelete,
+                    onClickItemCopy = {}
+                )
+            }
         }
     }
 }

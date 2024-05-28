@@ -8,4 +8,6 @@ interface InvoiceInteractions {
     fun onClickItemFromInvoice(index:Int)
     fun onClickExpandedCard(expandedCardStatus:ExpandedCardStatus)
     fun onClickItemDelete(index: Int)
+    fun showErrorScreen()
+
 }
