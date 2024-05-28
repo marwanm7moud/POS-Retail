@@ -42,7 +42,6 @@ import com.beepbeep.designSystem.ui.composable.animate.FadeAnimation
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.abapps.app.presentation.base.ErrorState
 import org.abapps.app.presentation.screens.allinvoices.AllInvoicesScreen
-import org.abapps.app.presentation.screens.composable.DropDownState
 import org.abapps.app.presentation.screens.composable.DropDownTextField
 import org.abapps.app.presentation.screens.composable.HandleErrorState
 import org.abapps.app.presentation.screens.posInvoiceScreen.composables.AllItemTable
@@ -240,24 +239,21 @@ private fun BrandonCard(
             Box(modifier = Modifier.weight(1f)) {
                 StTextField(
                     label = Resources.strings.invoiceNumber,
-                    text = "",
+                    text = state.invoiceNumber.toString(),
                     onValueChange = {},
+                    readOnly = true
                 )
             }
             DropDownTextField(
                 modifier = Modifier.weight(1f),
-                options = listOf(
-                    DropDownState(0, "gg"),
-                    DropDownState(1, "gg"),
-                    DropDownState(2, "gg")
-                ),
-                selectedItem = DropDownState(0, "gg"),
+                options = state.invoiceTypes.map { it.toDropDownState() },
+                selectedItem = state.selectedInvoiceType.toDropDownState(),
                 label = Resources.strings.invoiceType
             ) {}
             Box(modifier = Modifier.weight(1f)) {
                 StTextField(
                     label = Resources.strings.status,
-                    text = Resources.strings.regular,
+                    text = state.selectedInvoiceType.name,
                     onValueChange = {},
                     readOnly = true
                 )
@@ -265,11 +261,11 @@ private fun BrandonCard(
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Box(modifier = Modifier.weight(1f)) {
-                StTextField(
-                    label = Resources.strings.customer,
-                    text = "",
-                    onValueChange = {},
-                )
+                DropDownTextField(
+                    options = state.customers.map { it.toDropDownState() },
+                    selectedItem = state.selectedCustomer.toDropDownState(),
+                    label = Resources.strings.customer
+                ) {}
             }
             Box(modifier = Modifier.weight(1f)) {
                 StTextField(
@@ -295,32 +291,21 @@ private fun BrandonCard(
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             DropDownTextField(
                 modifier = Modifier.weight(1f),
-                options = listOf(
-                    DropDownState(0, "gg"),
-                    DropDownState(1, "gg"),
-                    DropDownState(2, "gg")
-                ),
-                selectedItem = DropDownState(0, "gg"),
-                label = Resources.strings.status
+                options = state.stores.map { it.toDropDownState() },
+                selectedItem = state.selectedStore.toDropDownState(),
+                label = Resources.strings.store
             ) {}
+            StTextField(
+                modifier = Modifier.weight(1f),
+                label = Resources.strings.cashier,
+                text = state.cashierName,
+                onValueChange = {},
+                readOnly = true
+            )
             DropDownTextField(
                 modifier = Modifier.weight(1f),
-                options = listOf(
-                    DropDownState(0, "gg"),
-                    DropDownState(1, "gg"),
-                    DropDownState(2, "gg")
-                ),
-                selectedItem = DropDownState(0, "gg"),
-                label = Resources.strings.cashier
-            ) {}
-            DropDownTextField(
-                modifier = Modifier.weight(1f),
-                options = listOf(
-                    DropDownState(0, "gg"),
-                    DropDownState(1, "gg"),
-                    DropDownState(2, "gg")
-                ),
-                selectedItem = DropDownState(0, "gg"),
+                options = state.sales.map { it.toDropDownState() },
+                selectedItem = state.selectedSalePerson.toDropDownState(),
                 label = Resources.strings.salesPerson
             ) {}
         }

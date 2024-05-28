@@ -23,11 +23,6 @@ data class SettingState(
 )
 
 @Immutable
-data class SetupState(
-    val setupItems: List<SetupItemState> = emptyList()
-)
-
-@Immutable
 data class SetupItemState(
     val id: Int = 0,
     val name: String = ""

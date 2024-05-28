@@ -1,7 +1,9 @@
 package org.abapps.app.presentation.screens.posInvoiceScreen
 
+import androidx.compose.runtime.Immutable
 import org.abapps.app.domain.entities.Item
 import org.abapps.app.presentation.base.ErrorState
+import org.abapps.app.presentation.screens.composable.DropDownState
 
 data class NewInvoiceUiState(
     val errorMessage: String = "",
@@ -13,7 +15,30 @@ data class NewInvoiceUiState(
     val selectedItemIndexFromInvoice: Int = -1,
     val invoiceItemList: List<NewInvoiceItemUiState> = emptyList(),
     val allItemsList: List<ItemUiState> = emptyList(),
-    val expandedCardStatus: ExpandedCardStatus? = null
+    val expandedCardStatus: ExpandedCardStatus? = null,
+    val stores: List<InvoiceDataState> = emptyList(),
+    val selectedStore: InvoiceDataState = InvoiceDataState(),
+    val sales: List<InvoiceDataState> = emptyList(),
+    val selectedSalePerson: InvoiceDataState = InvoiceDataState(),
+    val customers: List<InvoiceDataState> = emptyList(),
+    val selectedCustomer: InvoiceDataState = InvoiceDataState(),
+    val invoiceTypes: List<InvoiceDataState> = listOf(
+        InvoiceDataState(1, "Regular"),
+        InvoiceDataState(2, "Return"),
+    ),
+    val selectedInvoiceType: InvoiceDataState = invoiceTypes.first(),
+    val invoiceNumber: Int = 0,
+    val cashierName: String = "",
+)
+
+@Immutable
+data class InvoiceDataState(
+    val id: Int = 0,
+    val name: String = ""
+)
+
+fun InvoiceDataState.toDropDownState(): DropDownState = DropDownState(
+    id, name
 )
 
 enum class ExpandedCardStatus {
