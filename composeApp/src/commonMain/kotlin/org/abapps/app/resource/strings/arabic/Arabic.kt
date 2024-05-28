@@ -41,4 +41,6 @@ data class Arabic(
     override val comment: String = "تعليق",
     override val brandon: String = "برانداون",
     override val items: String = "الأصناف",
+    override val allItems: String = "جميع الأصناف",
+    override val addItem: String = "اضافة صنف",
 ) : IStringResources

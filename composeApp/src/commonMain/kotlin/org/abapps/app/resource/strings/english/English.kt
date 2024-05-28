@@ -40,5 +40,7 @@ data class English(
     override val salesPerson: String = "Sales Person",
     override val comment: String = "Comment",
     override val brandon: String = "Brandon",
-    override val items: String = "Items"
+    override val items: String = "Items",
+    override val allItems: String = "All Items",
+    override val addItem: String = "Add Item"
 ) : IStringResources
