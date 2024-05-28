@@ -5,16 +5,23 @@ import kotlinx.coroutines.CoroutineScope
 import org.abapps.app.data.util.RetailSetup
 import org.abapps.app.domain.usecase.ManageInvoiceUseCase
 import org.abapps.app.presentation.base.BaseScreenModel
+import org.abapps.app.presentation.base.ErrorState
 
 class InvoiceScreenModel(
     private val manageInvoice: ManageInvoiceUseCase
-) :
-    BaseScreenModel<NewInvoiceUiState, InvoiceUiEffect>(NewInvoiceUiState()), InvoiceInteractions {
+) : BaseScreenModel<NewInvoiceUiState, InvoiceUiEffect>(NewInvoiceUiState()), InvoiceInteractions {
 
     override val viewModelScope: CoroutineScope get() = screenModelScope
 
     override fun onClickAddItem() {
-        updateState { it.copy(isAddItem = true) }
+        updateState {
+            it.copy(
+                isAddItem = true,
+                isLoading = true,
+                errorState = null,
+                errorMessage = "",
+            )
+        }
         tryToExecute(
             function = {
                 manageInvoice.getAllItems(
@@ -27,16 +34,34 @@ class InvoiceScreenModel(
             onSuccess = { items ->
                 updateState {
                     it.copy(
+                        isLoading = false,
+                        errorState = null,
+                        errorMessage = "",
                         allItemsList = items.map { item ->
                             item.toUiState()
                         },
                     )
                 }
             },
-            onError = {
-                println(it.toString())
-            }
+            onError = ::onError
         )
+    }
+
+    private fun onError(error: ErrorState) {
+        updateState {
+            it.copy(
+                errorState = error,
+                isLoading = false,
+                errorMessage = when (error) {
+                    is ErrorState.UnknownError -> error.message.toString()
+                    is ErrorState.ServerError -> error.message.toString()
+                    is ErrorState.NotFound -> error.message.toString()
+                    is ErrorState.ValidationNetworkError -> error.message.toString()
+                    is ErrorState.NetworkError -> error.message.toString()
+                    else -> "Something wrong happened please try again !"
+                }
+            )
+        }
     }
 
     override fun onClickDone() {
@@ -44,9 +69,7 @@ class InvoiceScreenModel(
             invoice.copy(
                 isAddItem = false,
                 invoiceItemList = invoice.selectedItemsIndexFromAllItems.map {
-                    invoice.allItemsList.get(
-                        it
-                    )
+                    invoice.allItemsList[it]
                 }.map { it.toInvoiceItemUiState() },
                 selectedItemsIndexFromAllItems = emptyList()
             )

@@ -26,4 +26,19 @@ interface IStringResources {
     val enterYourPasscode: String
     val logo: String
     val logonError: String
+    val invoiceNumber: String
+    val invoiceType: String
+    val status: String
+    val regular: String
+    val returnInvoice: String
+    val customer: String
+    val sourceType: String
+    val store: String
+    val cashier: String
+    val salesPerson: String
+    val comment: String
+    val brandon: String
+    val items: String
+    val allItems: String
+    val addItem: String
 }

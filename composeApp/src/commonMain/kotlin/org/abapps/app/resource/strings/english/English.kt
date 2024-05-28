@@ -28,4 +28,17 @@ data class English(
     override val yes: String = "Yes",
     override val logo: String = "Logo",
     override val logonError: String = "Logon Error",
+    override val invoiceNumber: String = "Invc No",
+    override val invoiceType: String = "Invc Type",
+    override val status: String = "Status",
+    override val regular: String = "Regular",
+    override val returnInvoice: String = "Return",
+    override val customer: String = "Customer",
+    override val sourceType: String = "Source Type",
+    override val store: String = "Store",
+    override val cashier: String = "Cashier",
+    override val salesPerson: String = "Sales Person",
+    override val comment: String = "Comment",
+    override val brandon: String = "Brandon",
+    override val items: String = "Items"
 ) : IStringResources

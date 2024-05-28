@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -35,17 +37,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import com.beepbeep.designSystem.ui.composable.StAppBar
+import com.beepbeep.designSystem.ui.composable.StTextField
 import com.beepbeep.designSystem.ui.composable.animate.FadeAnimation
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.abapps.app.presentation.base.ErrorState
 import org.abapps.app.presentation.screens.allinvoices.AllInvoicesScreen
+import org.abapps.app.presentation.screens.composable.DropDownState
+import org.abapps.app.presentation.screens.composable.DropDownTextField
 import org.abapps.app.presentation.screens.composable.HandleErrorState
 import org.abapps.app.presentation.screens.posInvoiceScreen.composables.AllItemTable
-import org.abapps.app.presentation.screens.posInvoiceScreen.composables.BrandonCard
 import org.abapps.app.presentation.screens.posInvoiceScreen.composables.CalculationsBar
 import org.abapps.app.presentation.screens.posInvoiceScreen.composables.ExpandableCard
 import org.abapps.app.presentation.screens.posInvoiceScreen.composables.NewInvoiceItemTable
 import org.abapps.app.presentation.util.EventHandler
+import org.abapps.app.resource.Resources
 import org.abapps.app.util.getScreenModel
 import org.jetbrains.compose.resources.painterResource
 import pos_retail.composeapp.generated.resources.Res
@@ -56,8 +61,6 @@ class InvoiceScreen : Screen {
     override fun Content() {
         val invoicesScreenModel = getScreenModel<InvoiceScreenModel>()
         val state by invoicesScreenModel.state.collectAsState()
-
-
 
         EventHandler(invoicesScreenModel.effect) { effect, navigator ->
             when (effect) {
@@ -71,7 +74,6 @@ class InvoiceScreen : Screen {
             if (state.errorState != null) invoicesScreenModel.showErrorScreen()
         }
 
-
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = Color.Transparent,
@@ -79,7 +81,7 @@ class InvoiceScreen : Screen {
                 StAppBar(onNavigateUp = {
                     invoicesScreenModel.onClickBack()
                 },
-                    title = if (!state.isAddItem) "Invoice" else "All Items",
+                    title = if (!state.isAddItem) Resources.strings.invoice else Resources.strings.allItems,
                     isBackIconVisible = true,
                     painterResource = painterResource(Res.drawable.ic_back),
                     actions = {
@@ -97,7 +99,7 @@ class InvoiceScreen : Screen {
                                     tint = Theme.colors.contentPrimary
                                 )
                                 Text(
-                                    "Add Item",
+                                    Resources.strings.addItem,
                                     style = Theme.typography.title.copy(color = Color.White)
                                 )
                             }
@@ -160,7 +162,7 @@ class InvoiceScreen : Screen {
                     HandleErrorState(
                         title = state.errorMessage,
                         error = state.errorState
-                            ?: ErrorState.UnknownError("Something wrong happened please try again later!"),
+                            ?: ErrorState.UnknownError(Resources.strings.somethingWrongHappened),
                         onClick = invoicesScreenModel::retry
                     )
                 }
@@ -190,16 +192,19 @@ class InvoiceScreen : Screen {
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     ExpandableCard(
-                        title = "Brandon",
+                        title = Resources.strings.brandon,
                         expandedState = state.expandedCardStatus == ExpandedCardStatus.Brandon,
                         onClickCard = {
                             invoicesScreenModel.onClickExpandedCard(ExpandedCardStatus.Brandon)
                         }
                     ) {
-                        BrandonCard()
+                        BrandonCard(
+                            state = state,
+                            listener = invoicesScreenModel as InvoiceInteractions
+                        )
                     }
                     ExpandableCard(
-                        title = "Items",
+                        title = Resources.strings.items,
                         expandedState = state.expandedCardStatus == ExpandedCardStatus.Items,
                         onClickCard = {
                             invoicesScreenModel.onClickExpandedCard(ExpandedCardStatus.Items)
@@ -221,3 +226,110 @@ class InvoiceScreen : Screen {
     }
 }
 
+@Composable
+private fun BrandonCard(
+    modifier: Modifier = Modifier,
+    state: NewInvoiceUiState,
+    listener: InvoiceInteractions
+) {
+    Column(
+        modifier = modifier.padding(horizontal = 8.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Box(modifier = Modifier.weight(1f)) {
+                StTextField(
+                    label = Resources.strings.invoiceNumber,
+                    text = "",
+                    onValueChange = {},
+                )
+            }
+            DropDownTextField(
+                modifier = Modifier.weight(1f),
+                options = listOf(
+                    DropDownState(0, "gg"),
+                    DropDownState(1, "gg"),
+                    DropDownState(2, "gg")
+                ),
+                selectedItem = DropDownState(0, "gg"),
+                label = Resources.strings.invoiceType
+            ) {}
+            Box(modifier = Modifier.weight(1f)) {
+                StTextField(
+                    label = Resources.strings.status,
+                    text = Resources.strings.regular,
+                    onValueChange = {},
+                    readOnly = true
+                )
+            }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Box(modifier = Modifier.weight(1f)) {
+                StTextField(
+                    label = Resources.strings.customer,
+                    text = "",
+                    onValueChange = {},
+                )
+            }
+            Box(modifier = Modifier.weight(1f)) {
+                StTextField(
+                    label = Resources.strings.sourceType,
+                    text = Resources.strings.invoice,
+                    onValueChange = {},
+                    readOnly = true
+                )
+            }
+//            DropDownTextField(
+//                modifier = Modifier.weight(1f),
+//                options = listOf(
+//                    DropDownState(0, "gg"),
+//                    DropDownState(1, "gg"),
+//                    DropDownState(2, "gg")
+//                ),
+//                selectedItem = DropDownState(0, "gg"),
+//                label = "Sales Order"
+//            ) {
+//
+//            }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            DropDownTextField(
+                modifier = Modifier.weight(1f),
+                options = listOf(
+                    DropDownState(0, "gg"),
+                    DropDownState(1, "gg"),
+                    DropDownState(2, "gg")
+                ),
+                selectedItem = DropDownState(0, "gg"),
+                label = Resources.strings.status
+            ) {}
+            DropDownTextField(
+                modifier = Modifier.weight(1f),
+                options = listOf(
+                    DropDownState(0, "gg"),
+                    DropDownState(1, "gg"),
+                    DropDownState(2, "gg")
+                ),
+                selectedItem = DropDownState(0, "gg"),
+                label = Resources.strings.cashier
+            ) {}
+            DropDownTextField(
+                modifier = Modifier.weight(1f),
+                options = listOf(
+                    DropDownState(0, "gg"),
+                    DropDownState(1, "gg"),
+                    DropDownState(2, "gg")
+                ),
+                selectedItem = DropDownState(0, "gg"),
+                label = Resources.strings.salesPerson
+            ) {}
+        }
+        StTextField(
+            label = Resources.strings.comment,
+            textFieldModifier = Modifier.fillMaxWidth().height(96.dp),
+            text = "",
+            onValueChange = {},
+            readOnly = true
+        )
+    }
+}

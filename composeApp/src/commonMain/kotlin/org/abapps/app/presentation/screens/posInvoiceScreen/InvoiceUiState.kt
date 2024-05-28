@@ -17,8 +17,7 @@ data class NewInvoiceUiState(
 )
 
 enum class ExpandedCardStatus {
-    Items,
-    Brandon
+    Items, Brandon
 }
 
 data class NewInvoiceItemUiState(
@@ -159,11 +158,10 @@ fun ItemUiState.toInvoiceItemUiState(): NewInvoiceItemUiState = NewInvoiceItemUi
     qty = qty,
     orgPrice = price,
     itemDisc = itemDiscount,
-    price = price, //todo
-    extPrice = price,//todo
-    priceWOT = price,//todo
-    taxPerc = taxPerc,//todo
-    taxAmount = price,//todo
-    itemSerial = 0,//todo
-
+    price = price,
+    extPrice = price,
+    priceWOT = price,
+    taxPerc = taxPerc,
+    taxAmount = price,
+    itemSerial = 0,
 )
