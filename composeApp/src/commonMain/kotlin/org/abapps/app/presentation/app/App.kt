@@ -13,11 +13,12 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.abapps.app.presentation.screens.home.HomeScreen
 import org.abapps.app.resource.StarTouchTheme
 import org.abapps.app.util.getScreenModel
-import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import pos_retail.composeapp.generated.resources.Res
+import pos_retail.composeapp.generated.resources.background_pattern
+import org.abapps.app.presentation.screens.splash.SplashScreen
 
 @Composable
 fun App() {
@@ -35,11 +36,11 @@ object MainApp : Screen {
             ) {
                 Image(
                     modifier = Modifier.fillMaxSize().background(Theme.colors.background),
-                    painter = painterResource(DrawableResource("drawable/background_pattern.png")),
+                    painter = painterResource(Res.drawable.background_pattern),
                     contentDescription = "",
                     contentScale = ContentScale.Crop
                 )
-                Navigator(HomeScreen()) {
+                Navigator(SplashScreen) {
                     SlideTransition(it)
                 }
             }
