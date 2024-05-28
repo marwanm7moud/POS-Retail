@@ -4,7 +4,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import org.abapps.app.util.LanguageCode
 import org.abapps.app.util.getDateNow
 
-
 object AppLanguage {
     val code: MutableStateFlow<String> = MutableStateFlow(LanguageCode.EN.value)
 }
