@@ -113,4 +113,24 @@ class InvoiceScreenModel(
         updateState { it.copy(showErrorScreen = true) }
     }
 
+    override fun onChooseCustomer(id: Int) {
+        updateState { it.copy(selectedCustomer = it.selectedCustomer.copy(id = id)) }
+    }
+
+    override fun onChooseStore(id: Int) {
+        updateState { it.copy(selectedStore = it.selectedStore.copy(id = id)) }
+    }
+
+    override fun onChooseSalesPerson(id: Int) {
+        updateState { it.copy(selectedSalePerson = it.selectedSalePerson.copy(id = id)) }
+    }
+
+    override fun onChooseInvoiceType(id: Int) {
+        updateState { it.copy(selectedInvoiceType = it.selectedInvoiceType.copy(id = id)) }
+    }
+
+    override fun onCommentChanged(comment: String) {
+        updateState { it.copy(comment = comment) }
+    }
+
 }

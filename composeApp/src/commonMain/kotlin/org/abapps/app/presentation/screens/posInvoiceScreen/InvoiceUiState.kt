@@ -29,6 +29,7 @@ data class NewInvoiceUiState(
     val selectedInvoiceType: InvoiceDataState = invoiceTypes.first(),
     val invoiceNumber: Int = 0,
     val cashierName: String = "",
+    val comment: String = "",
 )
 
 @Immutable

@@ -249,7 +249,7 @@ private fun BrandonCard(
                 options = state.invoiceTypes.map { it.toDropDownState() },
                 selectedItem = state.selectedInvoiceType.toDropDownState(),
                 label = Resources.strings.invoiceType
-            ) {}
+            ) { listener.onChooseInvoiceType(it) }
             Box(modifier = Modifier.weight(1f)) {
                 StTextField(
                     label = Resources.strings.status,
@@ -265,7 +265,7 @@ private fun BrandonCard(
                     options = state.customers.map { it.toDropDownState() },
                     selectedItem = state.selectedCustomer.toDropDownState(),
                     label = Resources.strings.customer
-                ) {}
+                ) { listener.onChooseCustomer(it) }
             }
             Box(modifier = Modifier.weight(1f)) {
                 StTextField(
@@ -294,7 +294,7 @@ private fun BrandonCard(
                 options = state.stores.map { it.toDropDownState() },
                 selectedItem = state.selectedStore.toDropDownState(),
                 label = Resources.strings.store
-            ) {}
+            ) { listener.onChooseStore(it) }
             StTextField(
                 modifier = Modifier.weight(1f),
                 label = Resources.strings.cashier,
@@ -307,14 +307,13 @@ private fun BrandonCard(
                 options = state.sales.map { it.toDropDownState() },
                 selectedItem = state.selectedSalePerson.toDropDownState(),
                 label = Resources.strings.salesPerson
-            ) {}
+            ) { listener.onChooseSalesPerson(it) }
         }
         StTextField(
             label = Resources.strings.comment,
             textFieldModifier = Modifier.fillMaxWidth().height(96.dp),
-            text = "",
-            onValueChange = {},
-            readOnly = true
+            text = state.comment,
+            onValueChange = listener::onCommentChanged,
         )
     }
 }
