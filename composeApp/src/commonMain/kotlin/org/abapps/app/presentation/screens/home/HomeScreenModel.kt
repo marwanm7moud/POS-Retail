@@ -14,11 +14,15 @@ class HomeScreenModel(
     override val viewModelScope: CoroutineScope get() = screenModelScope
     private lateinit var localMessage: IStringResources
     override fun onClickInvoice() {
-        TODO("Not yet implemented")
+
     }
 
     override fun onClickTransfer() {
-        TODO("Not yet implemented")
+
+    }
+
+    fun retry() {
+
     }
 
     override fun onUserNameChanged(username: String) {
@@ -68,7 +72,7 @@ class HomeScreenModel(
     }
 
     override fun onClickSettingsOk() {
-        TODO("Not yet implemented")
+
     }
 
     override fun showErrorDialogue() {
