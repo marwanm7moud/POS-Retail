@@ -82,7 +82,7 @@ fun InvoiceSetupDto.toEntity(): InvoiceSetup {
         storeId = this.storeId ?: 0,
         allawPartialPaymentOfCheck = this.allawPartialPaymentOfCheck ?: false,
         checkPrinter = this.checkPrinter ?: 0,
-        defaultCust = this.defaultCust ?: 0,
+        defaultCust = this.defaultCust ?: 0L,
         defaultSeller = this.defaultSeller ?: 0,
         closeInvcWhenBalanceZero = this.closeInvcWhenBalanceZero ?: false,
         multiSeller = this.multiSeller ?: false,

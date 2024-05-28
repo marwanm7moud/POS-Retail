@@ -7,7 +7,7 @@ data class InvoiceSetupDto(
     val storeId: Int? = null,
     val allawPartialPaymentOfCheck: Boolean? = null,
     val checkPrinter: Int? = null,
-    val defaultCust: Int? = null,
+    val defaultCust: Long? = null,
     val defaultSeller: Int? = null,
     val closeInvcWhenBalanceZero: Boolean? = null,
     val multiSeller: Boolean? = null,

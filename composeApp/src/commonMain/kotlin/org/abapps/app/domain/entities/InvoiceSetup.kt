@@ -4,7 +4,7 @@ data class InvoiceSetup(
     val storeId: Int,
     val allawPartialPaymentOfCheck: Boolean,
     val checkPrinter: Int,
-    val defaultCust: Int,
+    val defaultCust: Long,
     val defaultSeller: Int,
     val closeInvcWhenBalanceZero: Boolean,
     val multiSeller: Boolean,
