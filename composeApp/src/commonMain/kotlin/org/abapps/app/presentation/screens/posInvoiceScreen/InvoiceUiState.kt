@@ -1,5 +1,6 @@
 package org.abapps.app.presentation.screens.posInvoiceScreen
 
+import org.abapps.app.domain.entities.Item
 import org.abapps.app.presentation.base.ErrorState
 
 data class NewInvoiceUiState(
@@ -11,17 +12,11 @@ data class NewInvoiceUiState(
     val selectedItemsIndexFromAllItems: List<Int> = emptyList(),
     val selectedItemIndexFromInvoice: Int = -1,
     val invoiceItemList: List<NewInvoiceItemUiState> = emptyList(),
-    val allItemsList: List<ItemUiState> = listOf(
-        ItemUiState(),
-        ItemUiState(),
-        ItemUiState(),
-        ItemUiState(),
-        ItemUiState()
-    ),
-    val expandedCardStatus:ExpandedCardStatus? = null
+    val allItemsList: List<ItemUiState> = emptyList(),
+    val expandedCardStatus: ExpandedCardStatus? = null
 )
 
-enum class ExpandedCardStatus{
+enum class ExpandedCardStatus {
     Items,
     Brandon
 }
@@ -98,7 +93,66 @@ data class ItemUiState(
     val indexId: Int = 151321,
 )
 
-fun ItemUiState.toInvoiceItemUiState():NewInvoiceItemUiState = NewInvoiceItemUiState(
+fun Item.toUiState(): ItemUiState {
+    return ItemUiState(
+        itemID = this.itemID,
+        itemCode = this.itemCode,
+        upc = this.upc,
+        alu = this.upc.toLong(),
+        name = this.name,
+        name2 = this.name2,
+        description = this.description,
+        styleId = this.styleId,
+        styleName = this.styleName,
+        onHand = this.onHand,
+        freeCard = this.freeCard,
+        freeCardPrice = this.freeCardPrice.toInt(),
+        price = this.price.toInt(),
+        taxPerc = this.taxPerc.toInt(),
+        qty = this.qty,
+        itemDiscount = this.itemDiscount.toInt(),
+        grid1 = this.grid1,
+        grid2 = this.grid2,
+        grid3 = this.grid3,
+        vendId = this.vendId,
+        vendName = this.vendName,
+        nonInvn = this.nonInvn,
+        taxable = this.taxable,
+        taxId = this.taxId,
+        itemType = this.itemType,
+        sClassId = this.sClassId,
+        subClass = this.subClass,
+        classId = this.classId,
+        className = this.className,
+        deptId = this.deptId,
+        department = this.department,
+        active = this.active,
+        openPrice = this.openPrice,
+        UDF1 = this.UDF1,
+        UDF2 = this.UDF2,
+        UDF3 = this.UDF3,
+        UDF4 = this.UDF4,
+        UDF5 = this.UDF5,
+        UDF6 = this.UDF6,
+        UDF7 = this.UDF7,
+        UDF8 = this.UDF8,
+        UDF9 = this.UDF9,
+        UDF10 = this.UDF10,
+        UDF11 = this.UDF11,
+        UDF12 = this.UDF12,
+        UDF13 = this.UDF13,
+        UDF14 = this.UDF14,
+        UDF15 = this.UDF15,
+        UDF16 = this.UDF16,
+        UDF17 = this.UDF17,
+        UDF18 = this.UDF18,
+        UDF19 = this.UDF19,
+        UDF20 = this.UDF20,
+        indexId = this.indexId
+    )
+}
+
+fun ItemUiState.toInvoiceItemUiState(): NewInvoiceItemUiState = NewInvoiceItemUiState(
     itemCode = itemCode,
     alu = alu,
     name = name,
@@ -110,6 +164,6 @@ fun ItemUiState.toInvoiceItemUiState():NewInvoiceItemUiState = NewInvoiceItemUiS
     priceWOT = price,//todo
     taxPerc = taxPerc,//todo
     taxAmount = price,//todo
-    itemSerial = 0 ,//todo
+    itemSerial = 0,//todo
 
 )

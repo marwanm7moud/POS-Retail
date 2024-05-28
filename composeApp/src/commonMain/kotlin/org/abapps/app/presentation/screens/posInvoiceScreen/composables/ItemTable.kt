@@ -31,7 +31,6 @@ import org.abapps.app.presentation.screens.composable.itemBox
 import org.abapps.app.presentation.screens.posInvoiceScreen.ItemUiState
 import org.abapps.app.util.calculateBiggestWidthOnEveryRow
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AllItemTable(
     modifier: Modifier,
@@ -55,7 +54,7 @@ fun AllItemTable(
         ) {
             headers.forEach { header ->
                 itemBox(
-                    content =  header.title,
+                    content = header.title,
                     modifier = Modifier
                         .padding(4.dp)
                         .width(with(LocalDensity.current) {
@@ -132,7 +131,7 @@ fun AllItemTable(
                             AllItemHeaders.INDEX_ID -> item.indexId.toString()
                         }
                         itemBox(
-                            content =  content,
+                            content = content,
                             modifier = Modifier
                                 .padding(4.dp)
                                 .width(with(LocalDensity.current) {
@@ -150,45 +149,88 @@ fun AllItemTable(
 @Composable
 private fun calculateBiggestWidths(invoiceItems: List<ItemUiState>): SnapshotStateMap<AllItemHeaders, Int> {
     val biggestColumnWidths = remember { mutableStateMapOf<AllItemHeaders, Int>() }
-    biggestColumnWidths[AllItemHeaders.ITEM_ID] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemID.toString() } + AllItemHeaders.ITEM_ID.title)
-    biggestColumnWidths[AllItemHeaders.ITEM_CODE] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemCode.toString() } + AllItemHeaders.ITEM_CODE.title)
-    biggestColumnWidths[AllItemHeaders.UPC] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.upc.toString() } + AllItemHeaders.UPC.title)
-    biggestColumnWidths[AllItemHeaders.ALU] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.alu.toString() } + AllItemHeaders.ALU.title)
-    biggestColumnWidths[AllItemHeaders.NAME] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.name.toString() } + AllItemHeaders.NAME.title)
-    biggestColumnWidths[AllItemHeaders.NAME2] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.name2.toString() } + AllItemHeaders.NAME2.title)
-    biggestColumnWidths[AllItemHeaders.DESCRIPTION] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.description.toString() } + AllItemHeaders.DESCRIPTION.title)
-    biggestColumnWidths[AllItemHeaders.STYLE_ID] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.styleId.toString() } + AllItemHeaders.STYLE_ID.title)
-    biggestColumnWidths[AllItemHeaders.STYLE_NAME] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.styleName.toString() } + AllItemHeaders.STYLE_NAME.title)
-    biggestColumnWidths[AllItemHeaders.ON_HAND] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.onHand.toString() } + AllItemHeaders.ON_HAND.title)
-    biggestColumnWidths[AllItemHeaders.FREE_CARD] = calculateBiggestWidthOnEveryRow(listOf(
-        AllItemHeaders.FREE_CARD.title))
-    biggestColumnWidths[AllItemHeaders.FREE_CARD_PRICE] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.freeCardPrice.toString() } + AllItemHeaders.FREE_CARD_PRICE.title)
-    biggestColumnWidths[AllItemHeaders.PRICE] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.price.toString() } + AllItemHeaders.PRICE.title)
-    biggestColumnWidths[AllItemHeaders.QTY] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.qty.toString() } + AllItemHeaders.QTY.title)
-    biggestColumnWidths[AllItemHeaders.ITEM_DISCOUNT] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemDiscount.toString() } + AllItemHeaders.ITEM_DISCOUNT.title)
-    biggestColumnWidths[AllItemHeaders.GRID1] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.grid1.toString() } + AllItemHeaders.GRID1.title)
-    biggestColumnWidths[AllItemHeaders.GRID2] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.grid2.toString() } + AllItemHeaders.GRID2.title)
-    biggestColumnWidths[AllItemHeaders.GRID3] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.grid3.toString() } + AllItemHeaders.GRID3.title)
-    biggestColumnWidths[AllItemHeaders.VEND_ID] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.vendId.toString() } + AllItemHeaders.VEND_ID.title)
-    biggestColumnWidths[AllItemHeaders.VEND_NAME] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.vendName.toString() } + AllItemHeaders.VEND_NAME.title)
-    biggestColumnWidths[AllItemHeaders.NON_INVN] = calculateBiggestWidthOnEveryRow(listOf(
-        AllItemHeaders.NON_INVN.title))
-    biggestColumnWidths[AllItemHeaders.TAXABLE] = calculateBiggestWidthOnEveryRow(listOf(
-        AllItemHeaders.TAXABLE.title) )
-    biggestColumnWidths[AllItemHeaders.TAX_ID] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.taxId.toString() } + AllItemHeaders.TAX_ID.title)
-    biggestColumnWidths[AllItemHeaders.ITEM_TYPE] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemType.toString() } + AllItemHeaders.ITEM_TYPE.title)
+    biggestColumnWidths[AllItemHeaders.ITEM_ID] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemID.toString() } + AllItemHeaders.ITEM_ID.title)
+    biggestColumnWidths[AllItemHeaders.ITEM_CODE] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemCode.toString() } + AllItemHeaders.ITEM_CODE.title)
+    biggestColumnWidths[AllItemHeaders.UPC] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.upc.toString() } + AllItemHeaders.UPC.title)
+    biggestColumnWidths[AllItemHeaders.ALU] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.alu.toString() } + AllItemHeaders.ALU.title)
+    biggestColumnWidths[AllItemHeaders.NAME] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.name.toString() } + AllItemHeaders.NAME.title)
+    biggestColumnWidths[AllItemHeaders.NAME2] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.name2.toString() } + AllItemHeaders.NAME2.title)
+    biggestColumnWidths[AllItemHeaders.DESCRIPTION] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.description.toString() } + AllItemHeaders.DESCRIPTION.title)
+    biggestColumnWidths[AllItemHeaders.STYLE_ID] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.styleId.toString() } + AllItemHeaders.STYLE_ID.title)
+    biggestColumnWidths[AllItemHeaders.STYLE_NAME] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.styleName.toString() } + AllItemHeaders.STYLE_NAME.title)
+    biggestColumnWidths[AllItemHeaders.ON_HAND] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.onHand.toString() } + AllItemHeaders.ON_HAND.title)
+    biggestColumnWidths[AllItemHeaders.FREE_CARD] = calculateBiggestWidthOnEveryRow(
+        listOf(
+            AllItemHeaders.FREE_CARD.title
+        )
+    )
+    biggestColumnWidths[AllItemHeaders.FREE_CARD_PRICE] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.freeCardPrice.toString() } + AllItemHeaders.FREE_CARD_PRICE.title)
+    biggestColumnWidths[AllItemHeaders.PRICE] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.price.toString() } + AllItemHeaders.PRICE.title)
+    biggestColumnWidths[AllItemHeaders.QTY] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.qty.toString() } + AllItemHeaders.QTY.title)
+    biggestColumnWidths[AllItemHeaders.ITEM_DISCOUNT] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemDiscount.toString() } + AllItemHeaders.ITEM_DISCOUNT.title)
+    biggestColumnWidths[AllItemHeaders.GRID1] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.grid1.toString() } + AllItemHeaders.GRID1.title)
+    biggestColumnWidths[AllItemHeaders.GRID2] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.grid2.toString() } + AllItemHeaders.GRID2.title)
+    biggestColumnWidths[AllItemHeaders.GRID3] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.grid3.toString() } + AllItemHeaders.GRID3.title)
+    biggestColumnWidths[AllItemHeaders.VEND_ID] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.vendId.toString() } + AllItemHeaders.VEND_ID.title)
+    biggestColumnWidths[AllItemHeaders.VEND_NAME] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.vendName.toString() } + AllItemHeaders.VEND_NAME.title)
+    biggestColumnWidths[AllItemHeaders.NON_INVN] = calculateBiggestWidthOnEveryRow(
+        listOf(
+            AllItemHeaders.NON_INVN.title
+        )
+    )
+    biggestColumnWidths[AllItemHeaders.TAXABLE] = calculateBiggestWidthOnEveryRow(
+        listOf(
+            AllItemHeaders.TAXABLE.title
+        )
+    )
+    biggestColumnWidths[AllItemHeaders.TAX_ID] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.taxId.toString() } + AllItemHeaders.TAX_ID.title)
+    biggestColumnWidths[AllItemHeaders.ITEM_TYPE] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemType.toString() } + AllItemHeaders.ITEM_TYPE.title)
 
-    biggestColumnWidths[AllItemHeaders.SCLASS_ID] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.sClassId.toString() } + AllItemHeaders.SCLASS_ID.title)
-    biggestColumnWidths[AllItemHeaders.SUB_CLASS] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.subClass.toString() } + AllItemHeaders.SUB_CLASS.title)
-    biggestColumnWidths[AllItemHeaders.CLASS_ID] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.classId.toString() } + AllItemHeaders.CLASS_ID.title)
-    biggestColumnWidths[AllItemHeaders.CLASS_NAME] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.className.toString() } + AllItemHeaders.CLASS_NAME.title)
-    biggestColumnWidths[AllItemHeaders.DEPT_ID] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.deptId.toString() } + AllItemHeaders.DEPT_ID.title)
-    biggestColumnWidths[AllItemHeaders.DEPARTMENT] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.department.toString() } + AllItemHeaders.DEPARTMENT.title)
-    biggestColumnWidths[AllItemHeaders.ACTIVE] =calculateBiggestWidthOnEveryRow(listOf(
-        AllItemHeaders.ACTIVE.title))
-    biggestColumnWidths[AllItemHeaders.OPEN_PRICE] = calculateBiggestWidthOnEveryRow(listOf(
-        AllItemHeaders.OPEN_PRICE.title))
-    biggestColumnWidths[AllItemHeaders.INDEX_ID] = calculateBiggestWidthOnEveryRow(invoiceItems.map { it.indexId.toString() } + AllItemHeaders.INDEX_ID.title)
+    biggestColumnWidths[AllItemHeaders.SCLASS_ID] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.sClassId.toString() } + AllItemHeaders.SCLASS_ID.title)
+    biggestColumnWidths[AllItemHeaders.SUB_CLASS] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.subClass.toString() } + AllItemHeaders.SUB_CLASS.title)
+    biggestColumnWidths[AllItemHeaders.CLASS_ID] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.classId.toString() } + AllItemHeaders.CLASS_ID.title)
+    biggestColumnWidths[AllItemHeaders.CLASS_NAME] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.className.toString() } + AllItemHeaders.CLASS_NAME.title)
+    biggestColumnWidths[AllItemHeaders.DEPT_ID] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.deptId.toString() } + AllItemHeaders.DEPT_ID.title)
+    biggestColumnWidths[AllItemHeaders.DEPARTMENT] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.department.toString() } + AllItemHeaders.DEPARTMENT.title)
+    biggestColumnWidths[AllItemHeaders.ACTIVE] = calculateBiggestWidthOnEveryRow(
+        listOf(
+            AllItemHeaders.ACTIVE.title
+        )
+    )
+    biggestColumnWidths[AllItemHeaders.OPEN_PRICE] = calculateBiggestWidthOnEveryRow(
+        listOf(
+            AllItemHeaders.OPEN_PRICE.title
+        )
+    )
+    biggestColumnWidths[AllItemHeaders.INDEX_ID] =
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.indexId.toString() } + AllItemHeaders.INDEX_ID.title)
 
     return biggestColumnWidths
 }

@@ -2,16 +2,31 @@ package org.abapps.app.presentation.screens.posInvoiceScreen
 
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.CoroutineScope
+import org.abapps.app.domain.usecase.ManageInvoiceUseCase
 import org.abapps.app.presentation.base.BaseScreenModel
 
-class InvoiceScreenModel() :
+class InvoiceScreenModel(
+    private val manageInvoice: ManageInvoiceUseCase
+) :
     BaseScreenModel<NewInvoiceUiState, InvoiceUiEffect>(NewInvoiceUiState()), InvoiceInteractions {
 
     override val viewModelScope: CoroutineScope get() = screenModelScope
 
     override fun onClickAddItem() {
         updateState { it.copy(isAddItem = true) }
-        println(state.value.isAddItem)
+        tryToExecute(
+            function = { manageInvoice.getAllItems(1, 1, 10000000001, false) },
+            onSuccess = { items ->
+                updateState {
+                    it.copy(
+                        allItemsList = items.map { item ->
+                            item.toUiState()
+                        },
+                    )
+                }
+            },
+            onError = {}
+        )
     }
 
     override fun onClickDone() {
@@ -27,8 +42,9 @@ class InvoiceScreenModel() :
             )
         }
     }
+
     fun retry() {
-       //todo
+
     }
 
     override fun onClickBack() {
@@ -63,6 +79,5 @@ class InvoiceScreenModel() :
     override fun showErrorScreen() {
         updateState { it.copy(showErrorScreen = true) }
     }
-
 
 }
