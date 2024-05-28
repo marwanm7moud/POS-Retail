@@ -1,0 +1,33 @@
+package org.abapps.app.domain.entities
+
+data class Invoice(
+    val invcId: Int,
+    val invcNo: Int,
+    val invcType: String,
+    val invcDate: String,
+    val status: String,
+    val reverse: Int,
+    val comment: String,
+    val cancelled: Boolean,
+    val hold: Boolean,
+    val post: Boolean,
+    val postedDate: String,
+    val custId: Int,
+    val cashierId: Int,
+    val sellerId: Int,
+    val createDate: String,
+    val modifiedDate: String,
+    val userId: Int,
+    val scomId: Int,
+    val storeId: Int,
+    val ws: Int,
+    val numPrint: Int,
+    val pointId: Int,
+    val soId: Int,
+    val sourceType: String,
+    val voidReasonId: Int,
+    val eUuid: String,
+    val ePreviousUuid: String,
+    val eSubmissionId: String,
+    val eStatus: String
+)
