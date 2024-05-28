@@ -28,8 +28,8 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.abapps.app.presentation.base.ErrorState
 import org.abapps.app.presentation.screens.composable.HandleErrorState
 import org.abapps.app.presentation.screens.home.HomeScreen
-import org.abapps.app.presentation.screens.posInvoiceScreen.InvoiceScreen
 import org.abapps.app.presentation.screens.transferInvoices.composables.TransferInvoicesTable
+import org.abapps.app.presentation.screens.transferNewInvoice.TransferNewInvoiceScreen
 import org.abapps.app.presentation.util.EventHandler
 import org.abapps.app.util.getScreenModel
 import org.jetbrains.compose.resources.painterResource
@@ -45,7 +45,7 @@ class TransferInvoicesScreen : Screen {
         EventHandler(screenModel.effect){effect, navigator ->
             when(effect){
                 is TransferInvoicesUiEffect.NavigateToNewInvoice-> {
-                    navigator.push(InvoiceScreen())
+                    navigator.push(TransferNewInvoiceScreen())
                 }
                 is TransferInvoicesUiEffect.NavigateToHomeScreen-> {
                     navigator.replace(HomeScreen())
