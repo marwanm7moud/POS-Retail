@@ -34,9 +34,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.StOutlinedButton
+import org.abapps.app.presentation.screens.posInvoiceScreen.NewInvoiceUiState
 
 @Composable
-fun CalculationsBar() {
+fun CalculationsBar(state: NewInvoiceUiState) {
     var expandedState by remember { mutableStateOf(true) }
     val rotationState by animateFloatAsState(
         targetValue = if (expandedState) 180f else 0f
@@ -55,12 +56,12 @@ fun CalculationsBar() {
                 .padding(horizontal = 16.dp),
             contentAlignment = Alignment.Center
 
-        ){
+        ) {
             IconButton(
                 modifier = Modifier
                     .alpha(0.5f)
                     .rotate(rotationState),
-                onClick = {expandedState = !expandedState}
+                onClick = { expandedState = !expandedState }
             ) {
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
@@ -84,8 +85,16 @@ fun CalculationsBar() {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                        CalculationItem("Sub Total", "1000")
-                        CalculationItem("Total Tax", "140")
+                        CalculationItem(
+                            "Sub Total",
+                            state.invoiceItemList.sumOf { it.priceWOT.toDouble() }.toFloat()
+                                .toString()
+                        )
+                        CalculationItem(
+                            "Total Tax",
+                            state.invoiceItemList.sumOf { it.taxAmount.toDouble() }.toFloat()
+                                .toString()
+                        )
                         Spacer(modifier = Modifier.height(16.dp))
                         CalculationItem("Net Total", "1000")
                         CalculationItem("Fee", "0")
