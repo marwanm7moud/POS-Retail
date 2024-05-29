@@ -8,8 +8,8 @@ class CalculationInvoiceUseCase {
 
     fun calculateItemsPrice(items: List<NewInvoiceItemUiState>): List<NewInvoiceItemUiState> {
         return items.map { item ->
-            if (!RetailSetup.VAT && ((!RetailSetup.TAX_EFFECT && !RetailSetup.TAX_EFFECT_WITH_ITEM))
-                || (RetailSetup.TAX_EFFECT && RetailSetup.TAX_EFFECT_WITH_ITEM)
+            if ((!RetailSetup.VAT && (!RetailSetup.TAX_EFFECT && !RetailSetup.TAX_EFFECT_WITH_ITEM)) ||
+                (!RetailSetup.VAT && (RetailSetup.TAX_EFFECT && RetailSetup.TAX_EFFECT_WITH_ITEM))
             ) {
                 val priceWOT = item.orgPrice
                 val taxAmount = item.taxPerc.div(100f) * priceWOT
@@ -21,7 +21,9 @@ class CalculationInvoiceUseCase {
                     price = price,
                     extPrice = extPrice,
                 )
-            } else {
+            } else if ((RetailSetup.VAT && (!RetailSetup.TAX_EFFECT && !RetailSetup.TAX_EFFECT_WITH_ITEM)) ||
+                (RetailSetup.VAT && (RetailSetup.TAX_EFFECT && RetailSetup.TAX_EFFECT_WITH_ITEM))
+            ) {
                 val priceWOT = item.orgPrice / (1 + (item.taxPerc / 100))
                 val taxAmount = item.taxPerc.div(100f) * priceWOT
                 val price = priceWOT + taxAmount
@@ -32,6 +34,8 @@ class CalculationInvoiceUseCase {
                     price = price,
                     extPrice = extPrice,
                 )
+            } else {
+                item.copy()
             }
         }
     }
