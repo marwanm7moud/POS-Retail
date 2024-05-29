@@ -8,8 +8,8 @@ class CalculationInvoiceUseCase {
 
     fun calculateItemsPrice(items: List<NewInvoiceItemUiState>): List<NewInvoiceItemUiState> {
         return items.map { item ->
-            if ((!RetailSetup.VAT && (!RetailSetup.TAX_EFFECT && !RetailSetup.TAX_EFFECT_WITH_ITEM)) ||
-                (!RetailSetup.VAT && (RetailSetup.TAX_EFFECT && RetailSetup.TAX_EFFECT_WITH_ITEM))
+            if ((!RetailSetup.VAT && (!RetailSetup.TAX_EFFECT || !RetailSetup.TAX_EFFECT_WITH_ITEM)) ||
+                (!RetailSetup.VAT && (RetailSetup.TAX_EFFECT || RetailSetup.TAX_EFFECT_WITH_ITEM))
             ) {
                 val priceWOT = item.orgPrice
                 val taxAmount = item.taxPerc.div(100f) * priceWOT
@@ -21,8 +21,8 @@ class CalculationInvoiceUseCase {
                     price = price,
                     extPrice = extPrice,
                 )
-            } else if ((RetailSetup.VAT && (!RetailSetup.TAX_EFFECT && !RetailSetup.TAX_EFFECT_WITH_ITEM)) ||
-                (RetailSetup.VAT && (RetailSetup.TAX_EFFECT && RetailSetup.TAX_EFFECT_WITH_ITEM))
+            } else if ((RetailSetup.VAT && (!RetailSetup.TAX_EFFECT || !RetailSetup.TAX_EFFECT_WITH_ITEM)) ||
+                (RetailSetup.VAT && (RetailSetup.TAX_EFFECT || RetailSetup.TAX_EFFECT_WITH_ITEM))
             ) {
                 val priceWOT = item.orgPrice / (1 + (item.taxPerc / 100))
                 val taxAmount = item.taxPerc.div(100f) * priceWOT
@@ -46,13 +46,18 @@ class CalculationInvoiceUseCase {
     ): Calculations {
         val subTotal = items.sumOf { it.priceWOT.toDouble() }.toFloat()
         val totalTax = items.sumOf { it.taxAmount.toDouble() }.toFloat()
-        val remaining = subTotal - calculations.totalPaid
-        val netTotal = subTotal - calculations.discountAmount
+        val discountTotal = subTotal * (calculations.discountAmount / 100)
+        val netTotal = if (RetailSetup.VAT && calculations.discountAmount != 0f) discountTotal
+        else subTotal - discountTotal
+        val amount = if (!RetailSetup.VAT) subTotal + totalTax - discountTotal + calculations.fee
+        else if (!RetailSetup.TAX_EFFECT || !RetailSetup.TAX_EFFECT_WITH_ITEM) netTotal + totalTax + calculations.fee
+        else netTotal + totalTax + calculations.fee
+        val remaining = amount - calculations.totalPaid
         return calculations.copy(
             subTotal = subTotal,
             totalTax = totalTax,
             netTotal = netTotal,
-            amount = netTotal + totalTax + calculations.fee,
+            amount = amount,
             remaining = remaining
         )
     }

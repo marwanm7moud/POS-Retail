@@ -314,6 +314,11 @@ class InvoiceScreenModel(
                 calculations = it.calculations.copy(discountAmount = discount.value)
             )
         }
+        val newCalc = calculationInvoice.calculateInvoice(
+            state.value.invoiceItemList,
+            state.value.calculations
+        )
+        updateState { it.copy(calculations = newCalc) }
     }
 
     override fun onClickItemDiscount(itemId: Long) {
@@ -346,7 +351,7 @@ class InvoiceScreenModel(
     }
 
     override fun onChangeDiscount(discountAmount: String) {
-        if (discountAmount.isNotBlank())
+        if (discountAmount.isNotBlank()) {
             updateState {
                 it.copy(
                     calculations = it.calculations.copy(
@@ -354,6 +359,12 @@ class InvoiceScreenModel(
                     )
                 )
             }
+            val newCalc = calculationInvoice.calculateInvoice(
+                state.value.invoiceItemList,
+                state.value.calculations
+            )
+            updateState { it.copy(calculations = newCalc) }
+        }
     }
 }
 
