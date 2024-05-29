@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.StOutlinedButton
+import org.abapps.app.resource.Resources
 
 @Composable
 fun CalculationsBar() {
@@ -84,16 +85,16 @@ fun CalculationsBar() {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                        CalculationItem("Sub Total", "1000")
-                        CalculationItem("Total Tax", "140")
+                        CalculationItem(Resources.strings.subTotal, "1000")
+                        CalculationItem(Resources.strings.totalTax, "140")
                         Spacer(modifier = Modifier.height(16.dp))
-                        CalculationItem("Net Total", "1000")
-                        CalculationItem("Fee", "0")
+                        CalculationItem(Resources.strings.netTotal, "1000")
+                        CalculationItem(Resources.strings.fee, "0")
                     }
                     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                        CalculationItem("Amount", "1140")
-                        CalculationItem("Total Paid", "0")
-                        CalculationItem("Remaining", "1140")
+                        CalculationItem(Resources.strings.amount, "1140")
+                        CalculationItem(Resources.strings.totalPaid, "0")
+                        CalculationItem(Resources.strings.remaining, "1140")
                     }
                     Column(
                         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -102,8 +103,8 @@ fun CalculationsBar() {
                             RoundedCornerShape(12.dp)
                         ).padding(16.dp)
                     ) {
-                        CalculationItem("Taken", "1140")
-                        CalculationItem("Given", "0")
+                        CalculationItem(Resources.strings.taken, "1140")
+                        CalculationItem(Resources.strings.given, "0")
                     }
                     StOutlinedButton(
                         title = "Update",

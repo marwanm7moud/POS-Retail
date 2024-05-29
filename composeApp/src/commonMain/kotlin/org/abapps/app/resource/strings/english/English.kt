@@ -42,5 +42,15 @@ data class English(
     override val brandon: String = "Brandon",
     override val items: String = "Items",
     override val allItems: String = "All Items",
-    override val addItem: String = "Add Item"
-) : IStringResources
+    override val addItem: String = "Add Item",
+    override val subTotal: String = "Sub Total",
+    override val totalTax: String = "Total Tax",
+    override val netTotal: String = "Net Total",
+    override val fee: String = "Fee",
+    override val amount: String = "Amount",
+    override val totalPaid: String = "Total Paid",
+    override val remaining: String = "Remaining",
+    override val taken: String = "Taken",
+    override val given: String = "Given",
+
+    ) : IStringResources

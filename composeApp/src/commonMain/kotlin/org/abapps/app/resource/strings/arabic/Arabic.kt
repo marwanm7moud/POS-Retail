@@ -43,4 +43,13 @@ data class Arabic(
     override val items: String = "الأصناف",
     override val allItems: String = "جميع الأصناف",
     override val addItem: String = "اضافة صنف",
+    override val subTotal: String = "اجمالي سعر الصنف",
+    override val totalTax: String = "اجمالي الضريبه",
+    override val netTotal: String = "اجمالي السعر بعد الضريبه",
+    override val fee: String = "مصاريف",
+    override val amount: String = "المبلغ",
+    override val totalPaid: String = "اجمالي المدفوع",
+    override val remaining: String = "المتبقي",
+    override val taken: String = "المدفوع",
+    override val given: String = "المتبقي",
 ) : IStringResources
