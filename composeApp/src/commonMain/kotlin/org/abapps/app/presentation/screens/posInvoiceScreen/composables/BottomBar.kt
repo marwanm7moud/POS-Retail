@@ -164,7 +164,7 @@ fun CalculationsBar(
                         DropDownTextField(
                             modifier = Modifier.width(120.dp),
                             options = state.discounts.map { it.toDropDownState() },
-                            selectedItem = state.selectedDiscount.toDropDownState(),
+                            selectedItem = state.selectedInvoiceDiscount.toDropDownState(),
                             label = Resources.strings.discount
                         ) { listener.onChooseDiscount(it) }
 
@@ -182,7 +182,7 @@ fun CalculationsBar(
                                 BasicTextField(
                                     value = state.calculations.discountAmount.toString(),
                                     onValueChange = listener::onChangeDiscount,
-                                    readOnly = state.selectedDiscount.type != "Open_Amount",
+                                    readOnly = state.selectedInvoiceDiscount.type != "Open_Amount",
                                     textStyle = TextStyle(
                                         color = Color.White,
                                         textAlign = TextAlign.Center

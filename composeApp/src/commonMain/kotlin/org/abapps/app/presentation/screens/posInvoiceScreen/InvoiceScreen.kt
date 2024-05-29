@@ -65,7 +65,6 @@ import org.abapps.app.presentation.screens.posInvoiceScreen.composables.NewInvoi
 import org.abapps.app.presentation.util.EventHandler
 import org.abapps.app.resource.Resources
 import org.abapps.app.util.getScreenModel
-import org.abapps.app.util.roundToDecimals
 import org.jetbrains.compose.resources.painterResource
 import pos_retail.composeapp.generated.resources.Res
 import pos_retail.composeapp.generated.resources.ic_back
@@ -381,15 +380,15 @@ private fun DiscountDialog(state: NewInvoiceUiState, listener: InvoiceInteractio
                     modifier = Modifier.width(80.dp)
                 )
                 Text(
-                    text = state.calculations.discountAmount.toString(),
+                    text = state.invoiceItemList.find { it.itemID == state.itemId }?.priceWOT?.toString()
+                        ?: "0f",
                     color = Color.White,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.width(120.dp)
                         .border(
                             BorderStroke(0.5.dp, Color.LightGray),
                             RoundedCornerShape(12.dp)
-                        )
-                        .padding(vertical = 8.dp)
+                        ).padding(vertical = 8.dp)
                 )
             }
             Row(
@@ -403,7 +402,8 @@ private fun DiscountDialog(state: NewInvoiceUiState, listener: InvoiceInteractio
                     modifier = Modifier.padding(end = 8.dp)
                 )
                 Text(
-                    text = ((state.calculations.discountAmount / 100) * state.calculations.subTotal).toString(),
+                    text = ((state.calculationItem.discountAmount / 100) * (state.invoiceItemList.find { it.itemID == state.itemId }?.priceWOT
+                        ?: 0f)).toString(),
                     color = Color.White,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.width(120.dp)
@@ -419,10 +419,10 @@ private fun DiscountDialog(state: NewInvoiceUiState, listener: InvoiceInteractio
         DropDownTextField(
             modifier = Modifier,
             options = state.discounts.map { it.toDropDownState() },
-            selectedItem = state.selectedDiscount.toDropDownState(),
+            selectedItem = state.selectedItemDiscount.toDropDownState(),
             label = Resources.strings.discount
         ) {
-            listener.onChooseDiscount(it)
+            listener.onChooseDiscountItem(it)
         }
 
         Spacer(Modifier.height(16.dp))
@@ -441,13 +441,13 @@ private fun DiscountDialog(state: NewInvoiceUiState, listener: InvoiceInteractio
                     modifier = Modifier.width(80.dp)
                 )
                 BasicTextField(
-                    value = state.calculations.discountAmount.toString(),
-                    onValueChange = listener::onChangeDiscount,
+                    value = state.calculationItem.discountAmount.toString(),
+                    onValueChange = listener::onChangeDiscountItem,
                     textStyle = TextStyle(
                         color = Color.White,
                         textAlign = TextAlign.Center
                     ),
-                    readOnly = state.selectedDiscount.type != "Open_Amount",
+                    readOnly = state.selectedItemDiscount.type != "Open_Amount",
                     modifier = Modifier.width(120.dp)
                         .border(
                             BorderStroke(0.5.dp, Color.LightGray),
@@ -466,13 +466,8 @@ private fun DiscountDialog(state: NewInvoiceUiState, listener: InvoiceInteractio
                     modifier = Modifier.padding(end = 8.dp)
                 )
                 Text(
-                    text = if (RetailSetup.VAT) ((state.calculations.discountAmount / 100) *
-                            (state.calculations.subTotal + state.calculations.totalTax)).roundToDecimals(
-                        3
-                    ).toString() else ((state.calculations.discountAmount / 100) *
-                            (state.calculations.subTotal)).roundToDecimals(
-                        3
-                    ).toString(),
+                    text = ((state.calculationItem.discountAmount / 100) * (state.invoiceItemList.find { it.itemID == state.itemId }?.priceWOT
+                        ?: 0f)).toString(),
                     color = Color.White,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.width(120.dp)

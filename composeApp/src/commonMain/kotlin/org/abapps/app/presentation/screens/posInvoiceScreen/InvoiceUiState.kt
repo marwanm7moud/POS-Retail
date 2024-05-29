@@ -35,12 +35,15 @@ data class NewInvoiceUiState(
     val discounts: List<DiscountDataState> = listOf(
         DiscountDataState(0, "", "", value = 0f),
     ),
-    val selectedDiscount: DiscountDataState = discounts.first(),
+    val selectedInvoiceDiscount: DiscountDataState = discounts.first(),
+    val selectedItemDiscount: DiscountDataState = discounts.first(),
     val selectedInvoiceType: InvoiceDataState = invoiceTypes.first(),
     val invoiceNumber: Int = 0,
     val cashierName: String = RetailSetup.CASHIER_NAME,
     val comment: String = "",
     val calculations: Calculations = Calculations(),
+    val calculationItem: Calculations = calculations.copy(discountAmount = 0f),
+    val itemId: Long = 0L,
 )
 
 data class Calculations(
