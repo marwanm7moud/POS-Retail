@@ -48,8 +48,11 @@ class CalculationInvoiceUseCase {
         calculations: Calculations
     ): Calculations {
         val subTotal = items.sumOf { it.priceWOT.toDouble() }.toFloat().roundToDecimals(2)
-        val totalTax = items.sumOf { it.taxAmount.toDouble() }.toFloat()
-            .roundToDecimals(RetailSetup.LEN_DECIMAL)
+        val totalTax =
+            if (calculations.discountAmount == 0f) items.sumOf { it.taxAmount.toDouble() }.toFloat()
+                .roundToDecimals(RetailSetup.LEN_DECIMAL) else items.sumOf { it.taxAmount.toDouble() }
+                .toFloat()
+                .roundToDecimals(RetailSetup.LEN_DECIMAL) * (calculations.discountAmount / 100)
         val discountTotal =
             (subTotal * (calculations.discountAmount / 100)).roundToDecimals(3)
         val netTotal =
