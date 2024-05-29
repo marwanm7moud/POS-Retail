@@ -51,4 +51,7 @@ interface IStringResources {
     val taken: String
     val given: String
     val discount: String
+    val discountAmount: String
+    val pay: String
+    val percentage: String
 }

@@ -150,7 +150,7 @@ fun CalculationsBar(
                             )
                         }
                         StOutlinedButton(
-                            title = "Update",
+                            title = Resources.strings.pay,
                             onClick = {},
                             modifier = Modifier
                         )
@@ -206,7 +206,8 @@ fun CalculationsBar(
                                 modifier = Modifier.width(80.dp)
                             )
                             Text(
-                                text = ((state.calculations.discountAmount / 100) * state.calculations.subTotal).roundToDecimals(
+                                text = ((state.calculations.discountAmount / 100) *
+                                        (state.calculations.subTotal + state.calculations.totalTax)).roundToDecimals(
                                     3
                                 ).toString(),
                                 color = Color.White,
