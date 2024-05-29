@@ -184,7 +184,14 @@ class InvoiceScreenModel(
 
     override fun onClickBack() {
         if (state.value.isAddItem)
-            updateState { it.copy(isAddItem = false) }
+            updateState {
+                it.copy(
+                    isAddItem = false,
+                    errorMessage = "",
+                    errorState = null,
+                    isLoading = false
+                )
+            }
         else
             sendNewEffect(InvoiceUiEffect.NavigateBackToAllInvoices)
     }
@@ -247,6 +254,14 @@ class InvoiceScreenModel(
 
     override fun onDismissErrorDialogue() {
         updateState { it.copy(errorDialogueIsVisible = false) }
+    }
+
+    override fun onChangeQty(qty: String, itemCode: Int) {
+        updateState {
+            it.copy(
+                invoiceItemList = it.invoiceItemList.map { if (it.itemCode == itemCode) it.copy(qty = qty) else it }
+            )
+        }
     }
 
 }

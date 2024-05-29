@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,10 +30,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateMap
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.abapps.app.presentation.screens.composable.itemBox
 import org.abapps.app.presentation.screens.posInvoiceScreen.NewInvoiceItemUiState
@@ -46,7 +52,8 @@ fun NewInvoiceItemTable(
     onClickItemDelete: (Int) -> Unit,
     onClickItemEdit: (Int) -> Unit,
     onClickItemDiscount: (Int) -> Unit,
-    modifier: Modifier
+    modifier: Modifier,
+    onChangeQty : (String , Int)->Unit
 ) {
     val headers = NewInvoiceItemHeaders.entries.toTypedArray()
     val biggestColumnWidths = calculateBiggestWidths(invoiceItems)
@@ -147,23 +154,48 @@ fun NewInvoiceItemTable(
                             NewInvoiceItemHeaders.ItemSerial -> item.itemSerial.toString()
                             NewInvoiceItemHeaders.Number -> (index + 1).toString()
                         }
-                        itemBox(
-                            content = content,
-                            modifier = Modifier
-                                .padding(4.dp)
-                                .width(with(LocalDensity.current) {
-                                    (biggestColumnWidths[header] ?: 0).toDp()
-                                })
-                        )
+                        if (header == NewInvoiceItemHeaders.Qty) {
+                            Box(
+                                modifier = Modifier
+                                    .padding(4.dp)
+                                    .width(with(LocalDensity.current) {
+                                        (biggestColumnWidths[header] ?: 0).toDp()
+                                    }),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                BasicTextField(
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                    value = content,
+                                    onValueChange = {
+                                        onChangeQty(it ,item.itemCode )
+                                    },
+                                    maxLines = 1,
+                                    textStyle = TextStyle(
+                                        color = Color.White,
+                                        textAlign = TextAlign.Center
+                                    )
+                                )
+                            }
+                        } else {
+                            itemBox(
+                                content = content,
+                                modifier = Modifier
+                                    .padding(4.dp)
+                                    .width(with(LocalDensity.current) {
+                                        (biggestColumnWidths[header] ?: 0).toDp()
+                                    })
+                            )
+                        }
                     }
                 }
             }
-            
+
 
             Spacer(Modifier.fillMaxWidth().background(Color.LightGray).height(0.5.dp))
         }
     }
 }
+
 
 
 @Composable
@@ -178,7 +210,7 @@ private fun calculateBiggestWidths(invoiceItems: List<NewInvoiceItemUiState>): S
     biggestColumnWidths[NewInvoiceItemHeaders.Name] =
         calculateBiggestWidthOnEveryRow(invoiceItems.map { it.name.toString() } + NewInvoiceItemHeaders.Name.title)
     biggestColumnWidths[NewInvoiceItemHeaders.Qty] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.qty.toString() } + NewInvoiceItemHeaders.Qty.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.qty } + NewInvoiceItemHeaders.Qty.title)
     biggestColumnWidths[NewInvoiceItemHeaders.OrgPrice] =
         calculateBiggestWidthOnEveryRow(invoiceItems.map { it.orgPrice.toString() } + NewInvoiceItemHeaders.OrgPrice.title)
     biggestColumnWidths[NewInvoiceItemHeaders.ItemDisc] =

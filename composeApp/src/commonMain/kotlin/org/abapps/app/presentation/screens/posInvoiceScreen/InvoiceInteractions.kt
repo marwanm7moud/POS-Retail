@@ -14,5 +14,6 @@ interface InvoiceInteractions {
     fun onChooseSalesPerson(id: Long)
     fun onChooseInvoiceType(id: Long)
     fun onCommentChanged(comment: String)
+    fun onChangeQty(qty: String, itemCode: Int)
     fun onDismissErrorDialogue()
 }

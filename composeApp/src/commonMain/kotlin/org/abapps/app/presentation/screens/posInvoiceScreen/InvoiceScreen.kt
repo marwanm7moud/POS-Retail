@@ -228,6 +228,7 @@ class InvoiceScreen : Screen {
                             onClickItemDiscount = {},
                             onClickItemDelete = invoicesScreenModel::onClickItemDelete,
                             onClickItemEdit = {},
+                            onChangeQty = invoicesScreenModel::onChangeQty
                         )
                     }
                 }
