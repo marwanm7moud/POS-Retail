@@ -325,7 +325,7 @@ class InvoiceScreenModel(
     }
 
     override fun onClickOkInDiscountDialog() {
-        TODO("Not yet implemented")
+
     }
 
     override fun onChangeQty(qty: String, itemId: Long) {

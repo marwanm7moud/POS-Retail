@@ -451,8 +451,7 @@ private fun DiscountDialog(state: NewInvoiceUiState, listener: InvoiceInteractio
                         .border(
                             BorderStroke(0.5.dp, Color.LightGray),
                             RoundedCornerShape(12.dp)
-                        )
-                        .padding(vertical = 8.dp)
+                        ).padding(vertical = 8.dp)
                 )
             }
             Row(
@@ -473,8 +472,7 @@ private fun DiscountDialog(state: NewInvoiceUiState, listener: InvoiceInteractio
                         .border(
                             BorderStroke(0.5.dp, Color.LightGray),
                             RoundedCornerShape(12.dp)
-                        )
-                        .padding(vertical = 8.dp)
+                        ).padding(vertical = 8.dp)
                 )
             }
         }
