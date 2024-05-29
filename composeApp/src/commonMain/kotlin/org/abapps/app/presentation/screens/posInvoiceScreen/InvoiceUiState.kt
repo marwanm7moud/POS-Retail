@@ -37,7 +37,6 @@ data class NewInvoiceUiState(
         InvoiceDataState(2, "14"),
     ),
     val selectedDiscount: InvoiceDataState = discounts.first(),
-
     val selectedInvoiceType: InvoiceDataState = invoiceTypes.first(),
     val invoiceNumber: Int = 0,
     val discountAmount: Float = 0f,
@@ -47,15 +46,15 @@ data class NewInvoiceUiState(
 )
 
 data class Calculations(
-    val subTotal:Float = 438.6f,
-    val totalTax:Float= 438.6f,
-    val netTotal:Float= 438.6f,
-    val fee:Float= 438.6f,
-    val amount:Float= 438.6f,
-    val totalPaid:Float= 438.6f,
-    val remaining:Float= 438.6f,
-    val taken:Float= 438.6f,
-    val given:Float= 438.6f,
+    val subTotal: Float = 0f,
+    val totalTax: Float = 0f,
+    val netTotal: Float = 0f,
+    val fee: Float = 0f,
+    val amount: Float = 0f,
+    val totalPaid: Float = 0f,
+    val remaining: Float = 0f,
+    val taken: Float = 0f,
+    val given: Float = 0f,
 )
 
 @Immutable
