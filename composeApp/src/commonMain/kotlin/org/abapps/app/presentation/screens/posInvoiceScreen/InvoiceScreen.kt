@@ -380,7 +380,7 @@ private fun DiscountDialog(state: NewInvoiceUiState, listener: InvoiceInteractio
                     modifier = Modifier.width(80.dp)
                 )
                 Text(
-                    text = state.discountAmount.toString(),
+                    text = state.calculations.discountAmount.toString(),
                     color = Color.White,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.width(120.dp)
@@ -402,7 +402,7 @@ private fun DiscountDialog(state: NewInvoiceUiState, listener: InvoiceInteractio
                     modifier = Modifier.padding(end = 8.dp)
                 )
                 Text(
-                    text = ((state.discountAmount / 100) * state.calculations.subTotal).toString(),
+                    text = ((state.calculations.discountAmount / 100) * state.calculations.subTotal).toString(),
                     color = Color.White,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.width(120.dp)
@@ -440,7 +440,7 @@ private fun DiscountDialog(state: NewInvoiceUiState, listener: InvoiceInteractio
                     modifier = Modifier.width(80.dp)
                 )
                 BasicTextField(
-                    value = state.discountAmount.toString(),
+                    value = state.calculations.discountAmount.toString(),
                     onValueChange = listener::onChangeDiscount,
                     textStyle = TextStyle(
                         color = Color.White,
@@ -465,7 +465,7 @@ private fun DiscountDialog(state: NewInvoiceUiState, listener: InvoiceInteractio
                     modifier = Modifier.padding(end = 8.dp)
                 )
                 Text(
-                    text = ((state.discountAmount / 100) * state.calculations.subTotal).toString(),
+                    text = ((state.calculations.discountAmount / 100) * state.calculations.subTotal).toString(),
                     color = Color.White,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.width(120.dp)

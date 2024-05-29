@@ -33,12 +33,11 @@ data class NewInvoiceUiState(
         InvoiceDataState(2, "Return"),
     ),
     val discounts: List<DiscountDataState> = listOf(
-        DiscountDataState(0, "", ""),
+        DiscountDataState(0, "", "", value = 0f),
     ),
     val selectedDiscount: DiscountDataState = discounts.first(),
     val selectedInvoiceType: InvoiceDataState = invoiceTypes.first(),
     val invoiceNumber: Int = 0,
-    val discountAmount: Float = 0f,
     val cashierName: String = RetailSetup.CASHIER_NAME,
     val comment: String = "",
     val calculations: Calculations = Calculations(),
@@ -54,6 +53,7 @@ data class Calculations(
     val remaining: Float = 0f,
     val taken: Float = 0f,
     val given: Float = 0f,
+    val discountAmount: Float = 0f,
 )
 
 @Immutable
@@ -66,6 +66,7 @@ data class DiscountDataState(
     val id: Long = 0L,
     val name: String = "",
     val type: String = "",
+    val value: Float = 0f,
 )
 
 fun InvoiceDataState.toDropDownState(): DropDownState = DropDownState(

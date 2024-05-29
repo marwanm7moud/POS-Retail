@@ -178,7 +178,7 @@ fun CalculationsBar(
                                     modifier = Modifier.width(80.dp)
                                 )
                                 BasicTextField(
-                                    value = state.discountAmount.toString(),
+                                    value = state.calculations.discountAmount.toString(),
                                     onValueChange = listener::onChangeDiscount,
                                     readOnly = state.selectedDiscount.type != "Open_Amount",
                                     textStyle = TextStyle(
@@ -205,7 +205,7 @@ fun CalculationsBar(
                                 modifier = Modifier.width(80.dp)
                             )
                             Text(
-                                text = ((state.discountAmount / 100) * state.calculations.subTotal).toString(),
+                                text = ((state.calculations.discountAmount / 100) * state.calculations.subTotal).toString(),
                                 color = Color.White,
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.width(120.dp)

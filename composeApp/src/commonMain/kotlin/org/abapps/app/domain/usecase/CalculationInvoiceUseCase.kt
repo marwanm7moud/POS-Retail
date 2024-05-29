@@ -47,11 +47,12 @@ class CalculationInvoiceUseCase {
         val subTotal = items.sumOf { it.priceWOT.toDouble() }.toFloat()
         val totalTax = items.sumOf { it.taxAmount.toDouble() }.toFloat()
         val remaining = subTotal - calculations.totalPaid
+        val netTotal = subTotal - calculations.discountAmount
         return calculations.copy(
             subTotal = subTotal,
             totalTax = totalTax,
-            netTotal = subTotal,
-            amount = subTotal + totalTax,
+            netTotal = netTotal,
+            amount = netTotal + totalTax + calculations.fee,
             remaining = remaining
         )
     }

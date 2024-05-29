@@ -77,7 +77,8 @@ class InvoiceScreenModel(
                             DiscountDataState(
                                 id = discount.discId.toLong(),
                                 name = discount.name,
-                                type = discount.discType
+                                type = discount.discType,
+                                value = discount.value
                             )
                         },
                         selectedDiscount = DiscountDataState()
@@ -305,9 +306,12 @@ class InvoiceScreenModel(
     }
 
     override fun onChooseDiscount(id: Long) {
+        val discount = state.value.discounts.find { f -> f.id == id }
+            ?: DiscountDataState()
         updateState {
-            it.copy(selectedDiscount = it.discounts.find { f -> f.id == id }
-                ?: DiscountDataState()
+            it.copy(
+                selectedDiscount = discount,
+                calculations = it.calculations.copy(discountAmount = discount.value)
             )
         }
     }
@@ -343,9 +347,14 @@ class InvoiceScreenModel(
 
     override fun onChangeDiscount(discountAmount: String) {
         if (discountAmount.isNotBlank())
-            updateState { it.copy(discountAmount = discountAmount.toFloat()) }
+            updateState {
+                it.copy(
+                    calculations = it.calculations.copy(
+                        discountAmount = discountAmount.toFloat()
+                    )
+                )
+            }
     }
-
 }
 
 
