@@ -65,7 +65,7 @@ class InvoiceScreen : Screen {
         EventHandler(invoicesScreenModel.effect) { effect, navigator ->
             when (effect) {
                 is InvoiceUiEffect.NavigateBackToAllInvoices -> {
-                    navigator.push(AllInvoicesScreen())
+                    navigator.replace(AllInvoicesScreen())
                 }
             }
         }
