@@ -3,6 +3,7 @@ package org.abapps.app.domain.usecase
 import org.abapps.app.data.util.RetailSetup
 import org.abapps.app.presentation.screens.posInvoiceScreen.Calculations
 import org.abapps.app.presentation.screens.posInvoiceScreen.NewInvoiceItemUiState
+import org.abapps.app.util.roundToDecimals
 
 class CalculationInvoiceUseCase {
 
@@ -11,10 +12,11 @@ class CalculationInvoiceUseCase {
             if ((!RetailSetup.VAT && (!RetailSetup.TAX_EFFECT || !RetailSetup.TAX_EFFECT_WITH_ITEM)) ||
                 (!RetailSetup.VAT && (RetailSetup.TAX_EFFECT || RetailSetup.TAX_EFFECT_WITH_ITEM))
             ) {
-                val priceWOT = item.orgPrice
-                val taxAmount = item.taxPerc.div(100f) * priceWOT
-                val price = priceWOT + taxAmount
-                val extPrice = price * item.qty.toFloat()
+                val priceWOT = item.orgPrice.roundToDecimals(2)
+                val taxAmount =
+                    (item.taxPerc.div(100f) * priceWOT).roundToDecimals(RetailSetup.LEN_DECIMAL)
+                val price = (priceWOT + taxAmount).roundToDecimals(RetailSetup.LEN_DECIMAL)
+                val extPrice = (price * item.qty.toFloat()).roundToDecimals(RetailSetup.LEN_DECIMAL)
                 item.copy(
                     priceWOT = priceWOT,
                     taxAmount = taxAmount,
@@ -24,10 +26,11 @@ class CalculationInvoiceUseCase {
             } else if ((RetailSetup.VAT && (!RetailSetup.TAX_EFFECT || !RetailSetup.TAX_EFFECT_WITH_ITEM)) ||
                 (RetailSetup.VAT && (RetailSetup.TAX_EFFECT || RetailSetup.TAX_EFFECT_WITH_ITEM))
             ) {
-                val priceWOT = item.orgPrice / (1 + (item.taxPerc / 100))
-                val taxAmount = item.taxPerc.div(100f) * priceWOT
-                val price = priceWOT + taxAmount
-                val extPrice = price * item.qty.toFloat()
+                val priceWOT = (item.orgPrice / (1 + (item.taxPerc / 100))).roundToDecimals(2)
+                val taxAmount =
+                    (item.taxPerc.div(100f) * priceWOT).roundToDecimals(RetailSetup.LEN_DECIMAL)
+                val price = (priceWOT + taxAmount).roundToDecimals(RetailSetup.LEN_DECIMAL)
+                val extPrice = (price * item.qty.toFloat()).roundToDecimals(RetailSetup.LEN_DECIMAL)
                 item.copy(
                     priceWOT = priceWOT,
                     taxAmount = taxAmount,
@@ -44,15 +47,24 @@ class CalculationInvoiceUseCase {
         items: List<NewInvoiceItemUiState>,
         calculations: Calculations
     ): Calculations {
-        val subTotal = items.sumOf { it.priceWOT.toDouble() }.toFloat()
+        val subTotal = items.sumOf { it.priceWOT.toDouble() }.toFloat().roundToDecimals(2)
         val totalTax = items.sumOf { it.taxAmount.toDouble() }.toFloat()
-        val discountTotal = subTotal * (calculations.discountAmount / 100)
-        val netTotal = if (RetailSetup.VAT && calculations.discountAmount != 0f) discountTotal
-        else subTotal - discountTotal
-        val amount = if (!RetailSetup.VAT) subTotal + totalTax - discountTotal + calculations.fee
-        else if (!RetailSetup.TAX_EFFECT || !RetailSetup.TAX_EFFECT_WITH_ITEM) netTotal + totalTax + calculations.fee
-        else netTotal + totalTax + calculations.fee
-        val remaining = amount - calculations.totalPaid
+            .roundToDecimals(RetailSetup.LEN_DECIMAL)
+        val discountTotal = (subTotal * (calculations.discountAmount / 100)).roundToDecimals(3)
+        val netTotal =
+            if (RetailSetup.VAT && calculations.discountAmount != 0f) discountTotal.roundToDecimals(
+                3
+            )
+            else (subTotal - discountTotal).roundToDecimals(3)
+        val amount =
+            if (!RetailSetup.VAT) (subTotal + totalTax - discountTotal + calculations.fee).roundToDecimals(
+                RetailSetup.LEN_DECIMAL
+            )
+            else if (!RetailSetup.TAX_EFFECT || !RetailSetup.TAX_EFFECT_WITH_ITEM) (netTotal + totalTax + calculations.fee).roundToDecimals(
+                RetailSetup.LEN_DECIMAL
+            )
+            else (netTotal + totalTax + calculations.fee).roundToDecimals(RetailSetup.LEN_DECIMAL)
+        val remaining = (amount - calculations.totalPaid).roundToDecimals(RetailSetup.LEN_DECIMAL)
         return calculations.copy(
             subTotal = subTotal,
             totalTax = totalTax,
