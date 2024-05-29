@@ -50,7 +50,7 @@ fun Store.toInvoiceDataState(): InvoiceDataState = InvoiceDataState(
 )
 
 fun Customer.toInvoiceDataState(): InvoiceDataState = InvoiceDataState(
-    id, "$fullName $lastName"
+    id, "$firstName $lastName"
 )
 
 fun User.toInvoiceDataState(): InvoiceDataState = InvoiceDataState(

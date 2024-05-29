@@ -55,7 +55,7 @@ class InvoiceScreenModel(
                         customers = combinedSetupResult.customers.map { customer ->
                             InvoiceDataState(
                                 id = customer.id,
-                                name = "${customer.fullName} ${customer.lastName}"
+                                name = "${customer.firstName} ${customer.lastName}"
                             )
                         },
                         selectedCustomer = combinedSetupResult.customers.find { tempCustomer ->
