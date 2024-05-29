@@ -337,11 +337,6 @@ class InvoiceScreenModel(
                 calculationItem = it.calculations.copy(discountAmount = discount.value)
             )
         }
-//        val newCalc = calculationInvoice.calculateInvoice(
-//            state.value.invoiceItemList,
-//            state.value.calculations
-//        )
-//        updateState { it.copy(calculations = newCalc) }
     }
 
     override fun onClickItemDiscount(itemId: Long) {

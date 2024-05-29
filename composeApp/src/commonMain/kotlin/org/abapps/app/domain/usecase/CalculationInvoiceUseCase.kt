@@ -43,6 +43,50 @@ class CalculationInvoiceUseCase {
         }
     }
 
+    fun calculateItemDiscount(
+        items: List<NewInvoiceItemUiState>,
+        calculations: Calculations,
+        itemId: Long,
+    ): List<NewInvoiceItemUiState> {
+        return items.filter { it.itemID == itemId }.map { item ->
+            if ((!RetailSetup.VAT && (!RetailSetup.TAX_EFFECT || !RetailSetup.TAX_EFFECT_WITH_ITEM)) ||
+                (!RetailSetup.VAT && (RetailSetup.TAX_EFFECT || RetailSetup.TAX_EFFECT_WITH_ITEM))
+            ) {
+                val priceWOT = item.orgPrice.roundToDecimals(2) * calculations.discountAmount
+                val taxAmount = if (!RetailSetup.TAX_EFFECT || !RetailSetup.TAX_EFFECT_WITH_ITEM)
+                    (item.taxPerc.div(100f) * priceWOT).roundToDecimals(RetailSetup.LEN_DECIMAL)
+                else (item.taxPerc.div(100f) * priceWOT).roundToDecimals(RetailSetup.LEN_DECIMAL) * calculations.discountAmount
+                val price = (priceWOT + taxAmount).roundToDecimals(RetailSetup.LEN_DECIMAL)
+                val extPrice = (price * item.qty.toFloat()).roundToDecimals(RetailSetup.LEN_DECIMAL)
+                item.copy(
+                    priceWOT = priceWOT,
+                    taxAmount = taxAmount,
+                    price = price,
+                    extPrice = extPrice,
+                )
+            } else if ((RetailSetup.VAT && (!RetailSetup.TAX_EFFECT || !RetailSetup.TAX_EFFECT_WITH_ITEM)) ||
+                (RetailSetup.VAT && (RetailSetup.TAX_EFFECT || RetailSetup.TAX_EFFECT_WITH_ITEM))
+            ) {
+                val priceWOT =
+                    (item.orgPrice / (1 + (item.taxPerc / 100))).roundToDecimals(2) * calculations.discountAmount
+                val taxAmount = if (!RetailSetup.TAX_EFFECT || !RetailSetup.TAX_EFFECT_WITH_ITEM)
+                    (item.taxPerc.div(100f) * priceWOT).roundToDecimals(RetailSetup.LEN_DECIMAL)
+                else (item.taxPerc.div(100f) * priceWOT).roundToDecimals(RetailSetup.LEN_DECIMAL) * calculations.discountAmount
+                val price = (priceWOT + taxAmount).roundToDecimals(RetailSetup.LEN_DECIMAL)
+                val extPrice = (price * item.qty.toFloat()).roundToDecimals(RetailSetup.LEN_DECIMAL)
+                item.copy(
+                    priceWOT = priceWOT,
+                    taxAmount = taxAmount,
+                    price = price,
+                    extPrice = extPrice,
+                )
+            } else {
+                item.copy()
+            }
+        }
+    }
+
+
     fun calculateInvoice(
         items: List<NewInvoiceItemUiState>,
         calculations: Calculations
