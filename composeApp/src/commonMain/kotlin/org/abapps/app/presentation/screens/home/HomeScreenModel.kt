@@ -58,6 +58,7 @@ class HomeScreenModel(
                     DEFAULT_SALES_ID = combinedSetupResult.invoiceSetup.defaultSeller
                     DEFAULT_CUSTOMER_ID = combinedSetupResult.invoiceSetup.defaultCust
                     IS_MAIN_STORE = combinedSetupResult.mainStoreId == STORE_ID
+                    CASHIER_NAME = combinedSetupResult.cashierName
                 }
             },
             onError = ::onError
@@ -95,16 +96,30 @@ class HomeScreenModel(
                 }
             }
 
+            val cashierNameDeferred = async {
+                try {
+                    manageSetup.getCashierName(
+                        RetailSetup.STORE_ID,
+                        RetailSetup.SUB_COMPANY_ID,
+                        RetailSetup.USER_ID
+                    )
+                } catch (e: Exception) {
+                    throw UnknownErrorException(e.message.toString())
+                }
+            }
+
             val subCompanySetup = subCompanySetupDeferred.await()
             val storeSetup = storeSetupDeferred.await()
             val invoiceSetup = invoiceSetupDeferred.await()
             val mainStoreId = mainStoreIdDeferred.await()
+            val cashierName = cashierNameDeferred.await()
 
             CombinedSetupResult(
                 subCompanySetup = subCompanySetup,
                 storeSetup = storeSetup,
                 invoiceSetup = invoiceSetup,
                 mainStoreId = mainStoreId,
+                cashierName = cashierName,
             )
         }
     }
@@ -288,4 +303,5 @@ data class CombinedSetupResult(
     val storeSetup: StoreSetup,
     val invoiceSetup: InvoiceSetup,
     val mainStoreId: Int,
+    val cashierName: String,
 )

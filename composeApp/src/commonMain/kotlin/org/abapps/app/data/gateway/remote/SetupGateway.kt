@@ -2,6 +2,7 @@ package org.abapps.app.data.gateway.remote
 
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import org.abapps.app.data.gateway.BaseGateway
 import org.abapps.app.data.remote.mapper.toEntity
 import org.abapps.app.data.remote.model.InvoiceSetupDto
@@ -37,5 +38,15 @@ class SetupGateway(client: HttpClient) : BaseGateway(client), ISetupGateway {
         return tryToExecute<ServerResponse<Int>> {
             get("mainStore/$sComId")
         }.data ?: throw NotFoundException("Main Store not found")
+    }
+
+    override suspend fun getCashierName(storeId: Int, sComId: Int, userId: Int): String {
+        return tryToExecute<ServerResponse<String>> {
+            get("cashierName") {
+                parameter("storeId", storeId)
+                parameter("subCompanyId", sComId)
+                parameter("userId", userId)
+            }
+        }.data ?: throw NotFoundException("Cashier not found")
     }
 }

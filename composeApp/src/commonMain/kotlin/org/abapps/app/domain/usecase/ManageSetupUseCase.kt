@@ -23,4 +23,8 @@ class ManageSetupUseCase(
     suspend fun getMainStoreId(sComId: String): Int {
         return setupGateway.getMainStoreId(sComId)
     }
+
+    suspend fun getCashierName(storeId: Int, sComId: Int, userId: Int): String {
+        return setupGateway.getCashierName(storeId, sComId, userId)
+    }
 }

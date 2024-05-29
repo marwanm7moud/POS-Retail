@@ -1,6 +1,7 @@
 package org.abapps.app.presentation.screens.posInvoiceScreen
 
 import androidx.compose.runtime.Immutable
+import org.abapps.app.data.util.RetailSetup
 import org.abapps.app.domain.entities.Customer
 import org.abapps.app.domain.entities.Item
 import org.abapps.app.domain.entities.Store
@@ -31,7 +32,7 @@ data class NewInvoiceUiState(
     ),
     val selectedInvoiceType: InvoiceDataState = invoiceTypes.first(),
     val invoiceNumber: Int = 0,
-    val cashierName: String = "",
+    val cashierName: String = RetailSetup.CASHIER_NAME,
     val comment: String = "",
 )
 
