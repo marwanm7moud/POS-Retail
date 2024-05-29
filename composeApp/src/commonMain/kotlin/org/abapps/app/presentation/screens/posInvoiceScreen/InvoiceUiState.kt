@@ -2,6 +2,7 @@ package org.abapps.app.presentation.screens.posInvoiceScreen
 
 import androidx.compose.runtime.Immutable
 import org.abapps.app.domain.entities.Item
+import org.abapps.app.domain.entities.Store
 import org.abapps.app.presentation.base.ErrorState
 import org.abapps.app.presentation.screens.composable.DropDownState
 
@@ -40,6 +41,10 @@ data class InvoiceDataState(
 
 fun InvoiceDataState.toDropDownState(): DropDownState = DropDownState(
     id, name
+)
+
+fun Store.toInvoiceDataState(): InvoiceDataState = InvoiceDataState(
+    storeId, name
 )
 
 enum class ExpandedCardStatus {

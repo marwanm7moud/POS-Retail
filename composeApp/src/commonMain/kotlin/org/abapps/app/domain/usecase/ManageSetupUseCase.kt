@@ -19,4 +19,8 @@ class ManageSetupUseCase(
     suspend fun getInvoiceSetup(storeId: String): InvoiceSetup {
         return setupGateway.getInvoiceSetup(storeId)
     }
+
+    suspend fun getMainStoreId(sComId: String): Int {
+        return setupGateway.getMainStoreId(sComId)
+    }
 }

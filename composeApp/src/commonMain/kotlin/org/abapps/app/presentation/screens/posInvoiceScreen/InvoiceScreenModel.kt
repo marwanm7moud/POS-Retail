@@ -8,10 +8,48 @@ import org.abapps.app.presentation.base.BaseScreenModel
 import org.abapps.app.presentation.base.ErrorState
 
 class InvoiceScreenModel(
-    private val manageInvoice: ManageInvoiceUseCase
+    private val manageInvoice: ManageInvoiceUseCase,
 ) : BaseScreenModel<NewInvoiceUiState, InvoiceUiEffect>(NewInvoiceUiState()), InvoiceInteractions {
 
     override val viewModelScope: CoroutineScope get() = screenModelScope
+
+    init {
+        getSetupInvoiceData()
+    }
+
+    private fun getSetupInvoiceData() {
+        updateState {
+            it.copy(
+                isLoading = true,
+                errorState = null,
+                errorMessage = "",
+            )
+        }
+        tryToExecute(
+            function = {
+                manageInvoice.getStores(RetailSetup.SUB_COMPANY_ID)
+            },
+            onSuccess = { stores ->
+                updateState {
+                    it.copy(
+                        isLoading = false,
+                        errorState = null,
+                        errorMessage = "",
+                        stores = stores.map { store ->
+                            InvoiceDataState(
+                                id = store.storeId,
+                                name = store.name
+                            )
+                        },
+                        selectedStore = stores.find { tempStore ->
+                            tempStore.storeId == RetailSetup.STORE_ID
+                        }?.toInvoiceDataState() ?: InvoiceDataState()
+                    )
+                }
+            },
+            onError = ::onError
+        )
+    }
 
     override fun onClickAddItem() {
         updateState {
@@ -118,7 +156,8 @@ class InvoiceScreenModel(
     }
 
     override fun onChooseStore(id: Int) {
-        updateState { it.copy(selectedStore = it.selectedStore.copy(id = id)) }
+        if (RetailSetup.IS_MAIN_STORE)
+            updateState { it.copy(selectedStore = it.selectedStore.copy(id = id)) }
     }
 
     override fun onChooseSalesPerson(id: Int) {

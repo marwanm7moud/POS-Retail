@@ -12,6 +12,7 @@ object RetailSetup {
     var SUB_COMPANY_ID = 1
     var DEFAULT_CUSTOMER_ID = 0L
     var DEFAULT_SALES_ID = 0
+    var IS_MAIN_STORE = false
     var USER_ID = 0
     var TOKEN = ""
     var WORK_STATION_ID = 0

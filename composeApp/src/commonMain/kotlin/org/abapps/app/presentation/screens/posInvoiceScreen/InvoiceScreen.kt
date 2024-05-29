@@ -40,6 +40,7 @@ import com.beepbeep.designSystem.ui.composable.StAppBar
 import com.beepbeep.designSystem.ui.composable.StTextField
 import com.beepbeep.designSystem.ui.composable.animate.FadeAnimation
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.abapps.app.data.util.RetailSetup
 import org.abapps.app.presentation.base.ErrorState
 import org.abapps.app.presentation.screens.allinvoices.AllInvoicesScreen
 import org.abapps.app.presentation.screens.composable.DropDownTextField
@@ -293,7 +294,8 @@ private fun BrandonCard(
                 modifier = Modifier.weight(1f),
                 options = state.stores.map { it.toDropDownState() },
                 selectedItem = state.selectedStore.toDropDownState(),
-                label = Resources.strings.store
+                label = Resources.strings.store,
+                enabled = RetailSetup.IS_MAIN_STORE
             ) { listener.onChooseStore(it) }
             StTextField(
                 modifier = Modifier.weight(1f),

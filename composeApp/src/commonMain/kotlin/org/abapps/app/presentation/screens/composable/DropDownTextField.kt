@@ -1,5 +1,6 @@
 package org.abapps.app.presentation.screens.composable
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,23 +49,26 @@ fun DropDownTextField(
                 )
             },
         )
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = {
-                expanded = false
-            }
-        ) {
-            options.forEach { selectionOption ->
-                DropdownMenuItem(
-                    onClick = {
-                        selectedOptionText = selectionOption
-                        expanded = false
-                        onClick(selectionOption.id)
-                    },
-                    text = {
-                        Text(text = selectionOption.name)
-                    },
-                )
+        AnimatedVisibility(enabled) {
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = {
+                    expanded = false
+                }
+            ) {
+                if (enabled)
+                    options.forEach { selectionOption ->
+                        DropdownMenuItem(
+                            onClick = {
+                                selectedOptionText = selectionOption
+                                expanded = false
+                                onClick(selectionOption.id)
+                            },
+                            text = {
+                                Text(text = selectionOption.name)
+                            },
+                        )
+                    }
             }
         }
     }

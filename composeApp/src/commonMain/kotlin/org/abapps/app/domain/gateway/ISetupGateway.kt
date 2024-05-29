@@ -8,4 +8,5 @@ interface ISetupGateway {
     suspend fun getSubCompanySetup(sComId: String): SubCompanySetup
     suspend fun getSetupStore(storeId: String): StoreSetup
     suspend fun getInvoiceSetup(storeId: String): InvoiceSetup
+    suspend fun getMainStoreId(sComId: String): Int
 }
