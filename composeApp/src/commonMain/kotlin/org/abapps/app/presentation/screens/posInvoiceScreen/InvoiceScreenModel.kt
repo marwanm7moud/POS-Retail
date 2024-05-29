@@ -10,6 +10,7 @@ import org.abapps.app.domain.entities.Store
 import org.abapps.app.domain.entities.User
 import org.abapps.app.domain.usecase.CalculationInvoiceUseCase
 import org.abapps.app.domain.usecase.ManageInvoiceUseCase
+import org.abapps.app.domain.util.UnknownErrorException
 import org.abapps.app.presentation.base.BaseScreenModel
 import org.abapps.app.presentation.base.ErrorState
 
@@ -84,24 +85,21 @@ class InvoiceScreenModel(
                 try {
                     manageInvoice.getStores(RetailSetup.SUB_COMPANY_ID)
                 } catch (e: Exception) {
-                    onError(ErrorState.UnknownError(e.message.toString()))
-                    emptyList()
+                    throw UnknownErrorException(e.message.toString())
                 }
             }
             val customersDeferred = async {
                 try {
                     manageInvoice.getCustomers(RetailSetup.STORE_ID, RetailSetup.SUB_COMPANY_ID)
                 } catch (e: Exception) {
-                    onError(ErrorState.UnknownError(e.message.toString()))
-                    emptyList()
+                    throw UnknownErrorException(e.message.toString())
                 }
             }
             val salesPersonsDeferred = async {
                 try {
                     manageInvoice.getAllSales(RetailSetup.STORE_ID, RetailSetup.SUB_COMPANY_ID)
                 } catch (e: Exception) {
-                    onError(ErrorState.UnknownError(e.message.toString()))
-                    emptyList()
+                    throw UnknownErrorException(e.message.toString())
                 }
             }
 
