@@ -244,7 +244,7 @@ class InvoiceScreen : Screen {
                     ) {
                         NewInvoiceItemTable(
                             modifier = Modifier,
-                            invoiceItems = state.invoiceItemList,
+                            invoiceItems = state.invoiceItemList.sortedBy { it.itemCode },
                             selectedItemIndex = state.selectedItemIndexFromInvoice,
                             onClickItem = invoicesScreenModel::onClickItemFromInvoice,
                             onClickItemDiscount = invoicesScreenModel::onClickItemDiscount,
@@ -446,7 +446,7 @@ private fun DiscountDialog(state: NewInvoiceUiState, listener: InvoiceInteractio
                         color = Color.White,
                         textAlign = TextAlign.Center
                     ),
-                    readOnly = state.selectedDiscount.name != "open",
+                    readOnly = state.selectedDiscount.type != "Open_Amount",
                     modifier = Modifier.width(120.dp)
                         .border(
                             BorderStroke(0.5.dp, Color.LightGray),

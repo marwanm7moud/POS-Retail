@@ -288,7 +288,8 @@ class InvoiceScreenModel(
     override fun onChooseDiscount(id: Long) {
         updateState {
             it.copy(selectedDiscount = it.discounts.find { f -> f.id == id }
-                ?: InvoiceDataState())
+                ?: DiscountDataState()
+            )
         }
     }
 

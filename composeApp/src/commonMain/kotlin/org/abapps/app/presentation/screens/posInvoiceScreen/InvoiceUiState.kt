@@ -32,11 +32,12 @@ data class NewInvoiceUiState(
         InvoiceDataState(1, "Regular"),
         InvoiceDataState(2, "Return"),
     ),
-    val discounts: List<InvoiceDataState> = listOf(
-        InvoiceDataState(1, "open"),
-        InvoiceDataState(2, "14"),
+    val discounts: List<DiscountDataState> = listOf(
+        DiscountDataState(0, "", ""),
+        DiscountDataState(1, "open", "Open_Amount"),
+        DiscountDataState(2, "14", "Percentage"),
     ),
-    val selectedDiscount: InvoiceDataState = discounts.first(),
+    val selectedDiscount: DiscountDataState = discounts.first(),
     val selectedInvoiceType: InvoiceDataState = invoiceTypes.first(),
     val invoiceNumber: Int = 0,
     val discountAmount: Float = 0f,
@@ -63,7 +64,17 @@ data class InvoiceDataState(
     val name: String = ""
 )
 
+data class DiscountDataState(
+    val id: Long = 0L,
+    val name: String = "",
+    val type: String="",
+)
+
 fun InvoiceDataState.toDropDownState(): DropDownState = DropDownState(
+    id, name
+)
+
+fun DiscountDataState.toDropDownState(): DropDownState = DropDownState(
     id, name
 )
 
@@ -112,10 +123,10 @@ data class ItemUiState(
     val onHand: Float = 51f,
     val freeCard: Boolean = true,
     val freeCardPrice: Int = 10,
-    val price: Int = 1000,
-    val taxPerc: Int = 20,
+    val price: Float = 1000f,
+    val taxPerc: Float = 20f,
     val qty: Float = 1f,
-    val itemDiscount: Int = 1,
+    val itemDiscount: Float = 1f,
     val grid1: String = "",
     val grid2: String = "",
     val grid3: String = "",
@@ -170,10 +181,10 @@ fun Item.toUiState(): ItemUiState {
         onHand = this.onHand,
         freeCard = this.freeCard,
         freeCardPrice = this.freeCardPrice.toInt(),
-        price = this.price.toInt(),
-        taxPerc = this.taxPerc.toInt(),
+        price = this.price,
+        taxPerc = this.taxPerc,
         qty = this.qty,
-        itemDiscount = this.itemDiscount.toInt(),
+        itemDiscount = this.itemDiscount,
         grid1 = this.grid1,
         grid2 = this.grid2,
         grid3 = this.grid3,
@@ -221,12 +232,12 @@ fun ItemUiState.toInvoiceItemUiState(): NewInvoiceItemUiState = NewInvoiceItemUi
     alu = alu.toString(),
     name = name,
     qty = qty.toString(),
-    orgPrice = price.toFloat(),
-    itemDisc = itemDiscount.toFloat(),
-    price = price.toFloat(),
-    extPrice = price.toFloat(),
-    priceWOT = price.toFloat(),
-    taxPerc = taxPerc.toFloat(),
-    taxAmount = price.toFloat(),
+    orgPrice = price,
+    itemDisc = itemDiscount,
+    price = price,
+    extPrice = price,
+    priceWOT = price,
+    taxPerc = taxPerc,
+    taxAmount = price,
     itemSerial = 0,
 )

@@ -180,7 +180,7 @@ fun CalculationsBar(
                                 BasicTextField(
                                     value = state.discountAmount.toString(),
                                     onValueChange = listener::onChangeDiscount,
-                                    readOnly = state.selectedDiscount.name != "open",
+                                    readOnly = state.selectedDiscount.type != "Open_Amount",
                                     textStyle = TextStyle(
                                         color = Color.White,
                                         textAlign = TextAlign.Center
