@@ -278,6 +278,29 @@ class InvoiceScreenModel(
         updateState { it.copy(errorDialogueIsVisible = false) }
     }
 
+    override fun onChooseDiscount(id: Long) {
+        updateState {
+            it.copy(selectedDiscount = it.discounts.find { f -> f.id == id }
+                ?: InvoiceDataState())
+        }
+    }
+
+    override fun onClickItemDiscount(itemId: Long) {
+        updateState {
+            it.copy(showDiscountDialog = true)
+        }
+    }
+
+    override fun onDismissSettingsDialogue() {
+        updateState {
+            it.copy(showDiscountDialog = false)
+        }
+    }
+
+    override fun onClickOkInDiscountDialog() {
+        TODO("Not yet implemented")
+    }
+
     override fun onChangeQty(qty: String, itemId: Long) {
         updateState {
             it.copy(
@@ -288,6 +311,11 @@ class InvoiceScreenModel(
         }
         val newList = calculationInvoice.calculateItemsPrice(state.value.invoiceItemList)
         updateState { it.copy(invoiceItemList = newList) }
+    }
+
+    override fun onChangeDiscount(discountAmount: String) {
+        if (discountAmount.isNotBlank())
+        updateState { it.copy(discountAmount = discountAmount.toFloat()) }
     }
 
 }

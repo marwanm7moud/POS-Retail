@@ -50,4 +50,5 @@ interface IStringResources {
     val remaining: String
     val taken: String
     val given: String
+    val discount: String
 }

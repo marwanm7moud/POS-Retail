@@ -15,5 +15,10 @@ interface InvoiceInteractions {
     fun onChooseInvoiceType(id: Long)
     fun onCommentChanged(comment: String)
     fun onChangeQty(qty: String, itemId: Long)
+    fun onChangeDiscount(discountAmount: String)
     fun onDismissErrorDialogue()
+    fun onChooseDiscount(id: Long)
+    fun onClickItemDiscount(itemId: Long)
+    fun onDismissSettingsDialogue()
+    fun onClickOkInDiscountDialog()
 }
