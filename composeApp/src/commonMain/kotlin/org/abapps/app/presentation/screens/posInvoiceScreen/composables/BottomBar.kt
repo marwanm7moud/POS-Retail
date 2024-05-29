@@ -174,7 +174,7 @@ fun CalculationsBar(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = "Percentage",
+                                    text = Resources.strings.percentage,
                                     color = Color.White,
                                     modifier = Modifier.width(80.dp)
                                 )
@@ -201,7 +201,7 @@ fun CalculationsBar(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "Discount Amount",
+                                text = Resources.strings.discountAmount,
                                 color = Color.White,
                                 modifier = Modifier.width(80.dp)
                             )
@@ -216,14 +216,11 @@ fun CalculationsBar(
                                     .border(
                                         BorderStroke(0.5.dp, Color.LightGray),
                                         RoundedCornerShape(12.dp)
-                                    )
-                                    .padding(vertical = 8.dp)
+                                    ).padding(vertical = 8.dp)
                             )
                         }
                     }
-
                 }
-
             }
         }
     }

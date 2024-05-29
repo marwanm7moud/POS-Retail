@@ -436,7 +436,7 @@ private fun DiscountDialog(state: NewInvoiceUiState, listener: InvoiceInteractio
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Percentage",
+                    text = Resources.strings.percentage,
                     color = Color.White,
                     modifier = Modifier.width(80.dp)
                 )
@@ -461,7 +461,7 @@ private fun DiscountDialog(state: NewInvoiceUiState, listener: InvoiceInteractio
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Discount Amount",
+                    text = Resources.strings.discountAmount,
                     color = Color.White,
                     modifier = Modifier.padding(end = 8.dp)
                 )
