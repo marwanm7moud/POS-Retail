@@ -281,9 +281,13 @@ class InvoiceScreenModel(
     override fun onChangeQty(qty: String, itemId: Long) {
         updateState {
             it.copy(
-                invoiceItemList = it.invoiceItemList.map { if (it.itemID == itemId) it.copy(qty = qty) else it }
+                invoiceItemList = it.invoiceItemList.map { item ->
+                    if (item.itemID == itemId) item.copy(qty = qty) else item
+                }
             )
         }
+        val newList = calculationInvoice.calculateItemsPrice(state.value.invoiceItemList)
+        updateState { it.copy(invoiceItemList = newList) }
     }
 
 }
