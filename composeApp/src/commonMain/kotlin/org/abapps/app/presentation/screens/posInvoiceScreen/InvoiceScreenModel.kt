@@ -358,7 +358,7 @@ class InvoiceScreenModel(
             state.value.itemId
         )
         val newCalc = calculationInvoice.calculateInvoice(
-            state.value.invoiceItemList,
+            newList,
             state.value.calculations
         )
         updateState {
