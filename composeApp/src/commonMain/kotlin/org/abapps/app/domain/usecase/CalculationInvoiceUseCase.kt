@@ -20,10 +20,18 @@ class CalculationInvoiceUseCase {
                     price = price,
                     extPrice = extPrice,
                 )
-            } else item.copy(
-                extPrice = 100f,
-
+            } else {
+                val priceWOT = item.orgPrice / (1 + (item.taxPerc / 100))
+                val taxAmount = item.taxPerc.div(100f) * priceWOT
+                val price = priceWOT + taxAmount
+                val extPrice = price * item.qty.toFloat()
+                item.copy(
+                    priceWOT = priceWOT,
+                    taxAmount = taxAmount,
+                    price = price,
+                    extPrice = extPrice,
                 )
+            }
         }
     }
 }
