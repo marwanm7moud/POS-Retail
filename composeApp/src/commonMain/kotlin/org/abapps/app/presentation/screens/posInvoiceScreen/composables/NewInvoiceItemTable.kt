@@ -53,7 +53,7 @@ fun NewInvoiceItemTable(
     onClickItemEdit: (Int) -> Unit,
     onClickItemDiscount: (Int) -> Unit,
     modifier: Modifier,
-    onChangeQty : (String , Int)->Unit
+    onChangeQty : (String , Long)->Unit
 ) {
     val headers = NewInvoiceItemHeaders.entries.toTypedArray()
     val biggestColumnWidths = calculateBiggestWidths(invoiceItems)
@@ -167,7 +167,7 @@ fun NewInvoiceItemTable(
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                                     value = content,
                                     onValueChange = {
-                                        onChangeQty(it ,item.itemCode )
+                                        onChangeQty(it ,item.itemID )
                                     },
                                     maxLines = 1,
                                     textStyle = TextStyle(

@@ -64,6 +64,7 @@ enum class ExpandedCardStatus {
 }
 
 data class NewInvoiceItemUiState(
+    val itemID: Long = 10000003869,
     val itemCode: Int = 132,
     val alu: Long = 654,
     val name: String = "marnasdasdasd",
@@ -195,6 +196,7 @@ fun Item.toUiState(): ItemUiState {
 }
 
 fun ItemUiState.toInvoiceItemUiState(): NewInvoiceItemUiState = NewInvoiceItemUiState(
+    itemID = itemID,
     itemCode = itemCode,
     alu = alu,
     name = name,

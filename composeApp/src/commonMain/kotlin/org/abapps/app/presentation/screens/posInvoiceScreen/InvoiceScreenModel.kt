@@ -169,13 +169,15 @@ class InvoiceScreenModel(
         updateState { invoice ->
             invoice.copy(
                 isAddItem = false,
-                invoiceItemList = invoice.selectedItemsIndexFromAllItems.map {
-                    invoice.allItemsList[it]
-                }.map { it.toInvoiceItemUiState() },
+                invoiceItemList = invoice.invoiceItemList +
+                        invoice.selectedItemsIndexFromAllItems.map {
+                            invoice.allItemsList[it]
+                        }.map { it.toInvoiceItemUiState() },
                 selectedItemsIndexFromAllItems = emptyList()
             )
         }
     }
+
 
     fun retry() {
         getSetupInvoiceData()
@@ -255,10 +257,10 @@ class InvoiceScreenModel(
         updateState { it.copy(errorDialogueIsVisible = false) }
     }
 
-    override fun onChangeQty(qty: String, itemCode: Int) {
+    override fun onChangeQty(qty: String, itemId: Long) {
         updateState {
             it.copy(
-                invoiceItemList = it.invoiceItemList.map { if (it.itemCode == itemCode) it.copy(qty = qty) else it }
+                invoiceItemList = it.invoiceItemList.map { if (it.itemID == itemId) it.copy(qty = qty) else it }
             )
         }
     }
