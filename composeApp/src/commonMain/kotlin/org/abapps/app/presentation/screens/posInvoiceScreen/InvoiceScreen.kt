@@ -115,7 +115,11 @@ class InvoiceScreen : Screen {
                             }
                     })
             },
-            bottomBar = { AnimatedVisibility(!state.isAddItem && !state.isLoading && !state.showErrorScreen) { CalculationsBar() } },
+            bottomBar = {
+                AnimatedVisibility(!state.isAddItem && !state.isLoading && !state.showErrorScreen) {
+                    CalculationsBar(state)
+                }
+            },
             floatingActionButton = {
                 AnimatedVisibility(state.isAddItem) {
                     Box {
