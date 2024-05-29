@@ -44,6 +44,7 @@ import org.abapps.app.data.util.RetailSetup
 import org.abapps.app.presentation.base.ErrorState
 import org.abapps.app.presentation.screens.allinvoices.AllInvoicesScreen
 import org.abapps.app.presentation.screens.composable.DropDownTextField
+import org.abapps.app.presentation.screens.composable.ErrorDialogue
 import org.abapps.app.presentation.screens.composable.HandleErrorState
 import org.abapps.app.presentation.screens.posInvoiceScreen.composables.AllItemTable
 import org.abapps.app.presentation.screens.posInvoiceScreen.composables.CalculationsBar
@@ -72,6 +73,15 @@ class InvoiceScreen : Screen {
 
         LaunchedEffect(state.errorState) {
             if (state.errorState != null) invoicesScreenModel.showErrorScreen()
+        }
+
+        FadeAnimation(state.errorDialogueIsVisible) {
+            ErrorDialogue(
+                title = Resources.strings.error,
+                text = state.errorMessage,
+                onDismissRequest = invoicesScreenModel::onDismissErrorDialogue,
+                onClickConfirmButton = invoicesScreenModel::onDismissErrorDialogue,
+            )
         }
 
         Scaffold(

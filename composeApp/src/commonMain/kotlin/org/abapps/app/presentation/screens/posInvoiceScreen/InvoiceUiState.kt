@@ -15,6 +15,7 @@ data class NewInvoiceUiState(
     val isLoading: Boolean = false,
     val showErrorScreen: Boolean = false,
     val isAddItem: Boolean = false,
+    val errorDialogueIsVisible: Boolean = false,
     val selectedItemsIndexFromAllItems: List<Int> = emptyList(),
     val selectedItemIndexFromInvoice: Int = -1,
     val invoiceItemList: List<NewInvoiceItemUiState> = emptyList(),

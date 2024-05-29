@@ -146,7 +146,7 @@ class InvoiceScreenModel(
                 },
                 onError = ::onError
             )
-        }
+        } else updateState { it.copy(errorDialogueIsVisible = true) }
     }
 
     private fun onError(error: ErrorState) {
@@ -243,6 +243,10 @@ class InvoiceScreenModel(
 
     override fun onCommentChanged(comment: String) {
         updateState { it.copy(comment = comment) }
+    }
+
+    override fun onDismissErrorDialogue() {
+        updateState { it.copy(errorDialogueIsVisible = false) }
     }
 
 }
