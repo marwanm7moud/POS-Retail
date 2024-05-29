@@ -9,9 +9,9 @@ interface InvoiceInteractions {
     fun onClickExpandedCard(expandedCardStatus: ExpandedCardStatus)
     fun onClickItemDelete(index: Int)
     fun showErrorScreen()
-    fun onChooseCustomer(id: Int)
-    fun onChooseStore(id: Int)
-    fun onChooseSalesPerson(id: Int)
-    fun onChooseInvoiceType(id: Int)
+    fun onChooseCustomer(id: Long)
+    fun onChooseStore(id: Long)
+    fun onChooseSalesPerson(id: Long)
+    fun onChooseInvoiceType(id: Long)
     fun onCommentChanged(comment: String)
 }

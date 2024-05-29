@@ -2,8 +2,14 @@ package org.abapps.app.presentation.screens.posInvoiceScreen
 
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import org.abapps.app.data.util.RetailSetup
+import org.abapps.app.domain.entities.Customer
+import org.abapps.app.domain.entities.Store
+import org.abapps.app.domain.entities.User
 import org.abapps.app.domain.usecase.ManageInvoiceUseCase
+import org.abapps.app.domain.util.UnknownErrorException
 import org.abapps.app.presentation.base.BaseScreenModel
 import org.abapps.app.presentation.base.ErrorState
 
@@ -28,29 +34,83 @@ class InvoiceScreenModel(
         }
         tryToExecute(
             function = {
-                manageInvoice.getStores(RetailSetup.SUB_COMPANY_ID)
+                getCombinedSetup()
             },
-            onSuccess = { stores ->
+            onSuccess = { combinedSetupResult ->
                 updateState {
                     it.copy(
                         isLoading = false,
                         errorState = null,
                         errorMessage = "",
                         showErrorScreen = false,
-                        stores = stores.map { store ->
+                        stores = combinedSetupResult.stores.map { store ->
                             InvoiceDataState(
-                                id = store.storeId,
+                                id = store.storeId.toLong(),
                                 name = store.name
                             )
                         },
-                        selectedStore = stores.find { tempStore ->
+                        selectedStore = combinedSetupResult.stores.find { tempStore ->
                             tempStore.storeId == RetailSetup.STORE_ID
-                        }?.toInvoiceDataState() ?: InvoiceDataState()
+                        }?.toInvoiceDataState() ?: InvoiceDataState(),
+                        customers = combinedSetupResult.customers.map { customer ->
+                            InvoiceDataState(
+                                id = customer.id,
+                                name = "${customer.fullName} ${customer.lastName}"
+                            )
+                        },
+                        selectedCustomer = combinedSetupResult.customers.find { tempCustomer ->
+                            tempCustomer.id == RetailSetup.DEFAULT_CUSTOMER_ID
+                        }?.toInvoiceDataState() ?: InvoiceDataState(),
+                        sales = combinedSetupResult.salesPerson.map { salesPerson ->
+                            InvoiceDataState(
+                                id = salesPerson.id.toLong(),
+                                name = salesPerson.name
+                            )
+                        },
+                        selectedSalePerson = combinedSetupResult.salesPerson.find { tempSalesPerson ->
+                            tempSalesPerson.id == RetailSetup.DEFAULT_SALES_ID
+                        }?.toInvoiceDataState() ?: InvoiceDataState(),
                     )
                 }
             },
             onError = ::onError
         )
+    }
+
+    private suspend fun getCombinedSetup(): CombinedSetupResult {
+        return coroutineScope {
+            val storesDeferred = async {
+                try {
+                    manageInvoice.getStores(RetailSetup.SUB_COMPANY_ID)
+                } catch (e: Exception) {
+                    throw UnknownErrorException(e.message.toString())
+                }
+            }
+            val customersDeferred = async {
+                try {
+                    manageInvoice.getCustomers(RetailSetup.STORE_ID, RetailSetup.SUB_COMPANY_ID)
+                } catch (e: Exception) {
+                    throw UnknownErrorException(e.message.toString())
+                }
+            }
+            val salesPersonsDeferred = async {
+                try {
+                    manageInvoice.getAllSales(RetailSetup.STORE_ID, RetailSetup.SUB_COMPANY_ID)
+                } catch (e: Exception) {
+                    throw UnknownErrorException(e.message.toString())
+                }
+            }
+
+            val stores = storesDeferred.await()
+            val customers = customersDeferred.await()
+            val salesPersons = salesPersonsDeferred.await()
+
+            CombinedSetupResult(
+                stores = stores,
+                customers = customers,
+                salesPerson = salesPersons,
+            )
+        }
     }
 
     override fun onClickAddItem() {
@@ -153,20 +213,20 @@ class InvoiceScreenModel(
         updateState { it.copy(showErrorScreen = true) }
     }
 
-    override fun onChooseCustomer(id: Int) {
+    override fun onChooseCustomer(id: Long) {
         updateState { it.copy(selectedCustomer = it.selectedCustomer.copy(id = id)) }
     }
 
-    override fun onChooseStore(id: Int) {
+    override fun onChooseStore(id: Long) {
         if (RetailSetup.IS_MAIN_STORE)
             updateState { it.copy(selectedStore = it.selectedStore.copy(id = id)) }
     }
 
-    override fun onChooseSalesPerson(id: Int) {
+    override fun onChooseSalesPerson(id: Long) {
         updateState { it.copy(selectedSalePerson = it.selectedSalePerson.copy(id = id)) }
     }
 
-    override fun onChooseInvoiceType(id: Int) {
+    override fun onChooseInvoiceType(id: Long) {
         updateState { it.copy(selectedInvoiceType = it.selectedInvoiceType.copy(id = id)) }
     }
 
@@ -175,3 +235,10 @@ class InvoiceScreenModel(
     }
 
 }
+
+
+data class CombinedSetupResult(
+    val stores: List<Store>,
+    val customers: List<Customer>,
+    val salesPerson: List<User>,
+)

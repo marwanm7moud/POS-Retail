@@ -1,7 +1,7 @@
 package org.abapps.app.domain.entities
 
 data class Customer(
-    val id: Int,
+    val id: Long,
     val code: String,
     val firstName: String,
     val lastName: String,

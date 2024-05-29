@@ -24,7 +24,7 @@ fun DropDownTextField(
     selectedItem: DropDownState,
     enabled: Boolean = true,
     label: String = "",
-    onClick: (Int) -> Unit,
+    onClick: (Long) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf(selectedItem) }
@@ -77,6 +77,6 @@ fun DropDownTextField(
 
 @Immutable
 data class DropDownState(
-    val id: Int = 0,
+    val id: Long = 0L,
     val name: String = ""
 )

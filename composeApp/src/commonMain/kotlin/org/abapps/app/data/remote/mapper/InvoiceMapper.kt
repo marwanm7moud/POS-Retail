@@ -11,7 +11,7 @@ import org.abapps.app.domain.entities.User
 
 fun CustomerDto.toEntity(): Customer {
     return Customer(
-        id = this.id ?: 0,
+        id = this.id ?: 0L,
         code = this.code ?: "",
         firstName = this.firstName ?: "",
         lastName = this.lastName ?: "",
