@@ -1,6 +1,7 @@
 package org.abapps.app.domain.usecase
 
 import org.abapps.app.data.util.RetailSetup
+import org.abapps.app.presentation.screens.posInvoiceScreen.Calculations
 import org.abapps.app.presentation.screens.posInvoiceScreen.NewInvoiceItemUiState
 
 class CalculationInvoiceUseCase {
@@ -33,5 +34,22 @@ class CalculationInvoiceUseCase {
                 )
             }
         }
+    }
+
+    fun calculateInvoice(
+        items: List<NewInvoiceItemUiState>,
+        calculations: Calculations
+    ): Calculations {
+        val subTotal = items.sumOf { it.priceWOT.toDouble() }.toFloat()
+        val totalTax = items.sumOf { it.taxAmount.toDouble() }.toFloat()
+        val netTotal = subTotal + totalTax
+        val remaining = netTotal - calculations.totalPaid
+        return calculations.copy(
+            subTotal = subTotal,
+            totalTax = totalTax,
+            netTotal = netTotal,
+            amount = netTotal,
+            remaining = remaining
+        )
     }
 }

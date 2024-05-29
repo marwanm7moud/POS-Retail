@@ -195,7 +195,14 @@ class InvoiceScreenModel(
                 updatedInvoices.add(newInvoice)
             }
         }
-        return calculationInvoice.calculateItemsPrice(updatedInvoices)
+        return calculationInvoice.calculateItemsPrice(updatedInvoices).also {
+            val newCalc = calculationInvoice.calculateInvoice(
+                it, state.value.calculations
+            )
+            updateState { u ->
+                u.copy(calculations = newCalc)
+            }
+        }
     }
 
 
@@ -310,7 +317,8 @@ class InvoiceScreenModel(
             )
         }
         val newList = calculationInvoice.calculateItemsPrice(state.value.invoiceItemList)
-        updateState { it.copy(invoiceItemList = newList) }
+        val newCalc = calculationInvoice.calculateInvoice(newList, state.value.calculations)
+        updateState { it.copy(invoiceItemList = newList, calculations = newCalc) }
     }
 
     override fun onChangeDiscount(discountAmount: String) {
