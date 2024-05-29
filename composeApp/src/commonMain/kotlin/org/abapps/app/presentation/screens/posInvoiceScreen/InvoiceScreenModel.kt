@@ -169,13 +169,32 @@ class InvoiceScreenModel(
         updateState { invoice ->
             invoice.copy(
                 isAddItem = false,
-                invoiceItemList = invoice.invoiceItemList +
-                        invoice.selectedItemsIndexFromAllItems.map {
-                            invoice.allItemsList[it]
-                        }.map { it.toInvoiceItemUiState() },
+                invoiceItemList = addInvoices(
+                    invoice.invoiceItemList,
+                    invoice.selectedItemsIndexFromAllItems.map {
+                        invoice.allItemsList[it]
+                    }.map { it.toInvoiceItemUiState() }),
                 selectedItemsIndexFromAllItems = emptyList()
             )
         }
+    }
+
+    private fun addInvoices(
+        currentInvoices: List<NewInvoiceItemUiState>,
+        newInvoices: List<NewInvoiceItemUiState>
+    ): List<NewInvoiceItemUiState> {
+        val updatedInvoices = currentInvoices.toMutableList()
+        for (newInvoice in newInvoices) {
+            val existingInvoice = updatedInvoices.find { it.itemID == newInvoice.itemID }
+            if (existingInvoice != null) {
+                existingInvoice.qty = (existingInvoice.qty.toFloat() + 1f).toString()
+            } else {
+                updatedInvoices.add(newInvoice)
+            }
+        }
+
+        // Return the updated list of invoices
+        return updatedInvoices
     }
 
 

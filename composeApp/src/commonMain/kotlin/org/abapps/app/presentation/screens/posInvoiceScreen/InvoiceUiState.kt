@@ -68,7 +68,7 @@ data class NewInvoiceItemUiState(
     val itemCode: Int = 132,
     val alu: Long = 654,
     val name: String = "marnasdasdasd",
-    val qty: String = "",
+    var qty: String = "",
     val orgPrice: Int = 20,
     val itemDisc: Int = 20,
     val price: Int = 20,
