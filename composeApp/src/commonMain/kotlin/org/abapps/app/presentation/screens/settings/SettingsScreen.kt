@@ -171,7 +171,7 @@ private fun SettingsForm(
                 options = state.subCompanies.map { it.toDropDownState() },
                 selectedItem = state.selectedSubCompany.toDropDownState()
             ) {
-                listener.onChooseSubCompany(it)
+                listener.onChooseSubCompany(it.toInt())
             }
         }
         SlideAnimation(
@@ -184,7 +184,7 @@ private fun SettingsForm(
                 options = state.stores.map { it.toDropDownState() },
                 selectedItem = state.selectedStore.toDropDownState()
             ) {
-                listener.onChooseStore(it)
+                listener.onChooseStore(it.toInt())
             }
         }
         SlideAnimation(
@@ -197,7 +197,7 @@ private fun SettingsForm(
                 options = state.subCompanies.map { it.toDropDownState() },
                 selectedItem = state.selectedMainSubCompany.toDropDownState()
             ) {
-                listener.onChooseMainSubCompany(it)
+                listener.onChooseMainSubCompany(it.toInt())
             }
         }
         SlideAnimation(
@@ -210,7 +210,7 @@ private fun SettingsForm(
                 options = state.stores.map { it.toDropDownState() },
                 selectedItem = state.selectedMainStore.toDropDownState()
             ) {
-                listener.onChooseMainStore(it)
+                listener.onChooseMainStore(it.toInt())
             }
         }
         SettingTextFieldChoose(
@@ -254,7 +254,7 @@ private fun SettingDropDownChoose(
     options: List<DropDownState>,
     selectedItem: DropDownState,
     modifier: Modifier = Modifier,
-    onClick: (Int) -> Unit,
+    onClick: (Long) -> Unit,
 ) {
     Row(
         modifier.fillMaxWidth().padding(horizontal = 8.dp),

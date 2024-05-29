@@ -37,5 +37,5 @@ fun StoreSetting.toSetupItemState(): SetupItemState = SetupItemState(
 )
 
 fun SetupItemState.toDropDownState(): DropDownState = DropDownState(
-    id, name
+    id.toLong(), name
 )
