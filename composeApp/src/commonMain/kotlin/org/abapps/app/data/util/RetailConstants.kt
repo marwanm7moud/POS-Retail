@@ -13,7 +13,7 @@ object RetailSetup {
     var DEFAULT_CUSTOMER_ID = 0L
     var DEFAULT_SALES_ID = 0
     var IS_MAIN_STORE = false
-    var USER_ID = 1
+    var USER_ID = 1035
     var CASHIER_NAME = ""
     var TOKEN = ""
     var WORK_STATION_ID = 0
