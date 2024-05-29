@@ -85,6 +85,7 @@ class CalculationInvoiceUseCase {
                 item.copy()
             }
         }
+        items.toMutableList().remove(item.first())
         return items + item
     }
 
