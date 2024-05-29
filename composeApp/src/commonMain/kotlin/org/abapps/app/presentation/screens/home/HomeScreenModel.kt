@@ -59,6 +59,7 @@ class HomeScreenModel(
                     DEFAULT_CUSTOMER_ID = combinedSetupResult.invoiceSetup.defaultCust
                     IS_MAIN_STORE = combinedSetupResult.mainStoreId == STORE_ID
                     CASHIER_NAME = combinedSetupResult.cashierName
+                    PRICE_LVL_ID = combinedSetupResult.storeSetup.priceLvlId
                 }
             },
             onError = ::onError

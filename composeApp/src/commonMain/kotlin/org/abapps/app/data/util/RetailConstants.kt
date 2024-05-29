@@ -15,6 +15,7 @@ object RetailSetup {
     var IS_MAIN_STORE = false
     var USER_ID = 1035
     var CASHIER_NAME = ""
+    var PRICE_LVL_ID = 0
     var TOKEN = ""
     var WORK_STATION_ID = 0
     var USER_LANGUAGE = LanguageCode.EN.value

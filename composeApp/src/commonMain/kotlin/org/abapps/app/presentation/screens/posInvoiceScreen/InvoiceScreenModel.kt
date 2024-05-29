@@ -128,7 +128,8 @@ class InvoiceScreenModel(
                     RetailSetup.STORE_ID,
                     RetailSetup.SUB_COMPANY_ID,
                     RetailSetup.DEFAULT_CUSTOMER_ID,
-                    RetailSetup.FIFO || RetailSetup.AVERAGE
+                    RetailSetup.FIFO || RetailSetup.AVERAGE,
+                    RetailSetup.PRICE_LVL_ID
                 )
             },
             onSuccess = { items ->

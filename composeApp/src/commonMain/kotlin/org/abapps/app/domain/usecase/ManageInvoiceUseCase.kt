@@ -14,9 +14,16 @@ class ManageInvoiceUseCase(
         storeId: Int,
         subCompanyId: Int,
         customerId: Long,
-        isAverageOrFifo: Boolean
+        isAverageOrFifo: Boolean,
+        priceLvlId: Int,
     ): List<Item> {
-        return invoiceGateway.getAllItems(storeId, subCompanyId, customerId, isAverageOrFifo)
+        return invoiceGateway.getAllItems(
+            storeId,
+            subCompanyId,
+            customerId,
+            isAverageOrFifo,
+            priceLvlId
+        )
     }
 
     suspend fun getCustomers(storeId: Int, subCompanyId: Int): List<Customer> {

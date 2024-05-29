@@ -11,7 +11,8 @@ interface IInvoiceGateway {
         storeId: Int,
         sComId: Int,
         customerId: Long,
-        isAverageOrFifo: Boolean
+        isAverageOrFifo: Boolean,
+        priceLvlId: Int,
     ): List<Item>
 
     suspend fun getCustomers(storeId: Int, subCompanyId: Int): List<Customer>

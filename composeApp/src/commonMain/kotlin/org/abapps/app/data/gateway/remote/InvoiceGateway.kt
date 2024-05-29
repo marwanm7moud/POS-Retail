@@ -24,7 +24,8 @@ class InvoiceGateway(client: HttpClient) : BaseGateway(client), IInvoiceGateway 
         storeId: Int,
         sComId: Int,
         customerId: Long,
-        isAverageOrFifo: Boolean
+        isAverageOrFifo: Boolean,
+        priceLvlId: Int,
     ): List<Item> {
         return tryToExecute<ServerResponse<List<ItemDto>>> {
             get("items") {
@@ -32,6 +33,7 @@ class InvoiceGateway(client: HttpClient) : BaseGateway(client), IInvoiceGateway 
                 parameter("subCompanyId", sComId)
                 parameter("customerId", customerId)
                 parameter("isAverageOrFifo", isAverageOrFifo)
+                parameter("priceLvlId", priceLvlId)
             }
         }.data?.take(20)?.map { it.toEntity() } ?: throw NotFoundException("Items not found")
     }

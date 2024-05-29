@@ -37,9 +37,9 @@ val NetworkModule = module(createdAtStart = true) {
                 )
             }
             install(HttpTimeout) {
-                requestTimeoutMillis = 5000
-                connectTimeoutMillis = 5000
-                socketTimeoutMillis = 5000
+                requestTimeoutMillis = 15000
+                connectTimeoutMillis = 15000
+                socketTimeoutMillis = 15000
             }
             defaultRequest {
                 header("Content-Type", "application/json")
