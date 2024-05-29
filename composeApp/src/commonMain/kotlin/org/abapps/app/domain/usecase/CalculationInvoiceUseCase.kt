@@ -12,9 +12,10 @@ class CalculationInvoiceUseCase {
             if ((!RetailSetup.VAT && (!RetailSetup.TAX_EFFECT || !RetailSetup.TAX_EFFECT_WITH_ITEM)) ||
                 (!RetailSetup.VAT && (RetailSetup.TAX_EFFECT || RetailSetup.TAX_EFFECT_WITH_ITEM))
             ) {
-                val priceWOT = item.orgPrice.roundToDecimals(2)
-                val taxAmount =
+                val priceWOT = item.orgPrice.roundToDecimals(2) - item.itemDisc
+                val taxAmount = if (item.itemDisc == 0f)
                     (item.taxPerc.div(100f) * priceWOT).roundToDecimals(RetailSetup.LEN_DECIMAL)
+                else item.taxAmount
                 val price = (priceWOT + taxAmount).roundToDecimals(RetailSetup.LEN_DECIMAL)
                 val extPrice = (price * item.qty.toFloat()).roundToDecimals(RetailSetup.LEN_DECIMAL)
                 item.copy(
@@ -26,9 +27,11 @@ class CalculationInvoiceUseCase {
             } else if ((RetailSetup.VAT && (!RetailSetup.TAX_EFFECT || !RetailSetup.TAX_EFFECT_WITH_ITEM)) ||
                 (RetailSetup.VAT && (RetailSetup.TAX_EFFECT || RetailSetup.TAX_EFFECT_WITH_ITEM))
             ) {
-                val priceWOT = (item.orgPrice / (1 + (item.taxPerc / 100))).roundToDecimals(2)
-                val taxAmount =
+                val priceWOT =
+                    (item.orgPrice / (1 + (item.taxPerc / 100))).roundToDecimals(2) - item.itemDisc
+                val taxAmount = if (item.itemDisc == 0f)
                     (item.taxPerc.div(100f) * priceWOT).roundToDecimals(RetailSetup.LEN_DECIMAL)
+                else item.taxAmount
                 val price = (priceWOT + taxAmount).roundToDecimals(RetailSetup.LEN_DECIMAL)
                 val extPrice = (price * item.qty.toFloat()).roundToDecimals(RetailSetup.LEN_DECIMAL)
                 item.copy(
@@ -97,15 +100,16 @@ class CalculationInvoiceUseCase {
         items: List<NewInvoiceItemUiState>,
         calculations: Calculations
     ): Calculations {
-        val subTotal = items.sumOf { it.priceWOT.toDouble() }.toFloat().roundToDecimals(2)
+        val subTotal =
+            items.sumOf { it.priceWOT.toDouble() * it.qty.toDouble() }.toFloat().roundToDecimals(2)
         val totalTax =
             if (RetailSetup.TAX_EFFECT || RetailSetup.TAX_EFFECT_WITH_ITEM)
-                if (calculations.discountAmount == 0f) items.sumOf { it.taxAmount.toDouble() }
+                if (calculations.discountAmount == 0f) items.sumOf { it.taxAmount.toDouble() * it.qty.toDouble() }
                     .toFloat()
                     .roundToDecimals(RetailSetup.LEN_DECIMAL) else items.sumOf { it.taxAmount.toDouble() }
                     .toFloat()
                     .roundToDecimals(RetailSetup.LEN_DECIMAL) * (calculations.discountAmount / 100)
-            else items.sumOf { it.taxAmount.toDouble() }
+            else items.sumOf { it.taxAmount.toDouble() * it.qty.toDouble() }
                 .toFloat()
                 .roundToDecimals(RetailSetup.LEN_DECIMAL)
         val discountTotal =
