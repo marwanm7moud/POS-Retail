@@ -114,39 +114,37 @@ class InvoiceScreenModel(
     }
 
     override fun onClickAddItem() {
-        if (state.value.selectedCustomer.id != 0L) {
-            updateState {
-                it.copy(
-                    isAddItem = true,
-                    isLoading = true,
-                    errorState = null,
-                    errorMessage = "",
-                )
-            }
-            tryToExecute(
-                function = {
-                    manageInvoice.getAllItems(
-                        RetailSetup.STORE_ID,
-                        RetailSetup.SUB_COMPANY_ID,
-                        RetailSetup.DEFAULT_CUSTOMER_ID,
-                        RetailSetup.FIFO || RetailSetup.AVERAGE
-                    )
-                },
-                onSuccess = { items ->
-                    updateState {
-                        it.copy(
-                            isLoading = false,
-                            errorState = null,
-                            errorMessage = "",
-                            allItemsList = state.value.allItemsList + items.map { item ->
-                                item.toUiState()
-                            },
-                        )
-                    }
-                },
-                onError = ::onError
+        updateState {
+            it.copy(
+                isAddItem = true,
+                isLoading = true,
+                errorState = null,
+                errorMessage = "",
             )
-        } else updateState { it.copy(errorDialogueIsVisible = true) }
+        }
+        tryToExecute(
+            function = {
+                manageInvoice.getAllItems(
+                    RetailSetup.STORE_ID,
+                    RetailSetup.SUB_COMPANY_ID,
+                    RetailSetup.DEFAULT_CUSTOMER_ID,
+                    RetailSetup.FIFO || RetailSetup.AVERAGE
+                )
+            },
+            onSuccess = { items ->
+                updateState {
+                    it.copy(
+                        isLoading = false,
+                        errorState = null,
+                        errorMessage = "",
+                        allItemsList = state.value.allItemsList + items.map { item ->
+                            item.toUiState()
+                        },
+                    )
+                }
+            },
+            onError = ::onError
+        )
     }
 
     private fun onError(error: ErrorState) {

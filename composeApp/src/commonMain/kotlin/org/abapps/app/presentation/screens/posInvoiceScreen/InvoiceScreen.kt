@@ -78,7 +78,7 @@ class InvoiceScreen : Screen {
         FadeAnimation(state.errorDialogueIsVisible) {
             ErrorDialogue(
                 title = Resources.strings.error,
-                text = state.errorMessage,
+                text = Resources.strings.exit,
                 onDismissRequest = invoicesScreenModel::onDismissErrorDialogue,
                 onClickConfirmButton = invoicesScreenModel::onDismissErrorDialogue,
             )
