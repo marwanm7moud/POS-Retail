@@ -21,7 +21,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -43,7 +42,7 @@ import org.abapps.app.presentation.screens.composable.itemBox
 import org.abapps.app.presentation.screens.posInvoiceScreen.NewInvoiceItemUiState
 import org.abapps.app.util.calculateBiggestWidthOnEveryRow
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NewInvoiceItemTable(
     invoiceItems: List<NewInvoiceItemUiState>,
@@ -53,7 +52,7 @@ fun NewInvoiceItemTable(
     onClickItemEdit: (Int) -> Unit,
     onClickItemDiscount: (Int) -> Unit,
     modifier: Modifier,
-    onChangeQty : (String , Long)->Unit
+    onChangeQty: (String, Long) -> Unit
 ) {
     val headers = NewInvoiceItemHeaders.entries.toTypedArray()
     val biggestColumnWidths = calculateBiggestWidths(invoiceItems)
@@ -167,7 +166,7 @@ fun NewInvoiceItemTable(
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                                     value = content,
                                     onValueChange = {
-                                        onChangeQty(it ,item.itemID )
+                                        onChangeQty(it, item.itemID)
                                     },
                                     maxLines = 1,
                                     textStyle = TextStyle(
@@ -195,7 +194,6 @@ fun NewInvoiceItemTable(
         }
     }
 }
-
 
 
 @Composable

@@ -8,6 +8,7 @@ import org.abapps.app.data.util.RetailSetup
 import org.abapps.app.domain.entities.Customer
 import org.abapps.app.domain.entities.Store
 import org.abapps.app.domain.entities.User
+import org.abapps.app.domain.usecase.CalculationInvoiceUseCase
 import org.abapps.app.domain.usecase.ManageInvoiceUseCase
 import org.abapps.app.domain.util.UnknownErrorException
 import org.abapps.app.presentation.base.BaseScreenModel
@@ -15,6 +16,7 @@ import org.abapps.app.presentation.base.ErrorState
 
 class InvoiceScreenModel(
     private val manageInvoice: ManageInvoiceUseCase,
+    private val calculationInvoice: CalculationInvoiceUseCase,
 ) : BaseScreenModel<NewInvoiceUiState, InvoiceUiEffect>(NewInvoiceUiState()), InvoiceInteractions {
 
     override val viewModelScope: CoroutineScope get() = screenModelScope
@@ -153,6 +155,7 @@ class InvoiceScreenModel(
             it.copy(
                 errorState = error,
                 isLoading = false,
+                showErrorScreen = true,
                 errorMessage = when (error) {
                     is ErrorState.UnknownError -> error.message.toString()
                     is ErrorState.ServerError -> error.message.toString()
@@ -192,13 +195,12 @@ class InvoiceScreenModel(
                 updatedInvoices.add(newInvoice)
             }
         }
-
-        // Return the updated list of invoices
-        return updatedInvoices
+        return calculationInvoice.calculateItemsPrice(updatedInvoices)
     }
 
 
     fun retry() {
+        updateState { it.copy(showErrorScreen = false) }
         getSetupInvoiceData()
     }
 
