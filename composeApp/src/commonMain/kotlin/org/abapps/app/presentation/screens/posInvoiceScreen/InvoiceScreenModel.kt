@@ -189,15 +189,22 @@ class InvoiceScreenModel(
     }
 
     override fun onClickDone() {
-        updateState { invoice ->
-            invoice.copy(
-                isAddItem = false,
-                invoiceItemList = addInvoices(
-                    invoice.invoiceItemList,
-                    invoice.selectedItemsIndexFromAllItems.map {
-                        invoice.allItemsList[it]
-                    }.map { it.toInvoiceItemUiState() }),
-                selectedItemsIndexFromAllItems = emptyList()
+        if (RetailSetup.ALLOW_NEGATIVE_QTY && state.value.allItemsList.any { it.onHand <= 0 }) {
+            updateState { invoice ->
+                invoice.copy(
+                    isAddItem = false,
+                    invoiceItemList = addInvoices(
+                        invoice.invoiceItemList,
+                        invoice.selectedItemsIndexFromAllItems.map {
+                            invoice.allItemsList[it]
+                        }.map { it.toInvoiceItemUiState() }),
+                    selectedItemsIndexFromAllItems = emptyList()
+                )
+            }
+        } else updateState {
+            it.copy(
+                errorDialogueIsVisible = true,
+                errorMessage = "Negative onHand is not allowed"
             )
         }
     }
