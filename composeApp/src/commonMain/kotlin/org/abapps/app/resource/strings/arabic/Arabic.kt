@@ -45,7 +45,7 @@ data class Arabic(
     override val addItem: String = "اضافة صنف",
     override val subTotal: String = "اجمالي سعر الصنف",
     override val totalTax: String = "اجمالي الضريبه",
-    override val netTotal: String = "اجمالي السعر بعد الضريبه",
+    override val netTotal: String = "اجمالي السعر قبل الضريبه",
     override val fee: String = "مصاريف",
     override val amount: String = "المبلغ",
     override val totalPaid: String = "اجمالي المدفوع",
