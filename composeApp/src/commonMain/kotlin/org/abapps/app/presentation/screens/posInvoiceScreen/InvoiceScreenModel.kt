@@ -138,7 +138,7 @@ class InvoiceScreenModel(
                         isLoading = false,
                         errorState = null,
                         errorMessage = "",
-                        allItemsList = state.value.allItemsList + items.map { item ->
+                        allItemsList = items.map { item ->
                             item.toUiState()
                         },
                     )
