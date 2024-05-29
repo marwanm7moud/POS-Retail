@@ -43,7 +43,10 @@ import org.abapps.app.presentation.screens.posInvoiceScreen.toDropDownState
 import org.abapps.app.resource.Resources
 
 @Composable
-fun CalculationsBar(state: NewInvoiceUiState, listener: InvoiceInteractions) {
+fun CalculationsBar(
+    state: NewInvoiceUiState,
+    listener: InvoiceInteractions
+) {
     var expandedState by remember { mutableStateOf(true) }
     val rotationState by animateFloatAsState(
         targetValue = if (expandedState) 180f else 0f
@@ -99,22 +102,35 @@ fun CalculationsBar(state: NewInvoiceUiState, listener: InvoiceInteractions) {
                         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                             CalculationItem(
                                 Resources.strings.subTotal,
-                                state.invoiceItemList.sumOf { it.priceWOT.toDouble() }.toFloat()
-                                    .toString()
+                                state.calculations.subTotal.toString()
                             )
                             CalculationItem(
                                 Resources.strings.totalTax,
-                                state.invoiceItemList.sumOf { it.taxAmount.toDouble() }.toFloat()
-                                    .toString()
+                                state.calculations.totalTax.toString()
                             )
                             Spacer(modifier = Modifier.height(16.dp))
-                            CalculationItem(Resources.strings.netTotal, "1000")
-                            CalculationItem(Resources.strings.fee, "0")
+                            CalculationItem(
+                                Resources.strings.netTotal,
+                                state.calculations.netTotal.toString()
+                            )
+                            CalculationItem(
+                                Resources.strings.fee,
+                                state.calculations.fee.toString()
+                            )
                         }
                         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                            CalculationItem(Resources.strings.amount, "1140")
-                            CalculationItem(Resources.strings.totalPaid, "0")
-                            CalculationItem(Resources.strings.remaining, "1140")
+                            CalculationItem(
+                                Resources.strings.amount,
+                                state.calculations.amount.toString()
+                            )
+                            CalculationItem(
+                                Resources.strings.totalPaid,
+                                state.calculations.totalPaid.toString()
+                            )
+                            CalculationItem(
+                                Resources.strings.remaining,
+                                state.calculations.remaining.toString()
+                            )
                         }
                         Column(
                             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -123,8 +139,14 @@ fun CalculationsBar(state: NewInvoiceUiState, listener: InvoiceInteractions) {
                                 RoundedCornerShape(12.dp)
                             ).padding(16.dp)
                         ) {
-                            CalculationItem(Resources.strings.taken, "1140")
-                            CalculationItem(Resources.strings.given, "0")
+                            CalculationItem(
+                                Resources.strings.taken,
+                                state.calculations.taken.toString()
+                            )
+                            CalculationItem(
+                                Resources.strings.given,
+                                state.calculations.given.toString()
+                            )
                         }
                         StOutlinedButton(
                             title = "Update",

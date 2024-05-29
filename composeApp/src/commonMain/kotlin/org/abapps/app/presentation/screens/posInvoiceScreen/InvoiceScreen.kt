@@ -70,7 +70,6 @@ import pos_retail.composeapp.generated.resources.Res
 import pos_retail.composeapp.generated.resources.ic_back
 
 class InvoiceScreen : Screen {
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
         val invoicesScreenModel = getScreenModel<InvoiceScreenModel>()
