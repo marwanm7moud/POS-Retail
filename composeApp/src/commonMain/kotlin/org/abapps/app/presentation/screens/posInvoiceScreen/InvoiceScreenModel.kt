@@ -270,8 +270,8 @@ class InvoiceScreenModel(
             updateState { it.copy(expandedCardStatus = expandedCardStatus) }
     }
 
-    override fun onClickItemDelete(index: Int) {
-        updateState { it.copy(invoiceItemList = it.invoiceItemList - it.invoiceItemList[index]) }
+    override fun onClickItemDelete(itemId: Long) {
+        updateState { it.copy(invoiceItemList = it.invoiceItemList - it.invoiceItemList.find { item -> item.itemID == itemId }!!) }
     }
 
     override fun showErrorScreen() {
