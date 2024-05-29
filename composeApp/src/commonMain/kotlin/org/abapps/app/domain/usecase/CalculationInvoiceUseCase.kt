@@ -55,7 +55,7 @@ class CalculationInvoiceUseCase {
                 val priceWOT =
                     item.orgPrice.roundToDecimals(2) * (calculations.discountAmount / 100)
                 val taxAmount = if (!RetailSetup.TAX_EFFECT || !RetailSetup.TAX_EFFECT_WITH_ITEM)
-                    (item.taxPerc.div(100f) * priceWOT).roundToDecimals(RetailSetup.LEN_DECIMAL)
+                    calculations.totalTax
                 else (item.taxPerc.div(100f) * priceWOT).roundToDecimals(RetailSetup.LEN_DECIMAL) * (calculations.discountAmount / 100)
                 val price = (priceWOT + taxAmount).roundToDecimals(RetailSetup.LEN_DECIMAL)
                 val extPrice = (price * item.qty.toFloat()).roundToDecimals(RetailSetup.LEN_DECIMAL)
@@ -71,7 +71,7 @@ class CalculationInvoiceUseCase {
                 val priceWOT =
                     (item.orgPrice / (1 + (item.taxPerc / 100))).roundToDecimals(2) * (calculations.discountAmount / 100)
                 val taxAmount = if (!RetailSetup.TAX_EFFECT || !RetailSetup.TAX_EFFECT_WITH_ITEM)
-                    (item.taxPerc.div(100f) * priceWOT).roundToDecimals(RetailSetup.LEN_DECIMAL)
+                    calculations.totalTax
                 else (item.taxPerc.div(100f) * priceWOT).roundToDecimals(RetailSetup.LEN_DECIMAL) * (calculations.discountAmount / 100)
                 val price = (priceWOT + taxAmount).roundToDecimals(RetailSetup.LEN_DECIMAL)
                 val extPrice = (price * item.qty.toFloat()).roundToDecimals(RetailSetup.LEN_DECIMAL)
@@ -80,13 +80,16 @@ class CalculationInvoiceUseCase {
                     taxAmount = taxAmount,
                     price = price,
                     extPrice = extPrice,
+                    itemDisc = priceWOT
                 )
             } else {
                 item.copy()
             }
         }
-        items.toMutableList().remove(item.first())
-        return items + item
+        val temp = items.toMutableList()
+        temp.remove(items.find { it.itemID == itemId })
+        temp.addAll(item)
+        return temp
     }
 
 
