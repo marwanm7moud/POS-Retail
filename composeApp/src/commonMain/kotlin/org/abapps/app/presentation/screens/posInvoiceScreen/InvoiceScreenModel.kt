@@ -23,6 +23,7 @@ class InvoiceScreenModel(
                 isLoading = true,
                 errorState = null,
                 errorMessage = "",
+                showErrorScreen = false
             )
         }
         tryToExecute(
@@ -35,6 +36,7 @@ class InvoiceScreenModel(
                         isLoading = false,
                         errorState = null,
                         errorMessage = "",
+                        showErrorScreen = false,
                         stores = stores.map { store ->
                             InvoiceDataState(
                                 id = store.storeId,
@@ -115,7 +117,7 @@ class InvoiceScreenModel(
     }
 
     fun retry() {
-
+        getSetupInvoiceData()
     }
 
     override fun onClickBack() {
