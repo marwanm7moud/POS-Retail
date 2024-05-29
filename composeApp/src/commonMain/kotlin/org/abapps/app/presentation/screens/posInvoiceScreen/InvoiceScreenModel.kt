@@ -214,20 +214,29 @@ class InvoiceScreenModel(
     }
 
     override fun onChooseCustomer(id: Long) {
-        updateState { it.copy(selectedCustomer = it.selectedCustomer.copy(id = id)) }
+        updateState {
+            it.copy(selectedCustomer = it.customers.find { f -> f.id == id } ?: InvoiceDataState())
+        }
     }
 
     override fun onChooseStore(id: Long) {
         if (RetailSetup.IS_MAIN_STORE)
-            updateState { it.copy(selectedStore = it.selectedStore.copy(id = id)) }
+            updateState {
+                it.copy(selectedStore = it.stores.find { f -> f.id == id } ?: InvoiceDataState())
+            }
     }
 
     override fun onChooseSalesPerson(id: Long) {
-        updateState { it.copy(selectedSalePerson = it.selectedSalePerson.copy(id = id)) }
+        updateState {
+            it.copy(selectedSalePerson = it.sales.find { f -> f.id == id } ?: InvoiceDataState())
+        }
     }
 
     override fun onChooseInvoiceType(id: Long) {
-        updateState { it.copy(selectedInvoiceType = it.selectedInvoiceType.copy(id = id)) }
+        updateState {
+            it.copy(selectedInvoiceType = it.invoiceTypes.find { f -> f.id == id }
+                ?: InvoiceDataState())
+        }
     }
 
     override fun onCommentChanged(comment: String) {
