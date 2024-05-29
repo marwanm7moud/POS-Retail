@@ -6,6 +6,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import org.abapps.app.data.util.RetailSetup
 import org.abapps.app.domain.entities.Customer
+import org.abapps.app.domain.entities.Discount
 import org.abapps.app.domain.entities.Store
 import org.abapps.app.domain.entities.User
 import org.abapps.app.domain.usecase.CalculationInvoiceUseCase
@@ -72,6 +73,14 @@ class InvoiceScreenModel(
                         selectedSalePerson = combinedSetupResult.salesPerson.find { tempSalesPerson ->
                             tempSalesPerson.id == RetailSetup.DEFAULT_SALES_ID
                         }?.toInvoiceDataState() ?: InvoiceDataState(),
+                        discounts = state.value.discounts + combinedSetupResult.discounts.map { discount ->
+                            DiscountDataState(
+                                id = discount.discId.toLong(),
+                                name = discount.name,
+                                type = discount.discType
+                            )
+                        },
+                        selectedDiscount = DiscountDataState()
                     )
                 }
             },
@@ -103,14 +112,24 @@ class InvoiceScreenModel(
                 }
             }
 
+            val discountsDeferred = async {
+                try {
+                    manageInvoice.getAllDiscounts(RetailSetup.SUB_COMPANY_ID)
+                } catch (e: Exception) {
+                    throw UnknownErrorException(e.message.toString())
+                }
+            }
+
             val stores = storesDeferred.await()
             val customers = customersDeferred.await()
             val salesPersons = salesPersonsDeferred.await()
+            val discounts = discountsDeferred.await()
 
             CombinedSetupResult(
                 stores = stores,
                 customers = customers,
                 salesPerson = salesPersons,
+                discounts = discounts,
             )
         }
     }
@@ -334,4 +353,5 @@ data class CombinedSetupResult(
     val stores: List<Store>,
     val customers: List<Customer>,
     val salesPerson: List<User>,
+    val discounts: List<Discount>,
 )

@@ -34,8 +34,6 @@ data class NewInvoiceUiState(
     ),
     val discounts: List<DiscountDataState> = listOf(
         DiscountDataState(0, "", ""),
-        DiscountDataState(1, "open", "Open_Amount"),
-        DiscountDataState(2, "14", "Percentage"),
     ),
     val selectedDiscount: DiscountDataState = discounts.first(),
     val selectedInvoiceType: InvoiceDataState = invoiceTypes.first(),
@@ -67,7 +65,7 @@ data class InvoiceDataState(
 data class DiscountDataState(
     val id: Long = 0L,
     val name: String = "",
-    val type: String="",
+    val type: String = "",
 )
 
 fun InvoiceDataState.toDropDownState(): DropDownState = DropDownState(
