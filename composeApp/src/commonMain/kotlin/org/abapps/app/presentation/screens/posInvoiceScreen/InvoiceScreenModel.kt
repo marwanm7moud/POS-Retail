@@ -315,7 +315,7 @@ class InvoiceScreenModel(
 
     override fun onChangeDiscount(discountAmount: String) {
         if (discountAmount.isNotBlank())
-        updateState { it.copy(discountAmount = discountAmount.toFloat()) }
+            updateState { it.copy(discountAmount = discountAmount.toFloat()) }
     }
 
 }
