@@ -466,8 +466,11 @@ private fun DiscountDialog(state: NewInvoiceUiState, listener: InvoiceInteractio
                     modifier = Modifier.padding(end = 8.dp)
                 )
                 Text(
-                    text = ((state.calculations.discountAmount / 100) *
+                    text = if (RetailSetup.VAT) ((state.calculations.discountAmount / 100) *
                             (state.calculations.subTotal + state.calculations.totalTax)).roundToDecimals(
+                        3
+                    ).toString() else ((state.calculations.discountAmount / 100) *
+                            (state.calculations.subTotal)).roundToDecimals(
                         3
                     ).toString(),
                     color = Color.White,

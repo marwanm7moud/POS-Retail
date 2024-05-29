@@ -36,6 +36,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.StOutlinedButton
+import org.abapps.app.data.util.RetailSetup
 import org.abapps.app.presentation.screens.composable.DropDownTextField
 import org.abapps.app.presentation.screens.posInvoiceScreen.InvoiceInteractions
 import org.abapps.app.presentation.screens.posInvoiceScreen.NewInvoiceUiState
@@ -206,8 +207,11 @@ fun CalculationsBar(
                                 modifier = Modifier.width(80.dp)
                             )
                             Text(
-                                text = ((state.calculations.discountAmount / 100) *
+                                text = if (RetailSetup.VAT) ((state.calculations.discountAmount / 100) *
                                         (state.calculations.subTotal + state.calculations.totalTax)).roundToDecimals(
+                                    3
+                                ).toString() else ((state.calculations.discountAmount / 100) *
+                                        (state.calculations.subTotal)).roundToDecimals(
                                     3
                                 ).toString(),
                                 color = Color.White,
