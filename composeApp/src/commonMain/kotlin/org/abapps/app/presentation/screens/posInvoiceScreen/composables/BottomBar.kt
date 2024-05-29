@@ -41,6 +41,7 @@ import org.abapps.app.presentation.screens.posInvoiceScreen.InvoiceInteractions
 import org.abapps.app.presentation.screens.posInvoiceScreen.NewInvoiceUiState
 import org.abapps.app.presentation.screens.posInvoiceScreen.toDropDownState
 import org.abapps.app.resource.Resources
+import org.abapps.app.util.roundToDecimals
 
 @Composable
 fun CalculationsBar(
@@ -205,7 +206,9 @@ fun CalculationsBar(
                                 modifier = Modifier.width(80.dp)
                             )
                             Text(
-                                text = ((state.calculations.discountAmount / 100) * state.calculations.subTotal).toString(),
+                                text = ((state.calculations.discountAmount / 100) * state.calculations.subTotal).roundToDecimals(
+                                    3
+                                ).toString(),
                                 color = Color.White,
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.width(120.dp)

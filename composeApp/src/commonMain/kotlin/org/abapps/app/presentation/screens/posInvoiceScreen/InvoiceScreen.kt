@@ -65,6 +65,7 @@ import org.abapps.app.presentation.screens.posInvoiceScreen.composables.NewInvoi
 import org.abapps.app.presentation.util.EventHandler
 import org.abapps.app.resource.Resources
 import org.abapps.app.util.getScreenModel
+import org.abapps.app.util.roundToDecimals
 import org.jetbrains.compose.resources.painterResource
 import pos_retail.composeapp.generated.resources.Res
 import pos_retail.composeapp.generated.resources.ic_back
@@ -465,7 +466,9 @@ private fun DiscountDialog(state: NewInvoiceUiState, listener: InvoiceInteractio
                     modifier = Modifier.padding(end = 8.dp)
                 )
                 Text(
-                    text = ((state.calculations.discountAmount / 100) * state.calculations.subTotal).toString(),
+                    text = ((state.calculations.discountAmount / 100) * state.calculations.subTotal).roundToDecimals(
+                        3
+                    ).toString(),
                     color = Color.White,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.width(120.dp)
