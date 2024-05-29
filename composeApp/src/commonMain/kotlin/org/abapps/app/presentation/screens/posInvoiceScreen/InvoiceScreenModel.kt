@@ -352,12 +352,23 @@ class InvoiceScreenModel(
     }
 
     override fun onClickOkInDiscountDialog() {
-//        val newList = calculationInvoice.calculateItemsPrice(state.value.invoiceItemList)
+        val newList = calculationInvoice.calculateItemDiscount(
+            state.value.invoiceItemList,
+            state.value.calculationItem,
+            state.value.itemId
+        )
         val newCalc = calculationInvoice.calculateInvoice(
             state.value.invoiceItemList,
             state.value.calculations
         )
-        updateState { it.copy(calculations = newCalc, showDiscountDialog = false) }
+        updateState {
+            it.copy(
+                calculations = newCalc,
+                showDiscountDialog = false,
+                invoiceItemList = newList,
+                itemId = 0L
+            )
+        }
     }
 
     override fun onChangeQty(qty: String, itemId: Long) {
