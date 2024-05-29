@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -31,14 +32,18 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.StOutlinedButton
+import org.abapps.app.presentation.screens.composable.DropDownTextField
+import org.abapps.app.presentation.screens.posInvoiceScreen.InvoiceInteractions
 import org.abapps.app.presentation.screens.posInvoiceScreen.NewInvoiceUiState
+import org.abapps.app.presentation.screens.posInvoiceScreen.toDropDownState
 import org.abapps.app.resource.Resources
 
 @Composable
-fun CalculationsBar(state: NewInvoiceUiState) {
+fun CalculationsBar(state: NewInvoiceUiState, listener: InvoiceInteractions) {
     var expandedState by remember { mutableStateOf(true) }
     val rotationState by animateFloatAsState(
         targetValue = if (expandedState) 180f else 0f
@@ -49,6 +54,7 @@ fun CalculationsBar(state: NewInvoiceUiState) {
     ) {
         Box(
             modifier = Modifier
+                .background(Color.Transparent)
                 .padding(end = 8.dp)
                 .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
                 .background(Color(0xFF0202020)).clickable {
@@ -81,44 +87,122 @@ fun CalculationsBar(state: NewInvoiceUiState) {
                 .padding(16.dp)
         ) {
             androidx.compose.animation.AnimatedVisibility(expandedState) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                Column(
+                    modifier = Modifier,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                        CalculationItem(Resources.strings.subTotal, state.invoiceItemList.sumOf { it.priceWOT.toDouble() }.toFloat()
-                            .toString())
-                        CalculationItem(Resources.strings.totalTax, state.invoiceItemList.sumOf { it.taxAmount.toDouble() }.toFloat()
-                            .toString())
-                        Spacer(modifier = Modifier.height(16.dp))
-                        CalculationItem(Resources.strings.netTotal, "1000")
-                        CalculationItem(Resources.strings.fee, "0")
-                    }
-                    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                        CalculationItem(Resources.strings.amount, "1140")
-                        CalculationItem(Resources.strings.totalPaid, "0")
-                        CalculationItem(Resources.strings.remaining, "1140")
-                    }
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        modifier = Modifier.border(
-                            BorderStroke(0.5.dp, Color.LightGray),
-                            RoundedCornerShape(12.dp)
-                        ).padding(16.dp)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        CalculationItem(Resources.strings.taken, "1140")
-                        CalculationItem(Resources.strings.given, "0")
+                        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                            CalculationItem(
+                                Resources.strings.subTotal,
+                                state.invoiceItemList.sumOf { it.priceWOT.toDouble() }.toFloat()
+                                    .toString()
+                            )
+                            CalculationItem(
+                                Resources.strings.totalTax,
+                                state.invoiceItemList.sumOf { it.taxAmount.toDouble() }.toFloat()
+                                    .toString()
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            CalculationItem(Resources.strings.netTotal, "1000")
+                            CalculationItem(Resources.strings.fee, "0")
+                        }
+                        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                            CalculationItem(Resources.strings.amount, "1140")
+                            CalculationItem(Resources.strings.totalPaid, "0")
+                            CalculationItem(Resources.strings.remaining, "1140")
+                        }
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            modifier = Modifier.border(
+                                BorderStroke(0.5.dp, Color.LightGray),
+                                RoundedCornerShape(12.dp)
+                            ).padding(16.dp)
+                        ) {
+                            CalculationItem(Resources.strings.taken, "1140")
+                            CalculationItem(Resources.strings.given, "0")
+                        }
+                        StOutlinedButton(
+                            title = "Update",
+                            onClick = {},
+                            modifier = Modifier
+                        )
                     }
-                    StOutlinedButton(
-                        title = "Update",
-                        onClick = {},
-                        modifier = Modifier
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.Bottom,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        DropDownTextField(
+                            modifier = Modifier.width(120.dp),
+                            options = state.discounts.map { it.toDropDownState() },
+                            selectedItem = state.selectedDiscount.toDropDownState(),
+                            label = Resources.strings.discount
+                        ) { listener.onChooseDiscount(it) }
+
+                        Row(modifier = Modifier) {
+                            Row(
+                                modifier = Modifier,
+                                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "Percentage",
+                                    color = Color.White,
+                                    modifier = Modifier.width(80.dp)
+                                )
+                                BasicTextField(
+                                    value = state.discountAmount.toString(),
+                                    onValueChange = listener::onChangeDiscount,
+                                    readOnly = state.selectedDiscount.name != "open",
+                                    textStyle = TextStyle(
+                                        color = Color.White,
+                                        textAlign = TextAlign.Center
+                                    ),
+                                    modifier = Modifier.width(120.dp)
+                                        .border(
+                                            BorderStroke(0.5.dp, Color.LightGray),
+                                            RoundedCornerShape(12.dp)
+                                        )
+                                        .padding(vertical = 8.dp)
+                                )
+                            }
+                        }
+                        Row(
+                            modifier = Modifier,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Discount Amount",
+                                color = Color.White,
+                                modifier = Modifier.width(80.dp)
+                            )
+                            Text(
+                                text = ((state.discountAmount / 100) * state.calculations.subTotal).toString(),
+                                color = Color.White,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.width(120.dp)
+                                    .border(
+                                        BorderStroke(0.5.dp, Color.LightGray),
+                                        RoundedCornerShape(12.dp)
+                                    )
+                                    .padding(vertical = 8.dp)
+                            )
+                        }
+                    }
+
                 }
+
             }
         }
     }
 }
+
 
 @Composable
 fun CalculationItem(title: String, calculatedNumber: String) {

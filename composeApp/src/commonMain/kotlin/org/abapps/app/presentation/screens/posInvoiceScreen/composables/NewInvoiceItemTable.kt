@@ -49,8 +49,7 @@ fun NewInvoiceItemTable(
     selectedItemIndex: Int,
     onClickItem: (Int) -> Unit,
     onClickItemDelete: (Int) -> Unit,
-    onClickItemEdit: (Int) -> Unit,
-    onClickItemDiscount: (Int) -> Unit,
+    onClickItemDiscount: (Long) -> Unit,
     modifier: Modifier,
     onChangeQty: (String, Long) -> Unit
 ) {
@@ -103,16 +102,7 @@ fun NewInvoiceItemTable(
                     DropdownMenuItem(
                         onClick = {
                             expanded = false
-                            onClickItemEdit(index)
-                        },
-                        text = {
-                            Text(text = "Edit")
-                        },
-                    )
-                    DropdownMenuItem(
-                        onClick = {
-                            expanded = false
-                            onClickItemDiscount(index)
+                            onClickItemDiscount(item.itemID)
                         },
                         text = {
                             Text(text = "Discount")

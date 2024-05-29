@@ -13,6 +13,7 @@ data class NewInvoiceUiState(
     val errorMessage: String = "",
     val errorState: ErrorState? = null,
     val isLoading: Boolean = false,
+    val showDiscountDialog: Boolean = false,
     val showErrorScreen: Boolean = false,
     val isAddItem: Boolean = false,
     val errorDialogueIsVisible: Boolean = false,
@@ -31,10 +32,30 @@ data class NewInvoiceUiState(
         InvoiceDataState(1, "Regular"),
         InvoiceDataState(2, "Return"),
     ),
+    val discounts: List<InvoiceDataState> = listOf(
+        InvoiceDataState(1, "open"),
+        InvoiceDataState(2, "14"),
+    ),
+    val selectedDiscount: InvoiceDataState = discounts.first(),
+
     val selectedInvoiceType: InvoiceDataState = invoiceTypes.first(),
     val invoiceNumber: Int = 0,
+    val discountAmount: Float = 0f,
     val cashierName: String = RetailSetup.CASHIER_NAME,
     val comment: String = "",
+    val calculations: Calculations = Calculations(),
+)
+
+data class Calculations(
+    val subTotal:Float = 438.6f,
+    val totalTax:Float= 438.6f,
+    val netTotal:Float= 438.6f,
+    val fee:Float= 438.6f,
+    val amount:Float= 438.6f,
+    val totalPaid:Float= 438.6f,
+    val remaining:Float= 438.6f,
+    val taken:Float= 438.6f,
+    val given:Float= 438.6f,
 )
 
 @Immutable

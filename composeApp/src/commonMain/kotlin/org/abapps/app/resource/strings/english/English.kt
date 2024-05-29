@@ -51,6 +51,6 @@ data class English(
     override val totalPaid: String = "Total Paid",
     override val remaining: String = "Remaining",
     override val taken: String = "Taken",
-    override val given: String = "Given",
+    override val given: String = "Given", override val discount: String = "Discount",
 
     ) : IStringResources
