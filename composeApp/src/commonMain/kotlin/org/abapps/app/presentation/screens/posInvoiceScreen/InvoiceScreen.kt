@@ -105,7 +105,7 @@ class InvoiceScreen : Screen {
                             }
                     })
             },
-            bottomBar = { AnimatedVisibility(!state.isAddItem && !state.isLoading) { CalculationsBar() } },
+            bottomBar = { AnimatedVisibility(!state.isAddItem && !state.isLoading && !state.showErrorScreen) { CalculationsBar() } },
             floatingActionButton = {
                 AnimatedVisibility(state.isAddItem) {
                     Box {
@@ -177,7 +177,7 @@ class InvoiceScreen : Screen {
                 }
             }
 
-            AnimatedVisibility(state.isAddItem && !state.isLoading) {
+            AnimatedVisibility(state.isAddItem && !state.isLoading && !state.showErrorScreen) {
                 AllItemTable(
                     modifier = Modifier.padding(top = it.calculateTopPadding()),
                     invoiceItems = state.allItemsList,
@@ -185,7 +185,7 @@ class InvoiceScreen : Screen {
                     onClickItem = invoicesScreenModel::onClickItemFromAllItems
                 )
             }
-            AnimatedVisibility(!state.isAddItem && !state.isLoading) {
+            AnimatedVisibility(!state.isAddItem && !state.isLoading && !state.showErrorScreen) {
                 Column(
                     modifier = Modifier.padding(it).padding(top = 8.dp).padding(horizontal = 8.dp)
                         .verticalScroll(rememberScrollState()),
