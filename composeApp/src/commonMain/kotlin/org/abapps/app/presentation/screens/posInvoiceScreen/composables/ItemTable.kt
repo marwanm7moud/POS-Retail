@@ -1,12 +1,12 @@
 package org.abapps.app.presentation.screens.posInvoiceScreen.composables
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,18 +15,31 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateMap
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import app.cash.paging.LoadStateError
+import app.cash.paging.LoadStateLoading
+import app.cash.paging.LoadStateNotLoading
+import app.cash.paging.compose.LazyPagingItems
+import com.beepbeep.designSystem.ui.theme.Theme
+import org.abapps.app.presentation.screens.composable.ErrorItem
+import org.abapps.app.presentation.screens.composable.ErrorView
+import org.abapps.app.presentation.screens.composable.convertLazyPagingItemsToList
 import org.abapps.app.presentation.screens.composable.itemBox
 import org.abapps.app.presentation.screens.posInvoiceScreen.ItemUiState
 import org.abapps.app.util.calculateBiggestWidthOnEveryRow
@@ -34,12 +47,13 @@ import org.abapps.app.util.calculateBiggestWidthOnEveryRow
 @Composable
 fun AllItemTable(
     modifier: Modifier,
-    invoiceItems: List<ItemUiState>,
+    invoiceItems: LazyPagingItems<ItemUiState>,
     selectedItemIndex: List<Int>,
     onClickItem: (Int) -> Unit
 ) {
     val headers = AllItemHeaders.entries.toTypedArray()
-    val biggestColumnWidths = calculateBiggestWidths(invoiceItems)
+    val items = convertLazyPagingItemsToList(invoiceItems)
+    val biggestColumnWidths = calculateBiggestWidths(items)
 
     Column(
         modifier = modifier.padding(16.dp)
@@ -64,7 +78,7 @@ fun AllItemTable(
             }
         }
         LazyColumn {
-            items(invoiceItems.size) { index ->
+            items(invoiceItems.itemCount) { index ->
                 val item = invoiceItems[index]
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -76,59 +90,59 @@ fun AllItemTable(
                 ) {
                     headers.forEach { header ->
                         val content = when (header) {
-                            AllItemHeaders.ITEM_ID -> item.itemID.toString()
-                            AllItemHeaders.ITEM_CODE -> item.itemCode.toString()
-                            AllItemHeaders.UPC -> item.upc.toString()
-                            AllItemHeaders.ALU -> item.alu.toString()
-                            AllItemHeaders.NAME -> item.name.toString()
-                            AllItemHeaders.NAME2 -> item.name2.toString()
-                            AllItemHeaders.DESCRIPTION -> item.description.toString()
-                            AllItemHeaders.STYLE_ID -> item.styleId.toString()
-                            AllItemHeaders.STYLE_NAME -> item.styleName.toString()
-                            AllItemHeaders.ON_HAND -> item.onHand.toString()
-                            AllItemHeaders.FREE_CARD -> item.freeCard.toString()
-                            AllItemHeaders.FREE_CARD_PRICE -> item.freeCardPrice.toString()
-                            AllItemHeaders.PRICE -> item.price.toString()
-                            AllItemHeaders.QTY -> item.qty.toString()
-                            AllItemHeaders.ITEM_DISCOUNT -> item.itemDiscount.toString()
-                            AllItemHeaders.GRID1 -> item.grid1.toString()
-                            AllItemHeaders.GRID2 -> item.grid2.toString()
-                            AllItemHeaders.GRID3 -> item.grid3.toString()
-                            AllItemHeaders.VEND_ID -> item.vendId.toString()
-                            AllItemHeaders.VEND_NAME -> item.vendName.toString()
-                            AllItemHeaders.NON_INVN -> item.nonInvn.toString()
-                            AllItemHeaders.TAXABLE -> item.taxable.toString()
-                            AllItemHeaders.TAX_ID -> item.taxId.toString()
-                            AllItemHeaders.ITEM_TYPE -> item.itemType.toString()
-                            AllItemHeaders.SCLASS_ID -> item.sClassId.toString()
-                            AllItemHeaders.SUB_CLASS -> item.subClass.toString()
-                            AllItemHeaders.CLASS_ID -> item.classId.toString()
-                            AllItemHeaders.CLASS_NAME -> item.classId.toString()
-                            AllItemHeaders.DEPT_ID -> item.deptId.toString()
-                            AllItemHeaders.DEPARTMENT -> item.department.toString()
-                            AllItemHeaders.ACTIVE -> item.active.toString()
-                            AllItemHeaders.OPEN_PRICE -> item.openPrice.toString()
-                            AllItemHeaders.UDF1 -> item.UDF1.toString()
-                            AllItemHeaders.UDF2 -> item.UDF2.toString()
-                            AllItemHeaders.UDF3 -> item.UDF3.toString()
-                            AllItemHeaders.UDF4 -> item.UDF4.toString()
-                            AllItemHeaders.UDF5 -> item.UDF5.toString()
-                            AllItemHeaders.UDF6 -> item.UDF6.toString()
-                            AllItemHeaders.UDF7 -> item.UDF7.toString()
-                            AllItemHeaders.UDF8 -> item.UDF9.toString()
-                            AllItemHeaders.UDF9 -> item.UDF9.toString()
-                            AllItemHeaders.UDF10 -> item.UDF10.toString()
-                            AllItemHeaders.UDF11 -> item.UDF11.toString()
-                            AllItemHeaders.UDF12 -> item.UDF12.toString()
-                            AllItemHeaders.UDF13 -> item.UDF13.toString()
-                            AllItemHeaders.UDF14 -> item.UDF14.toString()
-                            AllItemHeaders.UDF15 -> item.UDF15.toString()
-                            AllItemHeaders.UDF16 -> item.UDF16.toString()
-                            AllItemHeaders.UDF17 -> item.UDF17.toString()
-                            AllItemHeaders.UDF18 -> item.UDF18.toString()
-                            AllItemHeaders.UDF19 -> item.UDF19.toString()
-                            AllItemHeaders.UDF20 -> item.UDF20.toString()
-                            AllItemHeaders.INDEX_ID -> item.indexId.toString()
+                            AllItemHeaders.ITEM_ID -> item?.itemID.toString()
+                            AllItemHeaders.ITEM_CODE -> item?.itemCode.toString()
+                            AllItemHeaders.UPC -> item?.upc.toString()
+                            AllItemHeaders.ALU -> item?.alu.toString()
+                            AllItemHeaders.NAME -> item?.name.toString()
+                            AllItemHeaders.NAME2 -> item?.name2.toString()
+                            AllItemHeaders.DESCRIPTION -> item?.description.toString()
+                            AllItemHeaders.STYLE_ID -> item?.styleId.toString()
+                            AllItemHeaders.STYLE_NAME -> item?.styleName.toString()
+                            AllItemHeaders.ON_HAND -> item?.onHand.toString()
+                            AllItemHeaders.FREE_CARD -> item?.freeCard.toString()
+                            AllItemHeaders.FREE_CARD_PRICE -> item?.freeCardPrice.toString()
+                            AllItemHeaders.PRICE -> item?.price.toString()
+                            AllItemHeaders.QTY -> item?.qty.toString()
+                            AllItemHeaders.ITEM_DISCOUNT -> item?.itemDiscount.toString()
+                            AllItemHeaders.GRID1 -> item?.grid1.toString()
+                            AllItemHeaders.GRID2 -> item?.grid2.toString()
+                            AllItemHeaders.GRID3 -> item?.grid3.toString()
+                            AllItemHeaders.VEND_ID -> item?.vendId.toString()
+                            AllItemHeaders.VEND_NAME -> item?.vendName.toString()
+                            AllItemHeaders.NON_INVN -> item?.nonInvn.toString()
+                            AllItemHeaders.TAXABLE -> item?.taxable.toString()
+                            AllItemHeaders.TAX_ID -> item?.taxId.toString()
+                            AllItemHeaders.ITEM_TYPE -> item?.itemType.toString()
+                            AllItemHeaders.SCLASS_ID -> item?.sClassId.toString()
+                            AllItemHeaders.SUB_CLASS -> item?.subClass.toString()
+                            AllItemHeaders.CLASS_ID -> item?.classId.toString()
+                            AllItemHeaders.CLASS_NAME -> item?.classId.toString()
+                            AllItemHeaders.DEPT_ID -> item?.deptId.toString()
+                            AllItemHeaders.DEPARTMENT -> item?.department.toString()
+                            AllItemHeaders.ACTIVE -> item?.active.toString()
+                            AllItemHeaders.OPEN_PRICE -> item?.openPrice.toString()
+                            AllItemHeaders.UDF1 -> item?.UDF1.toString()
+                            AllItemHeaders.UDF2 -> item?.UDF2.toString()
+                            AllItemHeaders.UDF3 -> item?.UDF3.toString()
+                            AllItemHeaders.UDF4 -> item?.UDF4.toString()
+                            AllItemHeaders.UDF5 -> item?.UDF5.toString()
+                            AllItemHeaders.UDF6 -> item?.UDF6.toString()
+                            AllItemHeaders.UDF7 -> item?.UDF7.toString()
+                            AllItemHeaders.UDF8 -> item?.UDF9.toString()
+                            AllItemHeaders.UDF9 -> item?.UDF9.toString()
+                            AllItemHeaders.UDF10 -> item?.UDF10.toString()
+                            AllItemHeaders.UDF11 -> item?.UDF11.toString()
+                            AllItemHeaders.UDF12 -> item?.UDF12.toString()
+                            AllItemHeaders.UDF13 -> item?.UDF13.toString()
+                            AllItemHeaders.UDF14 -> item?.UDF14.toString()
+                            AllItemHeaders.UDF15 -> item?.UDF15.toString()
+                            AllItemHeaders.UDF16 -> item?.UDF16.toString()
+                            AllItemHeaders.UDF17 -> item?.UDF17.toString()
+                            AllItemHeaders.UDF18 -> item?.UDF18.toString()
+                            AllItemHeaders.UDF19 -> item?.UDF19.toString()
+                            AllItemHeaders.UDF20 -> item?.UDF20.toString()
+                            AllItemHeaders.INDEX_ID -> item?.indexId.toString()
                         }
                         itemBox(
                             content = content,
@@ -141,6 +155,68 @@ fun AllItemTable(
                     }
                 }
                 Spacer(Modifier.fillMaxWidth().background(Color.LightGray).height(0.5.dp))
+            }
+            invoiceItems.loadState.apply {
+                when {
+                    refresh is LoadStateNotLoading && invoiceItems.itemCount < 1 -> {
+                        item {
+                            Box(
+                                modifier = Modifier.fillParentMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "No Items",
+                                    modifier = Modifier.align(Alignment.Center),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+                        }
+                    }
+
+                    refresh is LoadStateLoading -> {
+                        item {
+                            Box(
+                                modifier = Modifier.fillParentMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator(
+                                    modifier.align(Alignment.Center),
+                                    color = Theme.colors.primary
+                                )
+                            }
+                        }
+                    }
+
+                    append is LoadStateLoading -> {
+                        item {
+                            CircularProgressIndicator(
+                                color = Theme.colors.primary,
+                                modifier = Modifier.fillMaxWidth()
+                                    .padding(16.dp)
+                                    .wrapContentWidth(Alignment.CenterHorizontally)
+                            )
+                        }
+                    }
+
+                    refresh is LoadStateError -> {
+                        item {
+                            ErrorView(
+                                message = "No Internet Connection",
+                                onClickRetry = { invoiceItems.retry() },
+                                modifier = Modifier.fillParentMaxSize()
+                            )
+                        }
+                    }
+
+                    append is LoadStateError -> {
+                        item {
+                            ErrorItem(
+                                message = "No Internet Connection",
+                                onClickRetry = { invoiceItems.retry() },
+                            )
+                        }
+                    }
+                }
             }
         }
     }

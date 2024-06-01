@@ -1,6 +1,11 @@
 package org.abapps.app.presentation.screens.posInvoiceScreen
 
 import androidx.compose.runtime.Immutable
+import androidx.paging.PagingData
+import androidx.paging.map
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.map
 import org.abapps.app.data.util.RetailSetup
 import org.abapps.app.domain.entities.Customer
 import org.abapps.app.domain.entities.Item
@@ -20,7 +25,7 @@ data class NewInvoiceUiState(
     val selectedItemsIndexFromAllItems: List<Int> = emptyList(),
     val selectedItemIndexFromInvoice: Int = -1,
     val invoiceItemList: List<NewInvoiceItemUiState> = emptyList(),
-    val allItemsList: List<ItemUiState> = emptyList(),
+    val allItemsList: Flow<PagingData<ItemUiState>> = emptyFlow(),
     val expandedCardStatus: ExpandedCardStatus? = null,
     val stores: List<InvoiceDataState> = emptyList(),
     val selectedStore: InvoiceDataState = InvoiceDataState(),
@@ -243,3 +248,7 @@ fun ItemUiState.toInvoiceItemUiState(): NewInvoiceItemUiState = NewInvoiceItemUi
     taxAmount = price,
     itemSerial = 0,
 )
+
+fun Flow<PagingData<Item>>.toUIState(): Flow<PagingData<ItemUiState>> {
+    return this.map { pagingData -> pagingData.map { it.toUiState() } }
+}

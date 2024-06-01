@@ -43,6 +43,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import app.cash.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.core.screen.Screen
 import com.beepbeep.designSystem.ui.composable.StAppBar
 import com.beepbeep.designSystem.ui.composable.StButton
@@ -74,6 +75,7 @@ class InvoiceScreen : Screen {
     override fun Content() {
         val invoicesScreenModel = getScreenModel<InvoiceScreenModel>()
         val state by invoicesScreenModel.state.collectAsState()
+        val items = state.allItemsList.collectAsLazyPagingItems()
 
         EventHandler(invoicesScreenModel.effect) { effect, navigator ->
             when (effect) {
@@ -205,11 +207,10 @@ class InvoiceScreen : Screen {
             FadeAnimation(visible = state.showDiscountDialog) {
                 DiscountDialog(state, invoicesScreenModel)
             }
-
             AnimatedVisibility(state.isAddItem && !state.isLoading && !state.showErrorScreen) {
                 AllItemTable(
                     modifier = Modifier.padding(top = it.calculateTopPadding()),
-                    invoiceItems = state.allItemsList,
+                    invoiceItems = items,
                     selectedItemIndex = state.selectedItemsIndexFromAllItems,
                     onClickItem = invoicesScreenModel::onClickItemFromAllItems
                 )

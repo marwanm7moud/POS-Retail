@@ -1,9 +1,14 @@
 package org.abapps.app.presentation.screens.posInvoiceScreen
 
+import androidx.paging.map
+import app.cash.paging.PagingData
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import org.abapps.app.data.util.RetailSetup
 import org.abapps.app.domain.entities.Customer
 import org.abapps.app.domain.entities.Discount
@@ -146,13 +151,7 @@ class InvoiceScreenModel(
         }
         tryToExecute(
             function = {
-                manageInvoice.getAllItems(
-                    RetailSetup.STORE_ID,
-                    RetailSetup.SUB_COMPANY_ID,
-                    RetailSetup.DEFAULT_CUSTOMER_ID,
-                    RetailSetup.FIFO || RetailSetup.AVERAGE,
-                    RetailSetup.PRICE_LVL_ID
-                )
+                manageInvoice.getAllItems(RetailSetup.DEFAULT_CUSTOMER_ID)
             },
             onSuccess = { items ->
                 updateState {
@@ -160,9 +159,7 @@ class InvoiceScreenModel(
                         isLoading = false,
                         errorState = null,
                         errorMessage = "",
-                        allItemsList = items.map { item ->
-                            item.toUiState()
-                        },
+                        allItemsList = items.toUIState(),
                     )
                 }
             },
@@ -189,24 +186,38 @@ class InvoiceScreenModel(
     }
 
     override fun onClickDone() {
-        if (RetailSetup.ALLOW_NEGATIVE_QTY && state.value.allItemsList.any { it.onHand <= 0 }) {
-            updateState { invoice ->
-                invoice.copy(
-                    isAddItem = false,
-                    invoiceItemList = addInvoices(
-                        invoice.invoiceItemList,
-                        invoice.selectedItemsIndexFromAllItems.map {
-                            invoice.allItemsList[it]
-                        }.map { it.toInvoiceItemUiState() }),
-                    selectedItemsIndexFromAllItems = emptyList()
+        viewModelScope.launch(Dispatchers.Default) {
+            if (RetailSetup.ALLOW_NEGATIVE_QTY && state.value.allItemsList.toListBlocking()
+                    .any { it.onHand <= 0 }
+            ) {
+                updateState { invoice ->
+                    invoice.copy(
+                        isAddItem = false,
+                        invoiceItemList = addInvoices(
+                            invoice.invoiceItemList,
+                            invoice.selectedItemsIndexFromAllItems.map {
+                                invoice.allItemsList.toListBlocking()[it]
+                            }.map { it.toInvoiceItemUiState() }),
+                        selectedItemsIndexFromAllItems = emptyList()
+                    )
+                }
+            } else updateState {
+                it.copy(
+                    errorDialogueIsVisible = true,
+                    errorMessage = "Negative onHand is not allowed"
                 )
             }
-        } else updateState {
-            it.copy(
-                errorDialogueIsVisible = true,
-                errorMessage = "Negative onHand is not allowed"
-            )
         }
+    }
+
+    private fun Flow<PagingData<ItemUiState>>.toListBlocking(): List<ItemUiState> {
+        val itemList = mutableListOf<ItemUiState>()
+        viewModelScope.launch(Dispatchers.Default) {
+            this@toListBlocking.collect { pagingData ->
+                pagingData.map { itemList.add(it) }
+            }
+        }
+        return itemList
     }
 
     private fun addInvoices(
