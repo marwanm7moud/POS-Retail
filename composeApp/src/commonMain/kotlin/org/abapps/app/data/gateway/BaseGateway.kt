@@ -8,6 +8,7 @@ import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.statement.HttpResponse
 import io.ktor.utils.io.errors.IOException
 import org.abapps.app.data.remote.model.ServerResponse
+import org.abapps.app.domain.entities.PaginationItems
 import org.abapps.app.domain.util.NetworkException
 import org.abapps.app.domain.util.NotFoundException
 import org.abapps.app.domain.util.PermissionDeniedException
@@ -42,5 +43,9 @@ open class BaseGateway(val client: HttpClient) {
             val errorMessages = e.message.toString()
             throw UnknownErrorException(errorMessages)
         }
+    }
+
+    fun <T> paginateData(result: List<T>, page: Int, total: Long): PaginationItems<T> {
+        return PaginationItems(total = total, page = page, items = result)
     }
 }

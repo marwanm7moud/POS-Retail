@@ -8,12 +8,14 @@ import org.abapps.app.data.remote.mapper.toEntity
 import org.abapps.app.data.remote.model.CustomerDto
 import org.abapps.app.data.remote.model.DiscountDto
 import org.abapps.app.data.remote.model.ItemDto
+import org.abapps.app.data.remote.model.PaginationResponse
 import org.abapps.app.data.remote.model.ServerResponse
 import org.abapps.app.data.remote.model.StoreDto
 import org.abapps.app.data.remote.model.UserDto
 import org.abapps.app.domain.entities.Customer
 import org.abapps.app.domain.entities.Discount
 import org.abapps.app.domain.entities.Item
+import org.abapps.app.domain.entities.PaginationItems
 import org.abapps.app.domain.entities.Store
 import org.abapps.app.domain.entities.User
 import org.abapps.app.domain.gateway.IInvoiceGateway
@@ -26,16 +28,26 @@ class InvoiceGateway(client: HttpClient) : BaseGateway(client), IInvoiceGateway 
         customerId: Long,
         isAverageOrFifo: Boolean,
         priceLvlId: Int,
-    ): List<Item> {
-        return tryToExecute<ServerResponse<List<ItemDto>>> {
+        page: Int,
+        pageSize: Int,
+    ): PaginationItems<Item> {
+        val result = tryToExecute<ServerResponse<PaginationResponse<ItemDto>>> {
             get("items") {
                 parameter("storeId", storeId)
                 parameter("subCompanyId", sComId)
                 parameter("customerId", customerId)
                 parameter("isAverageOrFifo", isAverageOrFifo)
                 parameter("priceLvlId", priceLvlId)
+                parameter("page", page)
+                parameter("pageSize", pageSize)
             }
-        }.data?.take(20)?.map { it.toEntity() } ?: throw NotFoundException("Items not found")
+        }.data
+        return paginateData(
+            result = result?.items?.map { it.toEntity() }
+                ?: throw NotFoundException("Items not found"),
+            page = result.page ?: 0,
+            total = result.total ?: 0
+        )
     }
 
     override suspend fun getCustomers(storeId: Int, subCompanyId: Int): List<Customer> {

@@ -6,7 +6,6 @@ import androidx.compose.runtime.Stable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import org.abapps.project.getActivity
 
 actual class PlatformContext(val androidContext: Context)
 

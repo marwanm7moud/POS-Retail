@@ -62,6 +62,8 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.compose.image.loader)
             implementation(libs.mongodb.realm)
+            implementation(libs.paging.compose)
+            implementation(libs.paging.common)
         }
 
         commonTest.dependencies {

@@ -16,14 +16,18 @@ class ManageInvoiceUseCase(
         customerId: Long,
         isAverageOrFifo: Boolean,
         priceLvlId: Int,
+        page: Int,
+        pageSize: Int,
     ): List<Item> {
         return invoiceGateway.getAllItems(
             storeId,
             subCompanyId,
             customerId,
             isAverageOrFifo,
-            priceLvlId
-        )
+            priceLvlId,
+            page,
+            pageSize
+        ).items
     }
 
     suspend fun getCustomers(storeId: Int, subCompanyId: Int): List<Customer> {
