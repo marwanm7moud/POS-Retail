@@ -54,5 +54,5 @@ data class Arabic(
     override val given: String = "المتبقي", override val discount: String = "خصم",
     override val discountAmount: String = "قيمه الخصم",
     override val pay: String = "الدفع",
-    override val percentage: String = "النسبه",
+    override val percentage: String = "النسبه", override val scanQr: String = "مسح",
 ) : IStringResources

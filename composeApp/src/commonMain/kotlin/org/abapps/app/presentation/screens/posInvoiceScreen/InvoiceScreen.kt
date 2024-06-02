@@ -26,6 +26,7 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Scanner
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -65,6 +66,7 @@ import org.abapps.app.presentation.screens.posInvoiceScreen.composables.Expandab
 import org.abapps.app.presentation.screens.posInvoiceScreen.composables.NewInvoiceItemTable
 import org.abapps.app.presentation.util.EventHandler
 import org.abapps.app.resource.Resources
+import org.abapps.app.util.BarcodeReader
 import org.abapps.app.util.getScreenModel
 import org.jetbrains.compose.resources.painterResource
 import pos_retail.composeapp.generated.resources.Res
@@ -98,160 +100,186 @@ class InvoiceScreen : Screen {
             )
         }
 
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            containerColor = Color.Transparent,
-            topBar = {
-                StAppBar(onNavigateUp = {
-                    invoicesScreenModel.onClickBack()
-                },
-                    title = if (!state.isAddItem) Resources.strings.invoice else Resources.strings.allItems,
-                    isBackIconVisible = true,
-                    painterResource = painterResource(Res.drawable.ic_back),
-                    actions = {
-                        if (!state.isAddItem)
-                            Row(
-                                modifier = Modifier.clip(RoundedCornerShape(12.dp)).clickable {
-                                    invoicesScreenModel.onClickAddItem()
-                                }.padding(horizontal = 8.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                Icon(
-                                    Icons.Filled.Add,
-                                    contentDescription = null,
-                                    tint = Theme.colors.contentPrimary
-                                )
-                                Text(
-                                    Resources.strings.addItem,
-                                    style = Theme.typography.title.copy(color = Color.White)
-                                )
-                            }
-                    })
-            },
-            bottomBar = {
-                AnimatedVisibility(!state.isAddItem && !state.isLoading && !state.showErrorScreen) {
-                    CalculationsBar(state, invoicesScreenModel)
-                }
-            },
-            floatingActionButton = {
-                AnimatedVisibility(state.isAddItem) {
-                    Box {
-                        FloatingActionButton(
-                            onClick = {
-                                invoicesScreenModel.onClickDone()
-                            },
-                            containerColor = Theme.colors.primary
-                        ) {
-                            Icon(
-                                Icons.Filled.Done,
-                                contentDescription = null,
-                                tint = Theme.colors.contentPrimary
-                            )
-                        }
-                        BadgedBox(
-                            {
-                                Box(
-                                    modifier = Modifier.align(Alignment.TopEnd).padding(8.dp)
-                                ) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(32.dp)
-                                            .background(
-                                                color = Theme.colors.contentPrimary,
-                                                shape = CircleShape
-                                            ).align(Alignment.Center).padding(8.dp),
-                                        contentAlignment = Alignment.Center
+        AnimatedVisibility(state.showBarcodeReaderScreen){
+            BarcodeReader {
+                invoicesScreenModel.onBarcodeDetected(it)
+            }
+        }
+
+        AnimatedVisibility(!state.showBarcodeReaderScreen){
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                containerColor = Color.Transparent,
+                topBar = {
+                    StAppBar(onNavigateUp = {
+                        invoicesScreenModel.onClickBack()
+                    },
+                        title = if (!state.isAddItem) Resources.strings.invoice else Resources.strings.allItems,
+                        isBackIconVisible = true,
+                        painterResource = painterResource(Res.drawable.ic_back),
+                        actions = {
+                            if (!state.isAddItem)
+                                Row(modifier = Modifier) {
+                                    Row(
+                                        modifier = Modifier.clip(RoundedCornerShape(12.dp)).clickable {
+                                            invoicesScreenModel.onClickAddItem()
+                                        }.padding(horizontal = 8.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                                     ) {
+                                        Icon(
+                                            Icons.Filled.Add,
+                                            contentDescription = null,
+                                            tint = Theme.colors.contentPrimary
+                                        )
                                         Text(
-                                            state.selectedItemsIndexFromAllItems.size.toString(),
-                                            style = Theme.typography.title,
-                                            modifier = Modifier.fillMaxSize()
-                                                .align(Alignment.Center),
-                                            textAlign = TextAlign.Center,
-                                            color = Theme.colors.surface
+                                            Resources.strings.addItem,
+                                            style = Theme.typography.title.copy(color = Color.White)
+                                        )
+                                    }
+
+                                    Row(
+                                        modifier = Modifier.clip(RoundedCornerShape(12.dp)).clickable {
+                                            invoicesScreenModel.onAddScanQR()
+                                        }.padding(horizontal = 8.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        Icon(
+                                            Icons.Filled.Scanner,
+                                            contentDescription = null,
+                                            tint = Theme.colors.contentPrimary
+                                        )
+                                        Text(
+                                            Resources.strings.scanQr,
+                                            style = Theme.typography.title.copy(color = Color.White)
                                         )
                                     }
                                 }
-                            },
-                            modifier = Modifier.align(Alignment.TopCenter).padding(start = 8.dp)
-                        ) {
+                        })
+                },
+                bottomBar = {
+                    AnimatedVisibility(!state.isAddItem && !state.isLoading && !state.showErrorScreen) {
+                        CalculationsBar(state, invoicesScreenModel)
+                    }
+                },
+                floatingActionButton = {
+                    AnimatedVisibility(state.isAddItem) {
+                        Box {
+                            FloatingActionButton(
+                                onClick = {
+                                    invoicesScreenModel.onClickDone()
+                                },
+                                containerColor = Theme.colors.primary
+                            ) {
+                                Icon(
+                                    Icons.Filled.Done,
+                                    contentDescription = null,
+                                    tint = Theme.colors.contentPrimary
+                                )
+                            }
+                            BadgedBox(
+                                {
+                                    Box(
+                                        modifier = Modifier.align(Alignment.TopEnd).padding(8.dp)
+                                    ) {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(32.dp)
+                                                .background(
+                                                    color = Theme.colors.contentPrimary,
+                                                    shape = CircleShape
+                                                ).align(Alignment.Center).padding(8.dp),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Text(
+                                                state.selectedItemsIndexFromAllItems.size.toString(),
+                                                style = Theme.typography.title,
+                                                modifier = Modifier.fillMaxSize()
+                                                    .align(Alignment.Center),
+                                                textAlign = TextAlign.Center,
+                                                color = Theme.colors.surface
+                                            )
+                                        }
+                                    }
+                                },
+                                modifier = Modifier.align(Alignment.TopCenter).padding(start = 8.dp)
+                            ) {
+                            }
                         }
                     }
                 }
-            }
-        ) {
-
-            FadeAnimation(state.showErrorScreen) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    HandleErrorState(
-                        title = state.errorMessage,
-                        error = state.errorState
-                            ?: ErrorState.UnknownError(Resources.strings.somethingWrongHappened),
-                        onClick = invoicesScreenModel::retry
+            ) {
+                FadeAnimation(state.showErrorScreen) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        HandleErrorState(
+                            title = state.errorMessage,
+                            error = state.errorState
+                                ?: ErrorState.UnknownError(Resources.strings.somethingWrongHappened),
+                            onClick = invoicesScreenModel::retry
+                        )
+                    }
+                }
+                FadeAnimation(visible = state.isLoading) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+                FadeAnimation(visible = state.showDiscountDialog) {
+                    DiscountDialog(state, invoicesScreenModel)
+                }
+                AnimatedVisibility(state.isAddItem && !state.isLoading && !state.showErrorScreen) {
+                    AllItemTable(
+                        modifier = Modifier.padding(top = it.calculateTopPadding()),
+                        invoiceItems = items,
+                        selectedItemIndex = state.selectedItemsIndexFromAllItems,
+                        onClickItem = invoicesScreenModel::onClickItemFromAllItems
                     )
                 }
-            }
-
-            FadeAnimation(visible = state.isLoading) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
-            FadeAnimation(visible = state.showDiscountDialog) {
-                DiscountDialog(state, invoicesScreenModel)
-            }
-            AnimatedVisibility(state.isAddItem && !state.isLoading && !state.showErrorScreen) {
-                AllItemTable(
-                    modifier = Modifier.padding(top = it.calculateTopPadding()),
-                    invoiceItems = items,
-                    selectedItemIndex = state.selectedItemsIndexFromAllItems,
-                    onClickItem = invoicesScreenModel::onClickItemFromAllItems
-                )
-            }
-            AnimatedVisibility(!state.isAddItem && !state.isLoading && !state.showErrorScreen) {
-                Column(
-                    modifier = Modifier.padding(
-                        top = it.calculateTopPadding(),
-                        //bottom = it.calculateBottomPadding()
-                    ).padding(top = 8.dp).padding(horizontal = 8.dp)
-                        .verticalScroll(rememberScrollState()),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    ExpandableCard(
-                        title = Resources.strings.brandon,
-                        expandedState = state.expandedCardStatus == ExpandedCardStatus.Brandon,
-                        onClickCard = {
-                            invoicesScreenModel.onClickExpandedCard(ExpandedCardStatus.Brandon)
-                        }
+                AnimatedVisibility(!state.isAddItem && !state.isLoading && !state.showErrorScreen) {
+                    Column(
+                        modifier = Modifier.padding(
+                            top = it.calculateTopPadding(),
+                            //bottom = it.calculateBottomPadding()
+                        ).padding(top = 8.dp).padding(horizontal = 8.dp)
+                            .verticalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        BrandonCard(
-                            state = state,
-                            listener = invoicesScreenModel as InvoiceInteractions
-                        )
-                    }
-                    ExpandableCard(
-                        title = Resources.strings.items,
-                        expandedState = state.expandedCardStatus == ExpandedCardStatus.Items,
-                        onClickCard = {
-                            invoicesScreenModel.onClickExpandedCard(ExpandedCardStatus.Items)
+                        ExpandableCard(
+                            title = Resources.strings.brandon,
+                            expandedState = state.expandedCardStatus == ExpandedCardStatus.Brandon,
+                            onClickCard = {
+                                invoicesScreenModel.onClickExpandedCard(ExpandedCardStatus.Brandon)
+                            }
+                        ) {
+                            BrandonCard(
+                                state = state,
+                                listener = invoicesScreenModel as InvoiceInteractions
+                            )
                         }
-                    ) {
-                        NewInvoiceItemTable(
-                            modifier = Modifier,
-                            invoiceItems = state.invoiceItemList.sortedBy { it.itemCode },
-                            selectedItemIndex = state.selectedItemIndexFromInvoice,
-                            onClickItem = invoicesScreenModel::onClickItemFromInvoice,
-                            onClickItemDiscount = invoicesScreenModel::onClickItemDiscount,
-                            onClickItemDelete = invoicesScreenModel::onClickItemDelete,
-                            onChangeQty = invoicesScreenModel::onChangeQty
-                        )
+                        ExpandableCard(
+                            title = Resources.strings.items,
+                            expandedState = state.expandedCardStatus == ExpandedCardStatus.Items,
+                            onClickCard = {
+                                invoicesScreenModel.onClickExpandedCard(ExpandedCardStatus.Items)
+                            }
+                        ) {
+                            NewInvoiceItemTable(
+                                modifier = Modifier,
+                                invoiceItems = state.invoiceItemList.sortedBy { it.itemCode },
+                                selectedItemIndex = state.selectedItemIndexFromInvoice,
+                                onClickItem = invoicesScreenModel::onClickItemFromInvoice,
+                                onClickItemDiscount = invoicesScreenModel::onClickItemDiscount,
+                                onClickItemDelete = invoicesScreenModel::onClickItemDelete,
+                                onChangeQty = invoicesScreenModel::onChangeQty
+                            )
+                        }
                     }
                 }
             }

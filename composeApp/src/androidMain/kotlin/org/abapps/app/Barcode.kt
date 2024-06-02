@@ -41,6 +41,7 @@ private fun processImageProxy(
     imageProxy: ImageProxy,
     callback: (String) -> Unit
 ) {
+    var callbackInvoked = false
     imageProxy.image?.let { image ->
         val inputImage =
             InputImage.fromMediaImage(
@@ -50,9 +51,12 @@ private fun processImageProxy(
 
         barcodeScanner.process(inputImage)
             .addOnSuccessListener { barcodeList ->
-                val barcode = barcodeList.getOrNull(0)
-                barcode?.rawValue?.let { value ->
-                    callback.invoke(value)
+                if (!callbackInvoked) {
+                    val barcode = barcodeList.getOrNull(0)
+                    barcode?.rawValue?.let { value ->
+                        callback.invoke(value)
+                        callbackInvoked = true
+                    }
                 }
             }
             .addOnFailureListener {

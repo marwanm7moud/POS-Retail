@@ -54,5 +54,5 @@ data class English(
     override val given: String = "Given", override val discount: String = "Discount",
     override val discountAmount: String = "Discount Amount",
     override val pay: String = "Pay",
-    override val percentage: String = "Percentage",
+    override val percentage: String = "Percentage", override val scanQr: String = "Scan QR",
 ) : IStringResources

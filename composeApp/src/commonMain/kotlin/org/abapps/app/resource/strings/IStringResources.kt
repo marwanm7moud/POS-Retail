@@ -41,6 +41,7 @@ interface IStringResources {
     val items: String
     val allItems: String
     val addItem: String
+    val scanQr: String
     val subTotal: String
     val totalTax: String
     val netTotal: String

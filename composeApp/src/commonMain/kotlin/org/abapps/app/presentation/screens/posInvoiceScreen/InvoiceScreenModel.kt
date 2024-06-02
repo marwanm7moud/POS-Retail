@@ -350,6 +350,59 @@ class InvoiceScreenModel(
         }
     }
 
+    override fun onAddScanQR() {
+        updateState {
+            it.copy(
+                showBarcodeReaderScreen = true,
+            )
+        }
+    }
+
+    override fun onBarcodeDetected(barcode: String) {
+        updateState {
+            it.copy(
+                showBarcodeReaderScreen = false,
+                //isLoading = true
+            )
+        }
+        tryToExecute(
+            function = { findItemFromFakeItems(barcode.toLong()) },
+            onSuccess = { foundedItem ->
+                updateState {
+                    it.copy(
+                        invoiceItemList = addFoundedItemToList(it.invoiceItemList, foundedItem)
+                        //isLoading = false
+                    )
+                }
+            },
+            onError = ::onError
+        )
+    }
+
+    private fun addFoundedItemToList(
+        currentInvoices: List<NewInvoiceItemUiState>,
+        foundedInvoice: NewInvoiceItemUiState
+    ): List<NewInvoiceItemUiState> {
+        val updatedInvoices = currentInvoices.toMutableList()
+        val existingInvoice = updatedInvoices.find { it.itemID == foundedInvoice.itemID }
+        if (existingInvoice != null) {
+            existingInvoice.qty = (existingInvoice.qty.toFloat() + 1f).toString()
+        } else {
+            updatedInvoices.add(foundedInvoice)
+        }
+        return updatedInvoices
+    }
+
+
+    fun findItemFromFakeItems(barcode: Long): NewInvoiceItemUiState {
+        return listOf(
+            NewInvoiceItemUiState(itemID = 6225000381674, itemCode = 9898),
+            NewInvoiceItemUiState(),
+            NewInvoiceItemUiState()
+        ).filter { it.itemID == barcode }.first()
+    }
+
+
     override fun onClickItemDiscount(itemId: Long) {
         updateState {
             it.copy(showDiscountDialog = true, itemId = itemId)
