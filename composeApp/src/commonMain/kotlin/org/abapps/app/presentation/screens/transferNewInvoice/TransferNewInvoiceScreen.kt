@@ -51,14 +51,15 @@ import com.beepbeep.designSystem.ui.composable.StTextField
 import com.beepbeep.designSystem.ui.composable.animate.FadeAnimation
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.abapps.app.presentation.base.ErrorState
-import org.abapps.app.presentation.screens.allinvoices.AllInvoicesScreen
 import org.abapps.app.presentation.screens.composable.DropDownState
 import org.abapps.app.presentation.screens.composable.DropDownTextField
 import org.abapps.app.presentation.screens.composable.HandleErrorState
 import org.abapps.app.presentation.screens.posInvoiceScreen.composables.CalculationItem
 import org.abapps.app.presentation.screens.posInvoiceScreen.composables.ExpandableCard
+import org.abapps.app.presentation.screens.transferInvoices.TransferInvoicesScreen
 import org.abapps.app.presentation.screens.transferNewInvoice.composables.TransferInvoiceItemTable
 import org.abapps.app.presentation.util.EventHandler
+import org.abapps.app.resource.Resources
 import org.abapps.app.util.getScreenModel
 import org.jetbrains.compose.resources.painterResource
 import pos_retail.composeapp.generated.resources.Res
@@ -76,7 +77,7 @@ class TransferNewInvoiceScreen : Screen {
         EventHandler(screenModel.effect) { effect, navigator ->
             when (effect) {
                 is TransferNewInvoiceUiEffect.NavigateBackToAllInvoices -> {
-                    navigator.push(AllInvoicesScreen())
+                    navigator.push(TransferInvoicesScreen())
                 }
             }
         }
@@ -93,7 +94,7 @@ class TransferNewInvoiceScreen : Screen {
                 StAppBar(onNavigateUp = {
                     screenModel.onClickBack()
                 },
-                    title = if (!state.isAddItem) "Transfer Invoice" else "All Items",
+                    title = if (!state.isAddItem) Resources.strings.transferNewInvoice else "All Items",
                     isBackIconVisible = true,
                     painterResource = painterResource(Res.drawable.ic_back),
                     actions = {
@@ -112,7 +113,7 @@ class TransferNewInvoiceScreen : Screen {
                                     tint = Theme.colors.contentPrimary
                                 )
                                 Text(
-                                    "Add Item",
+                                    Resources.strings.addItem,
                                     style = Theme.typography.title.copy(color = Color.White)
                                 )
                             }
@@ -166,10 +167,10 @@ class TransferNewInvoiceScreen : Screen {
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
-                                    CalculationItem("Cost", "1140")
-                                    CalculationItem("Price", "0")
-                                    CalculationItem("Qty OH", "1140")
-                                    CalculationItem("Qty Tran", "1140")
+                                    CalculationItem(Resources.strings.cost, "1140")
+                                    CalculationItem(Resources.strings.price, "0")
+                                    CalculationItem(Resources.strings.qtyOnHand, "1140")
+                                    CalculationItem(Resources.strings.qtyTransfer, "1140")
                                 }
                             }
                         }
@@ -262,7 +263,7 @@ class TransferNewInvoiceScreen : Screen {
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     ExpandableCard(
-                        title = "Brandon",
+                        title = Resources.strings.brandon,
                         expandedState = state.expandedCardStatus == ExpandedCardStatus.Brandon,
                         onClickCard = {
                             screenModel.onClickExpandedCard(ExpandedCardStatus.Brandon)
@@ -288,7 +289,7 @@ class TransferNewInvoiceScreen : Screen {
                                         DropDownState(2, "gg")
                                     ),
                                     selectedItem = DropDownState(0, "gg"),
-                                    label = "From Store"
+                                    label = Resources.strings.fromStore
                                 ) {}
                                 DropDownTextField(
                                     modifier = Modifier.weight(1f),
@@ -298,22 +299,22 @@ class TransferNewInvoiceScreen : Screen {
                                         DropDownState(2, "gg")
                                     ),
                                     selectedItem = DropDownState(0, "gg"),
-                                    label = "To Store"
+                                    label = Resources.strings.toStore
                                 ) {}
                             }
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 Box(modifier = Modifier.weight(1f)) {
                                     StTextField(
-                                        label = "Tran type",
-                                        text = "Transfer",
+                                        label = Resources.strings.transType,
+                                        text = "",
                                         onValueChange = {},
                                         readOnly = true
                                     )
                                 }
                                 Box(modifier = Modifier.weight(1f)) {
                                     StTextField(
-                                        label = "Tran Date",
-                                        text = "14-9-2019",
+                                        label = Resources.strings.transDate,
+                                        text = "",
                                         onValueChange = {},
                                         readOnly = true
                                     )
@@ -326,13 +327,13 @@ class TransferNewInvoiceScreen : Screen {
                                         DropDownState(2, "gg")
                                     ),
                                     selectedItem = DropDownState(0, "gg"),
-                                    label = "Status"
+                                    label = Resources.strings.status
                                 ) {
 
                                 }
                             }
                             StTextField(
-                                label = "Comment",
+                                label = Resources.strings.comment,
                                 textFieldModifier = Modifier.fillMaxWidth().height(96.dp),
                                 text = "",
                                 onValueChange = {},
@@ -341,7 +342,7 @@ class TransferNewInvoiceScreen : Screen {
                         }
                     }
                     ExpandableCard(
-                        title = "Items",
+                        title = Resources.strings.items,
                         expandedState = state.expandedCardStatus == ExpandedCardStatus.Items,
                         onClickCard = {
                             screenModel.onClickExpandedCard(ExpandedCardStatus.Items)
