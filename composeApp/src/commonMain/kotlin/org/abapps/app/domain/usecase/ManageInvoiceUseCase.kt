@@ -19,7 +19,7 @@ class ManageInvoiceUseCase(
     suspend fun getAllItems(customerId: Long): Flow<PagingData<Item>> {
         items.initCustomer(customerId)
         return Pager(
-            config = PagingConfig(pageSize = 20),
+            config = PagingConfig(pageSize = 10),
             pagingSourceFactory = { items },
         ).flow
     }

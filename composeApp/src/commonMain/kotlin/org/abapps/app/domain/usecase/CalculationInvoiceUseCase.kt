@@ -102,18 +102,18 @@ class CalculationInvoiceUseCase {
     ): Calculations {
         val subTotal =
             items.sumOf { it.priceWOT.toDouble() * it.qty.toDouble() }.toFloat().roundToDecimals(2)
+        val tax = items.sumOf { it.taxAmount.toDouble() * it.qty.toDouble() }
+            .toFloat()
+            .roundToDecimals(RetailSetup.LEN_DECIMAL)
         val totalTax =
             if (RetailSetup.TAX_EFFECT || RetailSetup.TAX_EFFECT_WITH_ITEM)
-                if (calculations.discountAmount == 0f) items.sumOf { it.taxAmount.toDouble() * it.qty.toDouble() }
-                    .toFloat()
-                    .roundToDecimals(RetailSetup.LEN_DECIMAL) else items.sumOf { it.taxAmount.toDouble() }
-                    .toFloat()
-                    .roundToDecimals(RetailSetup.LEN_DECIMAL) * (calculations.discountAmount / 100)
-            else items.sumOf { it.taxAmount.toDouble() * it.qty.toDouble() }
-                .toFloat()
-                .roundToDecimals(RetailSetup.LEN_DECIMAL)
+                if (calculations.discountAmount == 0f) tax else
+                    (tax - (tax * (calculations.discountAmount / 100))).roundToDecimals(RetailSetup.LEN_DECIMAL)
+            else tax
         val discountTotal =
-            (subTotal * (calculations.discountAmount / 100)).roundToDecimals(3)
+            if (calculations.discountAmount != 0f)
+                (subTotal - (subTotal * (calculations.discountAmount / 100))).roundToDecimals(3)
+            else (subTotal * (calculations.discountAmount / 100)).roundToDecimals(3)
         val netTotal =
             if (RetailSetup.VAT && calculations.discountAmount != 0f) discountTotal.roundToDecimals(
                 3
