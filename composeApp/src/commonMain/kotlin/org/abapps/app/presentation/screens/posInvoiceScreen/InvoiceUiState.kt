@@ -252,9 +252,12 @@ fun ItemUiState.toInvoiceItemUiState(): NewInvoiceItemUiState = NewInvoiceItemUi
     itemSerial = 0,
 )
 
+val list = mutableListOf<ItemUiState>()
+
 fun Flow<PagingData<Item>>.toUIState(): Flow<PagingData<ItemUiState>> {
     return this.map { pagingData ->
         pagingData.map {
+            list.add(it.toUiState())
             it.toUiState()
         }
     }

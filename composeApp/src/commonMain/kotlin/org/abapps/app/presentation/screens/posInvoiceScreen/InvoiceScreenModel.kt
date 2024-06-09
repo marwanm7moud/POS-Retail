@@ -188,7 +188,7 @@ class InvoiceScreenModel(
 
     override fun onClickDone() {
         viewModelScope.launch(Dispatchers.Default) {
-            if (RetailSetup.ALLOW_NEGATIVE_QTY && state.value.allItemsList.toListBlocking()
+            if (RetailSetup.ALLOW_NEGATIVE_QTY && list
                     .any { it.onHand <= 0 }
             ) {
                 updateState { invoice ->
@@ -197,7 +197,7 @@ class InvoiceScreenModel(
                         invoiceItemList = addInvoices(
                             invoice.invoiceItemList,
                             invoice.selectedItemsIndexFromAllItems.map {
-                                invoice.allItemsList.toListBlocking()[it]
+                                list[it]
                             }.map { it.toInvoiceItemUiState() }),
                         selectedItemsIndexFromAllItems = emptyList(),
                     )
