@@ -171,32 +171,6 @@ class HomeScreen : Screen {
                 }
             }
         }
-
-//        Box(
-//            modifier = Modifier.fillMaxSize(),
-//            contentAlignment = Alignment.Center
-//        ) {
-//
-//            Column {
-//                Button(
-//                    modifier = Modifier.fillMaxWidth(0.5f).height(56.dp),
-//                    colors = ButtonDefaults.buttonColors(containerColor = Theme.colors.primary),
-//                    shape = RoundedCornerShape(12.dp),
-//                    onClick = { }
-//                ) {
-//                    Text("POS")
-//                }
-//                Spacer(modifier = Modifier.height(16.dp))
-//                Button(
-//                    modifier = Modifier.fillMaxWidth(0.5f).height(56.dp),
-//                    colors = ButtonDefaults.buttonColors(containerColor = Theme.colors.primary),
-//                    shape = RoundedCornerShape(12.dp),
-//                    onClick = { }
-//                ) {
-//                    Text("Transfer")
-//                }
-//            }
-//        }
     }
 }
 

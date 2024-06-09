@@ -18,9 +18,7 @@ import org.abapps.app.presentation.screens.posInvoiceScreen.toUIState
 class TransferNewInvoiceScreenModel(
     private val manageInvoice: ManageInvoiceUseCase,
     private val calculationInvoice: CalculationInvoiceUseCase,
-
-    ) :
-    BaseScreenModel<TransferNewInvoiceUiState, TransferNewInvoiceUiEffect>(TransferNewInvoiceUiState()),
+) : BaseScreenModel<TransferNewInvoiceUiState, TransferNewInvoiceUiEffect>(TransferNewInvoiceUiState()),
     TransferNewInvoiceInteractions {
 
     override val viewModelScope: CoroutineScope get() = screenModelScope
@@ -52,6 +50,7 @@ class TransferNewInvoiceScreenModel(
         )
 
     }
+
     private fun onError(error: ErrorState) {
         updateState {
             it.copy(
@@ -69,6 +68,7 @@ class TransferNewInvoiceScreenModel(
             )
         }
     }
+
     override fun onDismissErrorDialogue() {
         updateState { it.copy(errorDialogueIsVisible = false) }
     }
@@ -108,6 +108,7 @@ class TransferNewInvoiceScreenModel(
 //            )
         //}
     }
+
     private fun addInvoices(
         currentInvoices: List<TransferNewInvoiceItemUiState>,
         newInvoices: List<TransferNewInvoiceItemUiState>
@@ -123,6 +124,7 @@ class TransferNewInvoiceScreenModel(
         }
         return updatedInvoices
     }
+
     private fun Flow<PagingData<ItemUiState>>.toListBlocking(): List<ItemUiState> {
         val itemList = mutableListOf<ItemUiState>()
         viewModelScope.launch(Dispatchers.Default) {
