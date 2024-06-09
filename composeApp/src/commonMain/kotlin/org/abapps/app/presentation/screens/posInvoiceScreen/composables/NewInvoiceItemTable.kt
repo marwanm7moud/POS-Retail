@@ -40,6 +40,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.abapps.app.presentation.screens.composable.itemBox
 import org.abapps.app.presentation.screens.posInvoiceScreen.NewInvoiceItemUiState
+import org.abapps.app.resource.Resources
 import org.abapps.app.util.calculateBiggestWidthOnEveryRow
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -56,12 +57,9 @@ fun NewInvoiceItemTable(
     val headers = NewInvoiceItemHeaders.entries.toTypedArray()
     val biggestColumnWidths = calculateBiggestWidths(invoiceItems)
 
-
-
     Column(
         modifier = modifier.padding(16.dp)
             .clip(RoundedCornerShape(12.dp))
-            //.defaultMinSize(minHeight = 120.dp)
             .border(BorderStroke(0.5.dp, Color.LightGray), RoundedCornerShape(12.dp))
             .horizontalScroll(rememberScrollState(0))
     ) {
@@ -96,7 +94,7 @@ fun NewInvoiceItemTable(
                             onClickItemDelete(item.itemID)
                         },
                         text = {
-                            Text(text = "Delete")
+                            Text(text = Resources.strings.delete)
                         },
                     )
                     DropdownMenuItem(
@@ -105,7 +103,7 @@ fun NewInvoiceItemTable(
                             onClickItemDiscount(item.itemID)
                         },
                         text = {
-                            Text(text = "Discount")
+                            Text(text = Resources.strings.discount)
                         },
                     )
 
@@ -156,7 +154,10 @@ fun NewInvoiceItemTable(
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                                     value = content,
                                     onValueChange = {
-                                        onChangeQty(it, item.itemID)
+                                        if (it.isEmpty())
+                                            onChangeQty("0", item.itemID)
+                                        else
+                                            onChangeQty(it, item.itemID)
                                     },
                                     maxLines = 1,
                                     textStyle = TextStyle(

@@ -381,9 +381,7 @@ class TransferNewInvoiceScreen : Screen {
                             invoiceItems = state.invoiceItemList,
                             selectedItemIndex = state.selectedItemIndexFromInvoice,
                             onClickItem = screenModel::onClickItemFromInvoice,
-                            onClickItemDiscount = {},
                             onClickItemDelete = screenModel::onClickItemDelete,
-                            onClickItemEdit = {},
                             onChangeQty = screenModel::onChangeQty,
                             onChangeComment = screenModel::onChangeComment
                         )

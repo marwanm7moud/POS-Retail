@@ -21,7 +21,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -44,15 +43,13 @@ import org.abapps.app.presentation.screens.transferNewInvoice.TransferNewInvoice
 import org.abapps.app.resource.Resources
 import org.abapps.app.util.calculateBiggestWidthOnEveryRow
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TransferInvoiceItemTable(
     invoiceItems: List<TransferNewInvoiceItemUiState>,
     selectedItemIndex: Int,
     onClickItem: (Int) -> Unit,
     onClickItemDelete: (Int) -> Unit,
-    onClickItemEdit: (Int) -> Unit,
-    onClickItemDiscount: (Int) -> Unit,
     onChangeQty: (String, Long) -> Unit,
     onChangeComment: (String, Long) -> Unit,
     modifier: Modifier
@@ -60,12 +57,9 @@ fun TransferInvoiceItemTable(
     val headers = TransferNewInvoiceItemHeaders.entries.toTypedArray()
     val biggestColumnWidths = calculateBiggestWidths(invoiceItems)
 
-
-
     Column(
         modifier = modifier.padding(16.dp)
             .clip(RoundedCornerShape(12.dp))
-            //.defaultMinSize(minHeight = 120.dp)
             .border(BorderStroke(0.5.dp, Color.LightGray), RoundedCornerShape(12.dp))
             .horizontalScroll(rememberScrollState(0))
     ) {
@@ -103,25 +97,6 @@ fun TransferInvoiceItemTable(
                             Text(text = Resources.strings.delete)
                         },
                     )
-                    DropdownMenuItem(
-                        onClick = {
-                            expanded = false
-                            onClickItemEdit(index)
-                        },
-                        text = {
-                            Text(text = Resources.strings.edit)
-                        },
-                    )
-                    DropdownMenuItem(
-                        onClick = {
-                            expanded = false
-                            onClickItemDiscount(index)
-                        },
-                        text = {
-                            Text(text = Resources.strings.discount)
-                        },
-                    )
-
                 }
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -143,69 +118,77 @@ fun TransferInvoiceItemTable(
                     headers.forEach { header ->
                         val content = when (header) {
                             TransferNewInvoiceItemHeaders.itemCode -> item.itemCode.toString()
-                            TransferNewInvoiceItemHeaders.alu -> item.alu.toString()
+                            TransferNewInvoiceItemHeaders.alu -> item.alu
                             TransferNewInvoiceItemHeaders.qtyOH -> item.qtyOH.toString()
-                            TransferNewInvoiceItemHeaders.qtyTran -> item.qtyTran.toString()
-                            TransferNewInvoiceItemHeaders.comment -> item.comment.toString()
+                            TransferNewInvoiceItemHeaders.qtyTran -> item.qtyTran
+                            TransferNewInvoiceItemHeaders.comment -> item.comment
                             TransferNewInvoiceItemHeaders.cost -> item.cost.toString()
                             TransferNewInvoiceItemHeaders.price -> item.price.toString()
-                            TransferNewInvoiceItemHeaders.UDF11 -> item.UDF11.toString()
-                            TransferNewInvoiceItemHeaders.UDF12 -> item.UDF12.toString()
-                            TransferNewInvoiceItemHeaders.Name -> item.name.toString()
+                            TransferNewInvoiceItemHeaders.UDF11 -> item.UDF11
+                            TransferNewInvoiceItemHeaders.UDF12 -> item.UDF12
+                            TransferNewInvoiceItemHeaders.Name -> item.name
                         }
-                        if (header == TransferNewInvoiceItemHeaders.qtyTran) {
-                            Box(
-                                modifier = Modifier
-                                    .padding(4.dp)
-                                    .width(with(LocalDensity.current) {
-                                        (biggestColumnWidths[header] ?: 0).toDp()
-                                    }),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                BasicTextField(
-                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                    value = content,
-                                    onValueChange = {
-                                        onChangeQty(it, item.itemID)
-                                    },
-                                    maxLines = 1,
-                                    textStyle = TextStyle(
-                                        color = Color.White,
-                                        textAlign = TextAlign.Center
+                        when (header) {
+                            TransferNewInvoiceItemHeaders.qtyTran -> {
+                                Box(
+                                    modifier = Modifier
+                                        .padding(4.dp)
+                                        .width(with(LocalDensity.current) {
+                                            (biggestColumnWidths[header] ?: 0).toDp()
+                                        }),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    BasicTextField(
+                                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                        value = content,
+                                        onValueChange = {
+                                            if (it.isEmpty())
+                                                onChangeQty("0", item.itemID)
+                                            else
+                                                onChangeQty(it, item.itemID)
+                                        },
+                                        maxLines = 1,
+                                        textStyle = TextStyle(
+                                            color = Color.White,
+                                            textAlign = TextAlign.Center
+                                        )
                                     )
+                                }
+                            }
+
+                            TransferNewInvoiceItemHeaders.comment -> {
+                                Box(
+                                    modifier = Modifier
+                                        .padding(4.dp)
+                                        .width(with(LocalDensity.current) {
+                                            (biggestColumnWidths[header] ?: 0).toDp()
+                                        }),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    BasicTextField(
+                                        value = content,
+                                        onValueChange = {
+                                            onChangeComment(it, item.itemID)
+                                        },
+                                        maxLines = 1,
+                                        textStyle = TextStyle(
+                                            color = Color.White,
+                                            textAlign = TextAlign.Center
+                                        )
+                                    )
+                                }
+                            }
+
+                            else -> {
+                                itemBox(
+                                    content = content,
+                                    modifier = Modifier
+                                        .padding(4.dp)
+                                        .width(with(LocalDensity.current) {
+                                            (biggestColumnWidths[header] ?: 0).toDp()
+                                        })
                                 )
                             }
-                        } else if (header == TransferNewInvoiceItemHeaders.comment) {
-                        Box(
-                            modifier = Modifier
-                                .padding(4.dp)
-                                .width(with(LocalDensity.current) {
-                                    (biggestColumnWidths[header] ?: 0).toDp()
-                                }),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            BasicTextField(
-                                value = content,
-                                onValueChange = {
-                                    onChangeComment(it, item.itemID)
-                                },
-                                maxLines = 1,
-                                textStyle = TextStyle(
-                                    color = Color.White,
-                                    textAlign = TextAlign.Center
-                                )
-                            )
-                        }
-                    }
-                        else {
-                            itemBox(
-                                content = content,
-                                modifier = Modifier
-                                    .padding(4.dp)
-                                    .width(with(LocalDensity.current) {
-                                        (biggestColumnWidths[header] ?: 0).toDp()
-                                    })
-                            )
                         }
                     }
                 }
@@ -222,44 +205,64 @@ fun TransferInvoiceItemTable(
 private fun calculateBiggestWidths(invoiceItems: List<TransferNewInvoiceItemUiState>): SnapshotStateMap<TransferNewInvoiceItemHeaders, Int> {
     val biggestColumnWidths = remember { mutableStateMapOf<TransferNewInvoiceItemHeaders, Int>() }
     biggestColumnWidths[TransferNewInvoiceItemHeaders.itemCode] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemCode.toString() } + getTitleByHeader(TransferNewInvoiceItemHeaders.itemCode))
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemCode.toString() } + getTitleByHeader(
+            TransferNewInvoiceItemHeaders.itemCode
+        ))
     biggestColumnWidths[TransferNewInvoiceItemHeaders.alu] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.alu.toString() } + getTitleByHeader(TransferNewInvoiceItemHeaders.alu))
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.alu } + getTitleByHeader(
+            TransferNewInvoiceItemHeaders.alu
+        ))
     biggestColumnWidths[TransferNewInvoiceItemHeaders.Name] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.name.toString() } + getTitleByHeader(TransferNewInvoiceItemHeaders.Name))
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.name } + getTitleByHeader(
+            TransferNewInvoiceItemHeaders.Name
+        ))
 
     biggestColumnWidths[TransferNewInvoiceItemHeaders.qtyOH] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.qtyOH.toString() } + getTitleByHeader(TransferNewInvoiceItemHeaders.qtyOH))
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.qtyOH.toString() } + getTitleByHeader(
+            TransferNewInvoiceItemHeaders.qtyOH
+        ))
 
 
 
     biggestColumnWidths[TransferNewInvoiceItemHeaders.qtyTran] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.qtyTran.toString() } + getTitleByHeader(TransferNewInvoiceItemHeaders.qtyTran))
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.qtyTran } + getTitleByHeader(
+            TransferNewInvoiceItemHeaders.qtyTran
+        ))
 
     biggestColumnWidths[TransferNewInvoiceItemHeaders.comment] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.comment.toString() } + getTitleByHeader(TransferNewInvoiceItemHeaders.comment))
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.comment } + getTitleByHeader(
+            TransferNewInvoiceItemHeaders.comment
+        ))
 
     biggestColumnWidths[TransferNewInvoiceItemHeaders.cost] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.cost.toString() } + getTitleByHeader(TransferNewInvoiceItemHeaders.cost))
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.cost.toString() } + getTitleByHeader(
+            TransferNewInvoiceItemHeaders.cost
+        ))
 
     biggestColumnWidths[TransferNewInvoiceItemHeaders.price] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.price.toString() } + getTitleByHeader(TransferNewInvoiceItemHeaders.price))
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.price.toString() } + getTitleByHeader(
+            TransferNewInvoiceItemHeaders.price
+        ))
 
     biggestColumnWidths[TransferNewInvoiceItemHeaders.UDF11] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.UDF11.toString() } + getTitleByHeader(TransferNewInvoiceItemHeaders.UDF11))
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.UDF11 } + getTitleByHeader(
+            TransferNewInvoiceItemHeaders.UDF11
+        ))
     biggestColumnWidths[TransferNewInvoiceItemHeaders.UDF12] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.UDF12.toString() } + getTitleByHeader(TransferNewInvoiceItemHeaders.UDF12))
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.UDF12 } + getTitleByHeader(
+            TransferNewInvoiceItemHeaders.UDF12
+        ))
     return biggestColumnWidths
 }
 
 @Composable
-private fun getTitleByHeader(header: TransferNewInvoiceItemHeaders): String{
+private fun getTitleByHeader(header: TransferNewInvoiceItemHeaders): String {
     return when (header) {
         TransferNewInvoiceItemHeaders.itemCode -> Resources.strings.itemCode
         TransferNewInvoiceItemHeaders.alu -> "Alu"
         TransferNewInvoiceItemHeaders.Name -> Resources.strings.name
         TransferNewInvoiceItemHeaders.qtyOH -> Resources.strings.qtyOnHand
-        TransferNewInvoiceItemHeaders.qtyTran ->Resources.strings.qtyTransfer
+        TransferNewInvoiceItemHeaders.qtyTran -> Resources.strings.qtyTransfer
         TransferNewInvoiceItemHeaders.comment -> Resources.strings.comment
         TransferNewInvoiceItemHeaders.cost -> Resources.strings.cost
         TransferNewInvoiceItemHeaders.price -> Resources.strings.price
@@ -267,6 +270,7 @@ private fun getTitleByHeader(header: TransferNewInvoiceItemHeaders): String{
         TransferNewInvoiceItemHeaders.UDF12 -> "UDF12"
     }
 }
+
 private enum class TransferNewInvoiceItemHeaders {
     itemCode,
     alu,
@@ -278,5 +282,4 @@ private enum class TransferNewInvoiceItemHeaders {
     price,
     UDF11,
     UDF12
-
 }

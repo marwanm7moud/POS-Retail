@@ -107,7 +107,7 @@ data class NewInvoiceItemUiState(
     val itemCode: Int = 132,
     val alu: String = "654",
     val name: String = "marnasdasdasd",
-    var qty: String = "1",
+    var qty: String = "1.0",
     val orgPrice: Float = 20f,
     val itemDisc: Float = 20f,
     val price: Float = 20f,
