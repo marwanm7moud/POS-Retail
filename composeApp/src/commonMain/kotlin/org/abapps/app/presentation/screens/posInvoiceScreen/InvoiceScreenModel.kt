@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.abapps.app.data.util.RetailSetup
 import org.abapps.app.domain.entities.Customer
@@ -198,7 +199,7 @@ class InvoiceScreenModel(
                             invoice.selectedItemsIndexFromAllItems.map {
                                 invoice.allItemsList.toListBlocking()[it]
                             }.map { it.toInvoiceItemUiState() }),
-                        selectedItemsIndexFromAllItems = emptyList()
+                        selectedItemsIndexFromAllItems = emptyList(),
                     )
                 }
             } else updateState {
@@ -208,16 +209,6 @@ class InvoiceScreenModel(
                 )
             }
         }
-    }
-
-    private fun Flow<PagingData<ItemUiState>>.toListBlocking(): List<ItemUiState> {
-        val itemList = mutableListOf<ItemUiState>()
-        viewModelScope.launch(Dispatchers.Default) {
-            this@toListBlocking.collect { pagingData ->
-                pagingData.map { itemList.add(it) }
-            }
-        }
-        return itemList
     }
 
     private fun addInvoices(
@@ -241,6 +232,18 @@ class InvoiceScreenModel(
                 u.copy(calculations = newCalc)
             }
         }
+    }
+
+    private fun Flow<PagingData<ItemUiState>>.toListBlocking(): List<ItemUiState> {
+        val itemList = mutableListOf<ItemUiState>()
+        viewModelScope.launch(Dispatchers.Default) {
+            this@toListBlocking.map { pagingData ->
+                pagingData.map {
+                    itemList.add(it)
+                }
+            }
+        }
+        return itemList
     }
 
 

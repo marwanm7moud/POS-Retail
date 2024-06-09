@@ -250,5 +250,9 @@ fun ItemUiState.toInvoiceItemUiState(): NewInvoiceItemUiState = NewInvoiceItemUi
 )
 
 fun Flow<PagingData<Item>>.toUIState(): Flow<PagingData<ItemUiState>> {
-    return this.map { pagingData -> pagingData.map { it.toUiState() } }
+    return this.map { pagingData ->
+        pagingData.map {
+            it.toUiState()
+        }
+    }
 }
