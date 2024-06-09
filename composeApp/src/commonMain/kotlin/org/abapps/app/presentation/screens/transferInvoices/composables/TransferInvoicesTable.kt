@@ -34,6 +34,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import org.abapps.app.presentation.screens.composable.itemBox
 import org.abapps.app.presentation.screens.transferInvoices.TInvoiceUiState
+import org.abapps.app.resource.Resources
 import org.abapps.app.util.calculateBiggestWidthOnEveryRow
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -64,8 +65,9 @@ fun TransferInvoicesTable(
             modifier = Modifier.background(color = Color.LightGray).padding(vertical = 8.dp),
         ) {
             headers.forEach { header ->
+
                 itemBox(
-                    content = header.title,
+                    content = getTitleByHeader(header),
                     modifier = Modifier
                         .padding(4.dp)
                         .width(with(LocalDensity.current) {
@@ -90,7 +92,7 @@ fun TransferInvoicesTable(
                             onClickItemDelete(index)
                         },
                         text = {
-                            Text(text = "Delete")
+                            Text(text = Resources.strings.delete)
                         },
                     )
                     DropdownMenuItem(
@@ -99,7 +101,7 @@ fun TransferInvoicesTable(
                             onClickItemEdit(index)
                         },
                         text = {
-                            Text(text = "Edit")
+                            Text(text = Resources.strings.edit)
                         },
                     )
                     DropdownMenuItem(
@@ -108,7 +110,7 @@ fun TransferInvoicesTable(
                             onClickItemCopy(index)
                         },
                         text = {
-                            Text(text = "Copy")
+                            Text(text = Resources.strings.copy)
                         },
                     )
 
@@ -171,55 +173,73 @@ private fun calculateBiggestWidths(invoiceItems: List<TInvoiceUiState>): Snapsho
     val biggestColumnWidths = remember { mutableStateMapOf<TInvoicesHeaders, Int>() }
 
     biggestColumnWidths[TInvoicesHeaders.fromStore] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.fromStore.toString() } + TInvoicesHeaders.fromStore.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.fromStore } + getTitleByHeader(TInvoicesHeaders.fromStore))
 
     biggestColumnWidths[TInvoicesHeaders.toStore] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.toStore.toString() } + TInvoicesHeaders.toStore.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.toStore } + getTitleByHeader(TInvoicesHeaders.toStore))
     biggestColumnWidths[TInvoicesHeaders.transType] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.transType.toString() } + TInvoicesHeaders.transType.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.transType } + getTitleByHeader(TInvoicesHeaders.transType))
     biggestColumnWidths[TInvoicesHeaders.transDate] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.transDate.toString() } + TInvoicesHeaders.transDate.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.transDate } + getTitleByHeader(TInvoicesHeaders.transDate))
 
     biggestColumnWidths[TInvoicesHeaders.status] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.status.toString() } + TInvoicesHeaders.status.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.status } + getTitleByHeader(TInvoicesHeaders.status))
     biggestColumnWidths[TInvoicesHeaders.comment] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.comment.toString() } + TInvoicesHeaders.comment.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.comment } + getTitleByHeader(TInvoicesHeaders.comment))
 
     biggestColumnWidths[TInvoicesHeaders.createDate] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.createDate.toString() } + TInvoicesHeaders.createDate.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.createDate } + getTitleByHeader(TInvoicesHeaders.createDate))
     biggestColumnWidths[TInvoicesHeaders.totQtyTran] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.totQtyTran.toString() } + TInvoicesHeaders.totQtyTran.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.totQtyTran.toString() } + getTitleByHeader(TInvoicesHeaders.totQtyTran))
     biggestColumnWidths[TInvoicesHeaders.sentByUser] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.sentByUser.toString() } + TInvoicesHeaders.sentByUser.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.sentByUser } + getTitleByHeader(TInvoicesHeaders.sentByUser))
 
     biggestColumnWidths[TInvoicesHeaders.ws] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.ws.toString() } + TInvoicesHeaders.ws.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.ws.toString() } + getTitleByHeader(TInvoicesHeaders.ws))
     biggestColumnWidths[TInvoicesHeaders.indexId] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.indexId.toString() } + TInvoicesHeaders.indexId.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.indexId.toString() } + getTitleByHeader(TInvoicesHeaders.indexId))
 
     biggestColumnWidths[TInvoicesHeaders.isReceived] =
-        calculateBiggestWidthOnEveryRow(listOf(TInvoicesHeaders.isReceived.title))
+        calculateBiggestWidthOnEveryRow(listOf(getTitleByHeader(TInvoicesHeaders.isReceived)))
     biggestColumnWidths[TInvoicesHeaders.isHold] =
-        calculateBiggestWidthOnEveryRow(listOf(TInvoicesHeaders.isHold.title))
+        calculateBiggestWidthOnEveryRow(listOf(getTitleByHeader(TInvoicesHeaders.isHold)))
     biggestColumnWidths[TInvoicesHeaders.isPost] =
-        calculateBiggestWidthOnEveryRow(listOf(TInvoicesHeaders.isPost.title))
+        calculateBiggestWidthOnEveryRow(listOf(getTitleByHeader(TInvoicesHeaders.isPost)))
     return biggestColumnWidths
 }
 
-
-private enum class TInvoicesHeaders(val title: String) {
-    fromStore("From_Store"),
-    toStore("To_Store"),
-    transType("Tran_Type"),
-    transDate("Tran_Date"),
-    status("Status"),
-    comment("Comment"),
-    isReceived("Received"),
-    isHold("Hold"),
-    isPost("Post"),
-    createDate("Create_Date"),
-    totQtyTran("TOT_Qty_Tran"),
-    sentByUser("Sent_By_User"),
-    ws("WS"),
-    indexId("Index_Id"),
+@Composable
+private fun getTitleByHeader(header:TInvoicesHeaders): String{
+    return when (header) {
+        TInvoicesHeaders.fromStore -> Resources.strings.fromStore
+        TInvoicesHeaders.toStore -> Resources.strings.toStore
+        TInvoicesHeaders.transType -> Resources.strings.transType
+        TInvoicesHeaders.transDate -> Resources.strings.transDate
+        TInvoicesHeaders.status ->Resources.strings.status
+        TInvoicesHeaders.comment -> Resources.strings.comment
+        TInvoicesHeaders.isReceived -> Resources.strings.isReceived
+        TInvoicesHeaders.isHold -> Resources.strings.isHold
+        TInvoicesHeaders.isPost -> Resources.strings.isPost
+        TInvoicesHeaders.createDate -> Resources.strings.createDate
+        TInvoicesHeaders.totQtyTran -> Resources.strings.totQtyTran
+        TInvoicesHeaders.sentByUser -> Resources.strings.sentByUser
+        TInvoicesHeaders.ws -> Resources.strings.ws
+        TInvoicesHeaders.indexId -> Resources.strings.indexId
+    }
+}
+private enum class TInvoicesHeaders {
+    fromStore,
+    toStore,
+    transType,
+    transDate,
+    status,
+    comment,
+    isReceived,
+    isHold,
+    isPost,
+    createDate,
+    totQtyTran,
+    sentByUser,
+    ws,
+    indexId,
 }

@@ -23,4 +23,6 @@ interface InvoiceInteractions {
     fun onClickOkInDiscountDialog()
     fun onChangeDiscountItem(discountAmount: String)
     fun onChooseDiscountItem(id: Long)
+    fun onAddScanQR()
+    fun onBarcodeDetected(barcode: String)
 }

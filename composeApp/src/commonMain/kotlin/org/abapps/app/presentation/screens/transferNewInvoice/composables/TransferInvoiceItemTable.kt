@@ -35,6 +35,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import org.abapps.app.presentation.screens.composable.itemBox
 import org.abapps.app.presentation.screens.transferNewInvoice.TransferNewInvoiceItemUiState
+import org.abapps.app.resource.Resources
 import org.abapps.app.util.calculateBiggestWidthOnEveryRow
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -66,7 +67,7 @@ fun TransferInvoiceItemTable(
         ) {
             headers.forEach { header ->
                 itemBox(
-                    content = header.title,
+                    content = getTitleByHeader(header),
                     modifier = Modifier
                         .padding(4.dp)
                         .width(with(LocalDensity.current) {
@@ -91,7 +92,7 @@ fun TransferInvoiceItemTable(
                             onClickItemDelete(index)
                         },
                         text = {
-                            Text(text = "Delete")
+                            Text(text = Resources.strings.delete)
                         },
                     )
                     DropdownMenuItem(
@@ -100,7 +101,7 @@ fun TransferInvoiceItemTable(
                             onClickItemEdit(index)
                         },
                         text = {
-                            Text(text = "Edit")
+                            Text(text = Resources.strings.edit)
                         },
                     )
                     DropdownMenuItem(
@@ -109,7 +110,7 @@ fun TransferInvoiceItemTable(
                             onClickItemDiscount(index)
                         },
                         text = {
-                            Text(text = "Discount")
+                            Text(text = Resources.strings.discount)
                         },
                     )
 
@@ -167,47 +168,61 @@ fun TransferInvoiceItemTable(
 private fun calculateBiggestWidths(invoiceItems: List<TransferNewInvoiceItemUiState>): SnapshotStateMap<TransferNewInvoiceItemHeaders, Int> {
     val biggestColumnWidths = remember { mutableStateMapOf<TransferNewInvoiceItemHeaders, Int>() }
     biggestColumnWidths[TransferNewInvoiceItemHeaders.itemCode] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemCode.toString() } + TransferNewInvoiceItemHeaders.itemCode.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemCode.toString() } + getTitleByHeader(TransferNewInvoiceItemHeaders.itemCode))
     biggestColumnWidths[TransferNewInvoiceItemHeaders.alu] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.alu.toString() } + TransferNewInvoiceItemHeaders.alu.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.alu.toString() } + getTitleByHeader(TransferNewInvoiceItemHeaders.alu))
     biggestColumnWidths[TransferNewInvoiceItemHeaders.Name] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.name.toString() } + TransferNewInvoiceItemHeaders.Name.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.name.toString() } + getTitleByHeader(TransferNewInvoiceItemHeaders.Name))
 
     biggestColumnWidths[TransferNewInvoiceItemHeaders.qtyOH] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.qtyOH.toString() } + TransferNewInvoiceItemHeaders.qtyOH.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.qtyOH.toString() } + getTitleByHeader(TransferNewInvoiceItemHeaders.qtyOH))
 
 
 
     biggestColumnWidths[TransferNewInvoiceItemHeaders.qtyTran] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.qtyTran.toString() } + TransferNewInvoiceItemHeaders.qtyTran.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.qtyTran.toString() } + getTitleByHeader(TransferNewInvoiceItemHeaders.qtyTran))
 
     biggestColumnWidths[TransferNewInvoiceItemHeaders.comment] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.comment.toString() } + TransferNewInvoiceItemHeaders.comment.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.comment.toString() } + getTitleByHeader(TransferNewInvoiceItemHeaders.comment))
 
     biggestColumnWidths[TransferNewInvoiceItemHeaders.cost] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.cost.toString() } + TransferNewInvoiceItemHeaders.cost.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.cost.toString() } + getTitleByHeader(TransferNewInvoiceItemHeaders.cost))
 
     biggestColumnWidths[TransferNewInvoiceItemHeaders.price] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.price.toString() } + TransferNewInvoiceItemHeaders.price.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.price.toString() } + getTitleByHeader(TransferNewInvoiceItemHeaders.price))
 
     biggestColumnWidths[TransferNewInvoiceItemHeaders.UDF11] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.UDF11.toString() } + TransferNewInvoiceItemHeaders.UDF11.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.UDF11.toString() } + getTitleByHeader(TransferNewInvoiceItemHeaders.UDF11))
     biggestColumnWidths[TransferNewInvoiceItemHeaders.UDF12] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.UDF12.toString() } + TransferNewInvoiceItemHeaders.UDF12.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.UDF12.toString() } + getTitleByHeader(TransferNewInvoiceItemHeaders.UDF12))
     return biggestColumnWidths
 }
 
-
-private enum class TransferNewInvoiceItemHeaders(val title: String) {
-    itemCode("Item Code"),
-    alu("Alu"),
-    Name("Name"),
-    qtyOH("Qty OH"),
-    qtyTran("Qty Tran"),
-    comment("Comment"),
-    cost("Cost"),
-    price("Price"),
-    UDF11("UDF11"),
-    UDF12("UDF12")
+@Composable
+private fun getTitleByHeader(header: TransferNewInvoiceItemHeaders): String{
+    return when (header) {
+        TransferNewInvoiceItemHeaders.itemCode -> Resources.strings.itemCode
+        TransferNewInvoiceItemHeaders.alu -> "Alu"
+        TransferNewInvoiceItemHeaders.Name -> Resources.strings.name
+        TransferNewInvoiceItemHeaders.qtyOH -> Resources.strings.qtyOnHand
+        TransferNewInvoiceItemHeaders.qtyTran ->Resources.strings.qtyTransfer
+        TransferNewInvoiceItemHeaders.comment -> Resources.strings.comment
+        TransferNewInvoiceItemHeaders.cost -> Resources.strings.cost
+        TransferNewInvoiceItemHeaders.price -> Resources.strings.price
+        TransferNewInvoiceItemHeaders.UDF11 -> "UDF11"
+        TransferNewInvoiceItemHeaders.UDF12 -> "UDF12"
+    }
+}
+private enum class TransferNewInvoiceItemHeaders {
+    itemCode,
+    alu,
+    Name,
+    qtyOH,
+    qtyTran,
+    comment,
+    cost,
+    price,
+    UDF11,
+    UDF12
 
 }

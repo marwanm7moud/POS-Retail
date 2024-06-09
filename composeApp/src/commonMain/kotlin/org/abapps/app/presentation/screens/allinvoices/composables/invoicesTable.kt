@@ -34,6 +34,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import org.abapps.app.presentation.screens.allinvoices.InvoiceUiState
 import org.abapps.app.presentation.screens.composable.itemBox
+import org.abapps.app.resource.Resources
 import org.abapps.app.util.calculateBiggestWidthOnEveryRow
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -65,7 +66,7 @@ fun InvoicesItemTable(
         ) {
             headers.forEach { header ->
                 itemBox(
-                    content = header.title,
+                    content = getTitleByHeader(header),
                     modifier = Modifier
                         .padding(4.dp)
                         .width(with(LocalDensity.current) {
@@ -90,7 +91,7 @@ fun InvoicesItemTable(
                             onClickItemDelete(index)
                         },
                         text = {
-                            Text(text = "Delete")
+                            Text(text = Resources.strings.delete)
                         },
                     )
                     DropdownMenuItem(
@@ -99,7 +100,7 @@ fun InvoicesItemTable(
                             onClickItemEdit(index)
                         },
                         text = {
-                            Text(text = "Edit")
+                            Text(text = Resources.strings.edit)
                         },
                     )
                     DropdownMenuItem(
@@ -108,7 +109,7 @@ fun InvoicesItemTable(
                             onClickItemCopy(index)
                         },
                         text = {
-                            Text(text = "Copy")
+                            Text(text = Resources.strings.copy)
                         },
                     )
 
@@ -179,76 +180,103 @@ private fun calculateBiggestWidths(invoiceItems: List<InvoiceUiState>): Snapshot
     val biggestColumnWidths = remember { mutableStateMapOf<InvoicesHeaders, Int>() }
 
     biggestColumnWidths[InvoicesHeaders.invId] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.invId.toString() } + InvoicesHeaders.invId.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.invId.toString() } + getTitleByHeader(InvoicesHeaders.invId))
     biggestColumnWidths[InvoicesHeaders.invNumber] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.invNumber.toString() } + InvoicesHeaders.invNumber.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.invNumber.toString() } + getTitleByHeader(InvoicesHeaders.invNumber))
     biggestColumnWidths[InvoicesHeaders.invType] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.invType.toString() } + InvoicesHeaders.invType.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.invType.toString() } + getTitleByHeader(InvoicesHeaders.invType))
     biggestColumnWidths[InvoicesHeaders.status] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.status.toString() } + InvoicesHeaders.status.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.status.toString() } + getTitleByHeader(InvoicesHeaders.status))
     biggestColumnWidths[InvoicesHeaders.sourceType] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.sourceType.toString() } + InvoicesHeaders.sourceType.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.sourceType.toString() } + getTitleByHeader(InvoicesHeaders.sourceType))
     biggestColumnWidths[InvoicesHeaders.invNumber] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.invNumber.toString() } + InvoicesHeaders.invNumber.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.invNumber.toString() } + getTitleByHeader(InvoicesHeaders.invNumber))
     biggestColumnWidths[InvoicesHeaders.comment] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.comment.toString() } + InvoicesHeaders.comment.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.comment.toString() } + getTitleByHeader(InvoicesHeaders.comment))
     biggestColumnWidths[InvoicesHeaders.hold] =
-        calculateBiggestWidthOnEveryRow(listOf(InvoicesHeaders.comment.title))
+        calculateBiggestWidthOnEveryRow(listOf(getTitleByHeader(InvoicesHeaders.comment)))
     biggestColumnWidths[InvoicesHeaders.invDate] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.invDate.toString() } + InvoicesHeaders.invDate.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.invDate.toString() } + getTitleByHeader(InvoicesHeaders.invDate))
     biggestColumnWidths[InvoicesHeaders.post] =
-        calculateBiggestWidthOnEveryRow(listOf(InvoicesHeaders.post.title))
+        calculateBiggestWidthOnEveryRow(listOf(getTitleByHeader(InvoicesHeaders.post)))
     biggestColumnWidths[InvoicesHeaders.postedDate] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.postedDate.toString() } + InvoicesHeaders.postedDate.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.postedDate.toString() } + getTitleByHeader(InvoicesHeaders.postedDate))
     biggestColumnWidths[InvoicesHeaders.custId] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.custId.toString() } + InvoicesHeaders.custId.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.custId.toString() } + getTitleByHeader(InvoicesHeaders.custId))
     biggestColumnWidths[InvoicesHeaders.firstName] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.firstName.toString() } + InvoicesHeaders.firstName.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.firstName.toString() } + getTitleByHeader(InvoicesHeaders.firstName))
     biggestColumnWidths[InvoicesHeaders.cashierId] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.cashierId.toString() } + InvoicesHeaders.cashierId.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.cashierId.toString() } + getTitleByHeader(InvoicesHeaders.cashierId))
     biggestColumnWidths[InvoicesHeaders.cashierName] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.cashierName.toString() } + InvoicesHeaders.cashierName.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.cashierName.toString() } + getTitleByHeader(InvoicesHeaders.cashierName))
     biggestColumnWidths[InvoicesHeaders.amt] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.amt.toString() } + InvoicesHeaders.amt.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.amt.toString() } + getTitleByHeader(InvoicesHeaders.amt))
     biggestColumnWidths[InvoicesHeaders.createDate] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.createDate.toString() } + InvoicesHeaders.createDate.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.createDate.toString() } + getTitleByHeader(InvoicesHeaders.createDate))
     biggestColumnWidths[InvoicesHeaders.sComId] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.sComId.toString() } + InvoicesHeaders.sComId.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.sComId.toString() } + getTitleByHeader(InvoicesHeaders.sComId))
     biggestColumnWidths[InvoicesHeaders.storeId] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.storeId.toString() } + InvoicesHeaders.storeId.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.storeId.toString() } + getTitleByHeader(InvoicesHeaders.storeId))
     biggestColumnWidths[InvoicesHeaders.ws] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.ws.toString() } + InvoicesHeaders.ws.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.ws.toString() } + getTitleByHeader(InvoicesHeaders.ws))
     biggestColumnWidths[InvoicesHeaders.reverse] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.reverse.toString() } + InvoicesHeaders.reverse.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.reverse.toString() } + getTitleByHeader(InvoicesHeaders.reverse))
     biggestColumnWidths[InvoicesHeaders.indexId] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.indexId.toString() } + InvoicesHeaders.indexId.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.indexId.toString() } + getTitleByHeader(InvoicesHeaders.indexId))
     biggestColumnWidths[InvoicesHeaders.soId] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.soId.toString() } + InvoicesHeaders.soId.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.soId.toString() } + getTitleByHeader(InvoicesHeaders.soId))
     return biggestColumnWidths
 }
 
+@Composable
+private fun getTitleByHeader(header: InvoicesHeaders): String {
+    return when (header) {
+        InvoicesHeaders.invId -> Resources.strings.invId
+        InvoicesHeaders.invNumber -> Resources.strings.invNumber
+        InvoicesHeaders.invType -> Resources.strings.invType
+        InvoicesHeaders.status -> Resources.strings.status
+        InvoicesHeaders.comment -> Resources.strings.comment
+        InvoicesHeaders.sourceType -> Resources.strings.sourceType
+        InvoicesHeaders.hold -> Resources.strings.isHold
+        InvoicesHeaders.invDate -> Resources.strings.invDate
+        InvoicesHeaders.post -> Resources.strings.isPost
+        InvoicesHeaders.postedDate -> Resources.strings.postedDate
+        InvoicesHeaders.custId -> Resources.strings.custId
+        InvoicesHeaders.firstName -> Resources.strings.firstName
+        InvoicesHeaders.cashierId -> Resources.strings.cashierId
+        InvoicesHeaders.cashierName -> Resources.strings.cashierName
+        InvoicesHeaders.amt -> Resources.strings.amt
+        InvoicesHeaders.createDate -> Resources.strings.createDate
+        InvoicesHeaders.sComId -> Resources.strings.sComId
+        InvoicesHeaders.storeId -> Resources.strings.storeId
+        InvoicesHeaders.soId -> Resources.strings.soId
+        InvoicesHeaders.reverse -> Resources.strings.reverse
+        InvoicesHeaders.ws -> Resources.strings.ws
+        InvoicesHeaders.indexId -> Resources.strings.indexId
+    }
+}
 
-private enum class InvoicesHeaders(val title: String) {
-    invId("INVC_ID"),
-    invNumber("INVC_No"),
-    invType("INVC_TYPE"),
-    status("Status"),
-    sourceType("Source_Type"),
-    comment("Comment"),
-    hold("Hold"),
-    invDate("INVC_Date"),
-    post("Post"),
-    postedDate("PostedDate"),
-    custId("Cust_ID"),
-    firstName("First_Name"),
-    cashierId("Cashier_ID"),
-    cashierName("Cashier_Name"),
-    amt("AMT"),
-    createDate("Create_Date"),
-    sComId("SCom_ID"),
-    storeId("Store_ID"),
-    ws("WS"),
-    soId("SO_ID"),
-    reverse("Reverse"),
-    indexId("Index_ID"),
+private enum class InvoicesHeaders {
+    invId,
+    invNumber,
+    invType,
+    status,
+    sourceType,
+    comment,
+    hold,
+    invDate,
+    post,
+    postedDate,
+    custId,
+    firstName,
+    cashierId,
+    cashierName,
+    amt,
+    createDate,
+    sComId,
+    storeId,
+    ws,
+    soId,
+    reverse,
+    indexId,
 }

@@ -43,7 +43,7 @@ val NetworkModule = module(createdAtStart = true) {
             }
             defaultRequest {
                 header("Content-Type", "application/json")
-                url("http://192.168.1.5:8088/")
+                url("http://192.168.0.101:9898/")
                 // url(get<ILocalConfigurationGateway>().getApiUrl())
             }
         }

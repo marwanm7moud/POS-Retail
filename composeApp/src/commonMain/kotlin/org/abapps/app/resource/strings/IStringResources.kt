@@ -41,6 +41,7 @@ interface IStringResources {
     val items: String
     val allItems: String
     val addItem: String
+    val scanQr: String
     val subTotal: String
     val totalTax: String
     val netTotal: String
@@ -54,4 +55,45 @@ interface IStringResources {
     val discountAmount: String
     val pay: String
     val percentage: String
+    val transferTitle: String
+    val transferNumber: String
+    val newTransfer: String
+    val newInvoice: String
+    val fromStore: String
+    val toStore: String
+    val transType: String
+    val transDate: String
+    val isReceived: String
+    val isHold: String
+    val isPost: String
+    val createDate: String
+    val totQtyTran: String
+    val sentByUser: String
+    val indexId: String
+    val ws: String
+    val delete: String
+    val edit: String
+    val copy: String
+    val transferNewInvoice: String
+    val cost: String
+    val price: String
+    val qtyOnHand: String
+    val qtyTransfer: String
+    val itemCode: String
+    val name: String
+    val allInvoices: String
+    val invId: String
+    val invNumber: String
+    val invType: String
+    val invDate: String
+    val postedDate: String
+    val custId: String
+    val firstName: String
+    val cashierId: String
+    val cashierName: String
+    val amt: String
+    val sComId: String
+    val storeId: String
+    val soId: String
+    val reverse: String
 }

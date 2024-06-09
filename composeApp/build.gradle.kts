@@ -1,6 +1,7 @@
+
+import com.android.build.api.dsl.ManagedVirtualDevice
 import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import com.android.build.api.dsl.ManagedVirtualDevice
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -78,6 +79,10 @@ kotlin {
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.koin.android)
+            implementation ("androidx.camera:camera-camera2:1.3.3")
+            implementation ("androidx.camera:camera-lifecycle:1.3.3")
+            implementation ("androidx.camera:camera-view:1.3.3")
+            implementation ("com.google.mlkit:barcode-scanning:17.2.0")
         }
 
         jvmMain.dependencies {

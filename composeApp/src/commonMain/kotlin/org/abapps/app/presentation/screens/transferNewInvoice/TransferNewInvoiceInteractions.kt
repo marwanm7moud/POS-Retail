@@ -9,5 +9,6 @@ interface TransferNewInvoiceInteractions {
     fun onClickExpandedCard(expandedCardStatus:ExpandedCardStatus)
     fun onClickItemDelete(index: Int)
     fun showErrorScreen()
+    fun onDismissErrorDialogue()
 
 }

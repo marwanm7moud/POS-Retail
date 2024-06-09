@@ -31,6 +31,7 @@ import org.abapps.app.presentation.screens.composable.HandleErrorState
 import org.abapps.app.presentation.screens.home.HomeScreen
 import org.abapps.app.presentation.screens.posInvoiceScreen.InvoiceScreen
 import org.abapps.app.presentation.util.EventHandler
+import org.abapps.app.resource.Resources
 import org.abapps.app.util.getScreenModel
 import org.jetbrains.compose.resources.painterResource
 import pos_retail.composeapp.generated.resources.Res
@@ -62,7 +63,7 @@ class AllInvoicesScreen : Screen {
             topBar = {
                 StAppBar(
                     onNavigateUp = { screenModel.onClickBack() },
-                    title = "Invoices",
+                    title = Resources.strings.allInvoices,
                     isBackIconVisible = true,
                     painterResource = painterResource(Res.drawable.ic_back),
                 )
@@ -84,7 +85,7 @@ class AllInvoicesScreen : Screen {
                                 tint = Theme.colors.contentPrimary
                             )
                             Text(
-                                "New Invoice",
+                                Resources.strings.newInvoice,
                                 style = Theme.typography.title.copy(color = Color.White)
                             )
                         }

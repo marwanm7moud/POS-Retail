@@ -31,6 +31,7 @@ import org.abapps.app.presentation.screens.home.HomeScreen
 import org.abapps.app.presentation.screens.transferInvoices.composables.TransferInvoicesTable
 import org.abapps.app.presentation.screens.transferNewInvoice.TransferNewInvoiceScreen
 import org.abapps.app.presentation.util.EventHandler
+import org.abapps.app.resource.Resources
 import org.abapps.app.util.getScreenModel
 import org.jetbrains.compose.resources.painterResource
 import pos_retail.composeapp.generated.resources.Res
@@ -60,7 +61,7 @@ class TransferInvoicesScreen : Screen {
             topBar = {
                 StAppBar(
                     onNavigateUp = { screenModel.onClickBack() },
-                    title = "Invoices",
+                    title = Resources.strings.transferTitle,
                     isBackIconVisible = true,
                     painterResource = painterResource(Res.drawable.ic_back),
                 )
@@ -82,7 +83,7 @@ class TransferInvoicesScreen : Screen {
                                 tint = Theme.colors.contentPrimary
                             )
                             Text(
-                                "New Invoice",
+                                Resources.strings.newTransfer,
                                 style = Theme.typography.title.copy(color = Color.White)
                             )
                         }
