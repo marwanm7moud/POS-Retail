@@ -1,6 +1,9 @@
 package org.abapps.app.presentation.screens.transferNewInvoice
 
 interface TransferNewInvoiceInteractions {
+    fun onChangeQty(text:String , itemID:Long)
+    fun onChangeComment(text:String , itemID:Long)
+
     fun onClickAddItem()
     fun onClickDone()
     fun onClickBack()

@@ -13,7 +13,6 @@ import org.abapps.app.domain.usecase.ManageInvoiceUseCase
 import org.abapps.app.presentation.base.BaseScreenModel
 import org.abapps.app.presentation.base.ErrorState
 import org.abapps.app.presentation.screens.posInvoiceScreen.ItemUiState
-import org.abapps.app.presentation.screens.posInvoiceScreen.toUIState
 
 class TransferNewInvoiceScreenModel(
     private val manageInvoice: ManageInvoiceUseCase,
@@ -22,6 +21,30 @@ class TransferNewInvoiceScreenModel(
     TransferNewInvoiceInteractions {
 
     override val viewModelScope: CoroutineScope get() = screenModelScope
+    override fun onChangeQty(text: String, itemID: Long) {
+        updateState {
+            it.copy(
+                invoiceItemList = it.invoiceItemList.map { item ->
+                    if (item.itemID == itemID) item.copy(qtyTran = text) else item
+                }
+            )
+        }
+        val newCalc = calculationInvoice.calculateTransfer(
+            state.value.invoiceItemList,
+            state.value.calculations
+        )
+        updateState { it.copy(calculations = newCalc) }
+    }
+
+    override fun onChangeComment(text: String, itemID: Long) {
+        updateState {
+            it.copy(
+                invoiceItemList = it.invoiceItemList.map { item ->
+                    if (item.itemID == itemID) item.copy(comment = text) else item
+                }
+            )
+        }
+    }
 
     override fun onClickAddItem() {
         updateState {
@@ -75,18 +98,22 @@ class TransferNewInvoiceScreenModel(
 
     override fun onClickDone() {
         viewModelScope.launch(Dispatchers.Default) {
-            if (RetailSetup.ALLOW_NEGATIVE_QTY && state.value.allItemsList.toListBlocking()
+            if (RetailSetup.ALLOW_NEGATIVE_QTY && list
                     .any { it.onHand <= 0 }
             ) {
+                val updatedInvoicesItem = addInvoices(
+                    state.value.invoiceItemList,
+                    state.value.selectedItemsIndexFromAllItems.map {
+                        list[it]
+                    }.map { it.toTransferNewInvoiceItemUiState() })
                 updateState { invoice ->
                     invoice.copy(
                         isAddItem = false,
-                        invoiceItemList = addInvoices(
-                            invoice.invoiceItemList,
-                            invoice.selectedItemsIndexFromAllItems.map {
-                                invoice.allItemsList.toListBlocking()[it]
-                            }.map { it.toTransferNewInvoiceItemUiState() }),
-                        selectedItemsIndexFromAllItems = emptyList()
+                        invoiceItemList = updatedInvoicesItem,
+                        selectedItemsIndexFromAllItems = emptyList(),
+                        calculations = calculationInvoice.calculateTransfer(
+                            updatedInvoicesItem, state.value.calculations
+                        )
                     )
                 }
             } else updateState {
@@ -122,6 +149,7 @@ class TransferNewInvoiceScreenModel(
                 updatedInvoices.add(newInvoice)
             }
         }
+
         return updatedInvoices
     }
 

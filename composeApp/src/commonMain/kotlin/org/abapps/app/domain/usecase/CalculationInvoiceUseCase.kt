@@ -3,6 +3,7 @@ package org.abapps.app.domain.usecase
 import org.abapps.app.data.util.RetailSetup
 import org.abapps.app.presentation.screens.posInvoiceScreen.Calculations
 import org.abapps.app.presentation.screens.posInvoiceScreen.NewInvoiceItemUiState
+import org.abapps.app.presentation.screens.transferNewInvoice.TransferNewInvoiceItemUiState
 import org.abapps.app.util.roundToDecimals
 
 class CalculationInvoiceUseCase {
@@ -24,8 +25,7 @@ class CalculationInvoiceUseCase {
                     price = price,
                     extPrice = extPrice,
                 )
-            }
-            else if ((RetailSetup.VAT && (!RetailSetup.TAX_EFFECT || !RetailSetup.TAX_EFFECT_WITH_ITEM)) ||
+            } else if ((RetailSetup.VAT && (!RetailSetup.TAX_EFFECT || !RetailSetup.TAX_EFFECT_WITH_ITEM)) ||
                 (RetailSetup.VAT && (RetailSetup.TAX_EFFECT || RetailSetup.TAX_EFFECT_WITH_ITEM))
             ) {
                 val priceWOT =
@@ -135,6 +135,22 @@ class CalculationInvoiceUseCase {
             netTotal = netTotal,
             amount = amount,
             remaining = remaining
+        )
+    }
+
+    fun calculateTransfer(
+        items: List<TransferNewInvoiceItemUiState>,
+        calculations: org.abapps.app.presentation.screens.transferNewInvoice.Calculations
+    ): org.abapps.app.presentation.screens.transferNewInvoice.Calculations {
+        return calculations.copy(
+            totalPrice = items.sumOf { it.price.toDouble() }.toFloat()
+                .roundToDecimals(RetailSetup.LEN_DECIMAL),
+            totalCost = items.sumOf { it.cost.toDouble() }.toFloat()
+                .roundToDecimals(3),
+            totalQtyTran = items.sumOf { it.qtyTran.toDouble() }.toFloat()
+                .roundToDecimals(3),
+            totalQtyOnHand = items.sumOf { it.qtyOH.toDouble() }.toFloat()
+                .roundToDecimals(3),
         )
     }
 }

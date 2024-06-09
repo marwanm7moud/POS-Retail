@@ -171,10 +171,22 @@ class TransferNewInvoiceScreen : Screen {
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
-                                    CalculationItem(Resources.strings.cost, "1140")
-                                    CalculationItem(Resources.strings.price, "0")
-                                    CalculationItem(Resources.strings.qtyOnHand, "1140")
-                                    CalculationItem(Resources.strings.qtyTransfer, "1140")
+                                    CalculationItem(
+                                        Resources.strings.cost,
+                                        state.calculations.totalCost.toString()
+                                    )
+                                    CalculationItem(
+                                        Resources.strings.price,
+                                        state.calculations.totalPrice.toString()
+                                    )
+                                    CalculationItem(
+                                        Resources.strings.qtyOnHand,
+                                        state.calculations.totalQtyOnHand.toString()
+                                    )
+                                    CalculationItem(
+                                        Resources.strings.qtyTransfer,
+                                        state.calculations.totalQtyTran.toString()
+                                    )
                                 }
                             }
                         }
@@ -262,7 +274,7 @@ class TransferNewInvoiceScreen : Screen {
             }
 
             AnimatedVisibility(state.isAddItem && !state.isLoading && !state.showErrorScreen) {
-                SetLayoutDirection(LayoutDirection.Ltr){
+                SetLayoutDirection(LayoutDirection.Ltr) {
                     AllItemTable(
                         modifier = Modifier.padding(top = it.calculateTopPadding()),
                         invoiceItems = items,
@@ -372,6 +384,8 @@ class TransferNewInvoiceScreen : Screen {
                             onClickItemDiscount = {},
                             onClickItemDelete = screenModel::onClickItemDelete,
                             onClickItemEdit = {},
+                            onChangeQty = screenModel::onChangeQty,
+                            onChangeComment = screenModel::onChangeComment
                         )
                     }
                 }

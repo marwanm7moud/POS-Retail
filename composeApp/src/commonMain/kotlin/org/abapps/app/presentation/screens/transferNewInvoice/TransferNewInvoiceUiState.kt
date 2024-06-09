@@ -1,11 +1,14 @@
 package org.abapps.app.presentation.screens.transferNewInvoice
 
 import androidx.paging.PagingData
+import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.map
+import org.abapps.app.domain.entities.Item
 import org.abapps.app.presentation.base.ErrorState
-import org.abapps.app.presentation.screens.posInvoiceScreen.Calculations
 import org.abapps.app.presentation.screens.posInvoiceScreen.ItemUiState
+import org.abapps.app.presentation.screens.posInvoiceScreen.toUiState
 
 data class TransferNewInvoiceUiState(
     val errorMessage: String = "",
@@ -17,30 +20,33 @@ data class TransferNewInvoiceUiState(
     val selectedItemsIndexFromAllItems: List<Int> = emptyList(),
     val selectedItemIndexFromInvoice: Int = -1,
     val allItemsList: Flow<PagingData<ItemUiState>> = emptyFlow(),
-
-    val invoiceItemList: List<TransferNewInvoiceItemUiState> = listOf(
-        TransferNewInvoiceItemUiState(),
-        TransferNewInvoiceItemUiState(),
-        TransferNewInvoiceItemUiState(),
-        TransferNewInvoiceItemUiState(),
-    ),
+    val invoiceItemList: List<TransferNewInvoiceItemUiState> = emptyList(),
     val expandedCardStatus: ExpandedCardStatus? = null,
     val calculations: Calculations = Calculations(),
-    val calculationItem: Calculations = calculations.copy(discountAmount = 0f),
+    val calculationItem: Calculations = calculations,
 )
-fun ItemUiState.toTransferNewInvoiceItemUiState(): TransferNewInvoiceItemUiState = TransferNewInvoiceItemUiState(
-    itemID = itemID,
-    itemCode = itemCode,
-    alu = alu.toLong(),
-    name = name,
-    qtyOH = onHand,
-    comment = "",
-    qtyTran = "1f",
-    cost = cost,
-    price = price,
-    UDF11 = UDF11,
-    UDF12 = UDF12
+
+data class Calculations(
+    val totalQtyTran: Float = 0f,
+    val totalQtyOnHand: Float = 0f,
+    val totalPrice: Float = 0f,
+    val totalCost: Float = 0f,
 )
+
+fun ItemUiState.toTransferNewInvoiceItemUiState(): TransferNewInvoiceItemUiState =
+    TransferNewInvoiceItemUiState(
+        itemID = itemID,
+        itemCode = itemCode,
+        alu = alu,
+        name = name,
+        qtyOH = onHand,
+        comment = "",
+        qtyTran = "1f",
+        cost = cost,
+        price = price,
+        UDF11 = UDF11,
+        UDF12 = UDF12
+    )
 
 enum class ExpandedCardStatus {
     Items,
@@ -48,9 +54,9 @@ enum class ExpandedCardStatus {
 }
 
 data class TransferNewInvoiceItemUiState(
-    val itemID:Long = 1643,
+    val itemID: Long = 1643,
     val itemCode: Int = 132,
-    val alu: Long = 654,
+    val alu: String = "654",
     val name: String = "marnasdasdasd",
     val qtyOH: Float = 1f,
     var qtyTran: String = "1f",
@@ -60,6 +66,17 @@ data class TransferNewInvoiceItemUiState(
     val UDF11: String = "",
     val UDF12: String = ""
 )
+
+val list = mutableListOf<ItemUiState>()
+
+fun Flow<PagingData<Item>>.toUIState(): Flow<PagingData<ItemUiState>> {
+    return this.map { pagingData ->
+        pagingData.map {
+            list.add(it.toUiState())
+            it.toUiState()
+        }
+    }
+}
 
 //data class ItemUiState(
 //    val itemID: Long = 10000003869,

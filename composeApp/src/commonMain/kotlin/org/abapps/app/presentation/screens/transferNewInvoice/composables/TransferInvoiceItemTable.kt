@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,10 +30,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateMap
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.abapps.app.presentation.screens.composable.itemBox
 import org.abapps.app.presentation.screens.transferNewInvoice.TransferNewInvoiceItemUiState
@@ -47,6 +53,8 @@ fun TransferInvoiceItemTable(
     onClickItemDelete: (Int) -> Unit,
     onClickItemEdit: (Int) -> Unit,
     onClickItemDiscount: (Int) -> Unit,
+    onChangeQty: (String, Long) -> Unit,
+    onChangeComment: (String, Long) -> Unit,
     modifier: Modifier
 ) {
     val headers = TransferNewInvoiceItemHeaders.entries.toTypedArray()
@@ -145,14 +153,60 @@ fun TransferInvoiceItemTable(
                             TransferNewInvoiceItemHeaders.UDF12 -> item.UDF12.toString()
                             TransferNewInvoiceItemHeaders.Name -> item.name.toString()
                         }
-                        itemBox(
-                            content = content,
+                        if (header == TransferNewInvoiceItemHeaders.qtyTran) {
+                            Box(
+                                modifier = Modifier
+                                    .padding(4.dp)
+                                    .width(with(LocalDensity.current) {
+                                        (biggestColumnWidths[header] ?: 0).toDp()
+                                    }),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                BasicTextField(
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                    value = content,
+                                    onValueChange = {
+                                        onChangeQty(it, item.itemID)
+                                    },
+                                    maxLines = 1,
+                                    textStyle = TextStyle(
+                                        color = Color.White,
+                                        textAlign = TextAlign.Center
+                                    )
+                                )
+                            }
+                        } else if (header == TransferNewInvoiceItemHeaders.comment) {
+                        Box(
                             modifier = Modifier
                                 .padding(4.dp)
                                 .width(with(LocalDensity.current) {
                                     (biggestColumnWidths[header] ?: 0).toDp()
-                                })
-                        )
+                                }),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            BasicTextField(
+                                value = content,
+                                onValueChange = {
+                                    onChangeComment(it, item.itemID)
+                                },
+                                maxLines = 1,
+                                textStyle = TextStyle(
+                                    color = Color.White,
+                                    textAlign = TextAlign.Center
+                                )
+                            )
+                        }
+                    }
+                        else {
+                            itemBox(
+                                content = content,
+                                modifier = Modifier
+                                    .padding(4.dp)
+                                    .width(with(LocalDensity.current) {
+                                        (biggestColumnWidths[header] ?: 0).toDp()
+                                    })
+                            )
+                        }
                     }
                 }
             }
