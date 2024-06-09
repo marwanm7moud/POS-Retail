@@ -56,6 +56,8 @@ interface IStringResources {
     val pay: String
     val percentage: String
     val transferTitle: String
+    val transferNumber: String
+    val newTransfer: String
     val newInvoice: String
     val fromStore: String
     val toStore: String
@@ -80,4 +82,18 @@ interface IStringResources {
     val itemCode: String
     val name: String
     val allInvoices: String
+    val invId: String
+    val invNumber: String
+    val invType: String
+    val invDate: String
+    val postedDate: String
+    val custId: String
+    val firstName: String
+    val cashierId: String
+    val cashierName: String
+    val amt: String
+    val sComId: String
+    val storeId: String
+    val soId: String
+    val reverse: String
 }

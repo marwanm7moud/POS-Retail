@@ -83,7 +83,7 @@ class TransferInvoicesScreen : Screen {
                                 tint = Theme.colors.contentPrimary
                             )
                             Text(
-                                Resources.strings.newInvoice,
+                                Resources.strings.newTransfer,
                                 style = Theme.typography.title.copy(color = Color.White)
                             )
                         }

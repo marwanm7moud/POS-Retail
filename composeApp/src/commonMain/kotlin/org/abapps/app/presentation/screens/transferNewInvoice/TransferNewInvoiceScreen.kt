@@ -276,7 +276,7 @@ class TransferNewInvoiceScreen : Screen {
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 Box(modifier = Modifier.weight(1f)) {
                                     StTextField(
-                                        label = "Tran No",
+                                        label = Resources.strings.transferNumber,
                                         text = "",
                                         onValueChange = {},
                                     )
