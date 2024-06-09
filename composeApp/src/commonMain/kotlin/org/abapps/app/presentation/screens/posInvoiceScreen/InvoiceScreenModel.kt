@@ -1,14 +1,10 @@
 package org.abapps.app.presentation.screens.posInvoiceScreen
 
-import androidx.paging.map
-import app.cash.paging.PagingData
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.abapps.app.data.util.RetailSetup
 import org.abapps.app.domain.entities.Customer
@@ -142,6 +138,7 @@ class InvoiceScreenModel(
     }
 
     override fun onClickAddItem() {
+        list.clear()
         updateState {
             it.copy(
                 isAddItem = true,
@@ -188,18 +185,23 @@ class InvoiceScreenModel(
 
     override fun onClickDone() {
         viewModelScope.launch(Dispatchers.Default) {
+            println(RetailSetup.ALLOW_NEGATIVE_QTY)
             if (RetailSetup.ALLOW_NEGATIVE_QTY && list
                     .any { it.onHand <= 0 }
             ) {
+                val updatedInvoicesItem = addInvoices(
+                    state.value.invoiceItemList,
+                    state.value.selectedItemsIndexFromAllItems.map {
+                        list[it]
+                    }.map { it.toInvoiceItemUiState() })
                 updateState { invoice ->
                     invoice.copy(
                         isAddItem = false,
-                        invoiceItemList = addInvoices(
-                            invoice.invoiceItemList,
-                            invoice.selectedItemsIndexFromAllItems.map {
-                                list[it]
-                            }.map { it.toInvoiceItemUiState() }),
+                        invoiceItemList = updatedInvoicesItem,
                         selectedItemsIndexFromAllItems = emptyList(),
+                        calculations = calculationInvoice.calculateInvoice(
+                            updatedInvoicesItem, state.value.calculations
+                        )
                     )
                 }
             } else updateState {
@@ -224,26 +226,8 @@ class InvoiceScreenModel(
                 updatedInvoices.add(newInvoice)
             }
         }
-        return calculationInvoice.calculateItemsPrice(updatedInvoices).also {
-            val newCalc = calculationInvoice.calculateInvoice(
-                it, state.value.calculations
-            )
-            updateState { u ->
-                u.copy(calculations = newCalc)
-            }
-        }
-    }
 
-    private fun Flow<PagingData<ItemUiState>>.toListBlocking(): List<ItemUiState> {
-        val itemList = mutableListOf<ItemUiState>()
-        viewModelScope.launch(Dispatchers.Default) {
-            this@toListBlocking.map { pagingData ->
-                pagingData.map {
-                    itemList.add(it)
-                }
-            }
-        }
-        return itemList
+        return calculationInvoice.calculateItemsPrice(updatedInvoices)
     }
 
 

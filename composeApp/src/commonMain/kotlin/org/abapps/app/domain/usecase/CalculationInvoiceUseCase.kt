@@ -24,7 +24,8 @@ class CalculationInvoiceUseCase {
                     price = price,
                     extPrice = extPrice,
                 )
-            } else if ((RetailSetup.VAT && (!RetailSetup.TAX_EFFECT || !RetailSetup.TAX_EFFECT_WITH_ITEM)) ||
+            }
+            else if ((RetailSetup.VAT && (!RetailSetup.TAX_EFFECT || !RetailSetup.TAX_EFFECT_WITH_ITEM)) ||
                 (RetailSetup.VAT && (RetailSetup.TAX_EFFECT || RetailSetup.TAX_EFFECT_WITH_ITEM))
             ) {
                 val priceWOT =
@@ -41,7 +42,7 @@ class CalculationInvoiceUseCase {
                     extPrice = extPrice,
                 )
             } else {
-                item.copy()
+                item
             }
         }
     }
