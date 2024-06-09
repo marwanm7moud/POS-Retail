@@ -44,7 +44,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import app.cash.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.core.screen.Screen
 import com.beepbeep.designSystem.ui.composable.StAppBar
 import com.beepbeep.designSystem.ui.composable.StTextField
@@ -53,7 +55,10 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.abapps.app.presentation.base.ErrorState
 import org.abapps.app.presentation.screens.composable.DropDownState
 import org.abapps.app.presentation.screens.composable.DropDownTextField
+import org.abapps.app.presentation.screens.composable.ErrorDialogue
 import org.abapps.app.presentation.screens.composable.HandleErrorState
+import org.abapps.app.presentation.screens.composable.SetLayoutDirection
+import org.abapps.app.presentation.screens.posInvoiceScreen.composables.AllItemTable
 import org.abapps.app.presentation.screens.posInvoiceScreen.composables.CalculationItem
 import org.abapps.app.presentation.screens.posInvoiceScreen.composables.ExpandableCard
 import org.abapps.app.presentation.screens.transferInvoices.TransferInvoicesScreen
@@ -94,15 +99,14 @@ class TransferNewInvoiceScreen : Screen {
                 StAppBar(onNavigateUp = {
                     screenModel.onClickBack()
                 },
-                    title = if (!state.isAddItem) Resources.strings.transferNewInvoice else "All Items",
+                    title = if (!state.isAddItem) Resources.strings.transferNewInvoice else Resources.strings.allItems,
                     isBackIconVisible = true,
                     painterResource = painterResource(Res.drawable.ic_back),
                     actions = {
                         if (!state.isAddItem)
                             Row(
                                 modifier = Modifier.clip(RoundedCornerShape(12.dp)).clickable {
-                                    //todo
-                                    //screenModel.onClickAddItem()
+                                    screenModel.onClickAddItem()
                                 }.padding(horizontal = 8.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -224,6 +228,7 @@ class TransferNewInvoiceScreen : Screen {
                 }
             }
         ) {
+            val items = state.allItemsList.collectAsLazyPagingItems()
 
             FadeAnimation(state.showErrorScreen) {
                 Box(
@@ -238,6 +243,14 @@ class TransferNewInvoiceScreen : Screen {
                     )
                 }
             }
+            FadeAnimation(state.errorDialogueIsVisible) {
+                ErrorDialogue(
+                    title = Resources.strings.error,
+                    text = state.errorMessage,
+                    onDismissRequest = screenModel::onDismissErrorDialogue,
+                    onClickConfirmButton = screenModel::onDismissErrorDialogue,
+                )
+            }
 
             FadeAnimation(visible = state.isLoading) {
                 Box(
@@ -248,13 +261,16 @@ class TransferNewInvoiceScreen : Screen {
                 }
             }
 
-            AnimatedVisibility(state.isAddItem && !state.isLoading) {
-//                AllItemTable(
-//                    modifier = Modifier.padding(top = it.calculateTopPadding()),
-//                    invoiceItems = state.allItemsList,
-//                    selectedItemIndex = state.selectedItemsIndexFromAllItems,
-//                    onClickItem = screenModel::onClickItemFromAllItems
-//                )
+            AnimatedVisibility(state.isAddItem && !state.isLoading && !state.showErrorScreen) {
+                SetLayoutDirection(LayoutDirection.Ltr){
+                    AllItemTable(
+                        modifier = Modifier.padding(top = it.calculateTopPadding()),
+                        invoiceItems = items,
+                        selectedItemIndex = state.selectedItemsIndexFromAllItems,
+                        onClickItem = screenModel::onClickItemFromAllItems
+                    )
+                }
+
             }
             AnimatedVisibility(!state.isAddItem && !state.isLoading) {
                 Column(

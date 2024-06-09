@@ -123,6 +123,7 @@ data class ItemUiState(
     val itemCode: Int = 3465,
     val upc: Int = 654,
     val alu: String = "654",
+    val cost: Float = 1f,
     val name: String = "طقم ملايه بولي قطن",
     val name2: String = "uhukhkjhk",
     val description: String = " خسعيابستي بمتس بهتسي بمتسيمنب تسيمن بتمينتب منسيت بمنيست بمنتسيم بنتيسمن تبمن",
@@ -179,6 +180,7 @@ fun Item.toUiState(): ItemUiState {
     return ItemUiState(
         itemID = this.itemID,
         itemCode = this.itemCode,
+        cost = cost,
         upc = this.upc,
         alu = this.alu,
         name = this.name,

@@ -1,6 +1,11 @@
 package org.abapps.app.presentation.screens.transferNewInvoice
 
+import androidx.paging.PagingData
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import org.abapps.app.presentation.base.ErrorState
+import org.abapps.app.presentation.screens.posInvoiceScreen.Calculations
+import org.abapps.app.presentation.screens.posInvoiceScreen.ItemUiState
 
 data class TransferNewInvoiceUiState(
     val errorMessage: String = "",
@@ -8,22 +13,33 @@ data class TransferNewInvoiceUiState(
     val isLoading: Boolean = false,
     val showErrorScreen: Boolean = false,
     val isAddItem: Boolean = false,
+    val errorDialogueIsVisible: Boolean = false,
     val selectedItemsIndexFromAllItems: List<Int> = emptyList(),
     val selectedItemIndexFromInvoice: Int = -1,
+    val allItemsList: Flow<PagingData<ItemUiState>> = emptyFlow(),
+
     val invoiceItemList: List<TransferNewInvoiceItemUiState> = listOf(
         TransferNewInvoiceItemUiState(),
         TransferNewInvoiceItemUiState(),
         TransferNewInvoiceItemUiState(),
         TransferNewInvoiceItemUiState(),
     ),
-//    val allItemsList: List<ItemUiState> = listOf(
-//        ItemUiState(),
-//        ItemUiState(),
-//        ItemUiState(),
-//        ItemUiState(),
-//        ItemUiState()
-//    ),
-    val expandedCardStatus: ExpandedCardStatus? = null
+    val expandedCardStatus: ExpandedCardStatus? = null,
+    val calculations: Calculations = Calculations(),
+    val calculationItem: Calculations = calculations.copy(discountAmount = 0f),
+)
+fun ItemUiState.toTransferNewInvoiceItemUiState(): TransferNewInvoiceItemUiState = TransferNewInvoiceItemUiState(
+    itemID = itemID,
+    itemCode = itemCode,
+    alu = alu.toLong(),
+    name = name,
+    qtyOH = onHand,
+    comment = "",
+    qtyTran = "1f",
+    cost = cost,
+    price = price,
+    UDF11 = UDF11,
+    UDF12 = UDF12
 )
 
 enum class ExpandedCardStatus {
@@ -32,16 +48,17 @@ enum class ExpandedCardStatus {
 }
 
 data class TransferNewInvoiceItemUiState(
+    val itemID:Long = 1643,
     val itemCode: Int = 132,
     val alu: Long = 654,
     val name: String = "marnasdasdasd",
-    val qtyOH: Int = 1,
-    val qtyTran: Int = 1,
+    val qtyOH: Float = 1f,
+    var qtyTran: String = "1f",
     val comment: String = "marnasdasdasd",
-    val cost: Int = 1,
-    val price: Int = 1,
-    val UDF11: Int = 1,
-    val UDF12: Int = 1
+    val cost: Float = 1f,
+    val price: Float = 1f,
+    val UDF11: String = "",
+    val UDF12: String = ""
 )
 
 //data class ItemUiState(

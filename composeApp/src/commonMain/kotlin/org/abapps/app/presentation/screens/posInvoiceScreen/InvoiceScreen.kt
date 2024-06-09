@@ -100,13 +100,13 @@ class InvoiceScreen : Screen {
             )
         }
 
-        AnimatedVisibility(state.showBarcodeReaderScreen){
+        AnimatedVisibility(state.showBarcodeReaderScreen) {
             BarcodeReader {
                 invoicesScreenModel.onBarcodeDetected(it)
             }
         }
 
-        AnimatedVisibility(!state.showBarcodeReaderScreen){
+        AnimatedVisibility(!state.showBarcodeReaderScreen) {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 containerColor = Color.Transparent,
@@ -121,9 +121,10 @@ class InvoiceScreen : Screen {
                             if (!state.isAddItem)
                                 Row(modifier = Modifier) {
                                     Row(
-                                        modifier = Modifier.clip(RoundedCornerShape(12.dp)).clickable {
-                                            invoicesScreenModel.onClickAddItem()
-                                        }.padding(horizontal = 8.dp),
+                                        modifier = Modifier.clip(RoundedCornerShape(12.dp))
+                                            .clickable {
+                                                invoicesScreenModel.onClickAddItem()
+                                            }.padding(horizontal = 8.dp),
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                                     ) {
@@ -139,9 +140,10 @@ class InvoiceScreen : Screen {
                                     }
 
                                     Row(
-                                        modifier = Modifier.clip(RoundedCornerShape(12.dp)).clickable {
-                                            invoicesScreenModel.onAddScanQR()
-                                        }.padding(horizontal = 8.dp),
+                                        modifier = Modifier.clip(RoundedCornerShape(12.dp))
+                                            .clickable {
+                                                invoicesScreenModel.onAddScanQR()
+                                            }.padding(horizontal = 8.dp),
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                                     ) {
@@ -235,12 +237,14 @@ class InvoiceScreen : Screen {
                     DiscountDialog(state, invoicesScreenModel)
                 }
                 AnimatedVisibility(state.isAddItem && !state.isLoading && !state.showErrorScreen) {
-                    AllItemTable(
-                        modifier = Modifier.padding(top = it.calculateTopPadding()),
-                        invoiceItems = items,
-                        selectedItemIndex = state.selectedItemsIndexFromAllItems,
-                        onClickItem = invoicesScreenModel::onClickItemFromAllItems
-                    )
+                    SetLayoutDirection(LayoutDirection.Ltr) {
+                        AllItemTable(
+                            modifier = Modifier.padding(top = it.calculateTopPadding()),
+                            invoiceItems = items,
+                            selectedItemIndex = state.selectedItemsIndexFromAllItems,
+                            onClickItem = invoicesScreenModel::onClickItemFromAllItems
+                        )
+                    }
                 }
                 AnimatedVisibility(!state.isAddItem && !state.isLoading && !state.showErrorScreen) {
                     Column(
