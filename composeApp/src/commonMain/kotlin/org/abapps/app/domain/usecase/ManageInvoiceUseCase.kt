@@ -4,9 +4,11 @@ import app.cash.paging.Pager
 import app.cash.paging.PagingConfig
 import app.cash.paging.PagingData
 import kotlinx.coroutines.flow.Flow
+import org.abapps.app.data.gateway.remote.pagesource.InvoicesPagingSource
 import org.abapps.app.data.gateway.remote.pagesource.ItemsPagingSource
 import org.abapps.app.domain.entities.Customer
 import org.abapps.app.domain.entities.Discount
+import org.abapps.app.domain.entities.Invoice
 import org.abapps.app.domain.entities.Item
 import org.abapps.app.domain.entities.Store
 import org.abapps.app.domain.entities.User
@@ -15,12 +17,19 @@ import org.abapps.app.domain.gateway.IInvoiceGateway
 class ManageInvoiceUseCase(
     private val invoiceGateway: IInvoiceGateway,
     private val items: ItemsPagingSource,
+    private val invoices: InvoicesPagingSource,
 ) {
     suspend fun getAllItems(customerId: Long): Flow<PagingData<Item>> {
         items.initCustomer(customerId)
         return Pager(
             config = PagingConfig(pageSize = 10),
             pagingSourceFactory = { items },
+        ).flow
+    }
+    suspend fun getAllInvoices(): Flow<PagingData<Invoice>> {
+        return Pager(
+            config = PagingConfig(pageSize = 10),
+            pagingSourceFactory = { invoices },
         ).flow
     }
 
