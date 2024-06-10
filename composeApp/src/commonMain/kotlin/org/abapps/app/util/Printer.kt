@@ -3,8 +3,7 @@ package org.abapps.app.util
 import org.abapps.app.PlatformContext
 
 interface Printer {
-    fun connectBt(macAddress: String)
-    fun init()
+    fun connectBtandPrintReceipt(macAddress: String)
 }
 
 expect fun createPrinter(context: PlatformContext): Printer
