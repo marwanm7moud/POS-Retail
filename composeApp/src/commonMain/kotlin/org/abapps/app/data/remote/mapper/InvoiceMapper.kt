@@ -2,10 +2,12 @@ package org.abapps.app.data.remote.mapper
 
 import org.abapps.app.data.remote.model.CustomerDto
 import org.abapps.app.data.remote.model.DiscountDto
+import org.abapps.app.data.remote.model.InvoiceDto
 import org.abapps.app.data.remote.model.StoreDto
 import org.abapps.app.data.remote.model.UserDto
 import org.abapps.app.domain.entities.Customer
 import org.abapps.app.domain.entities.Discount
+import org.abapps.app.domain.entities.Invoice
 import org.abapps.app.domain.entities.Store
 import org.abapps.app.domain.entities.User
 
@@ -138,5 +140,39 @@ fun UserDto.toEntity(): User {
         scomId = this.scomId ?: 0,
         storeId = this.storeId ?: 0,
         sales = this.sales ?: false
+    )
+}
+
+fun InvoiceDto.toEntity(): Invoice {
+    return Invoice(
+        invcId = this.invcId ?: 0,
+        invcNo = this.invcNo ?:0,
+        invcType = this.invcType ?: "",
+        invcDate = this.invcDate ?: "",
+        status = this.status ?: "",
+        reverse = this.reverse ?: 0,
+        comment = this.comment ?: "",
+        cancelled = this.cancelled ?: false,
+        hold = this.hold ?: false,
+        post = this.post ?: false,
+        postedDate = this.postedDate ?: "",
+        custId = this.custId ?: 0,
+        cashierId = this.cashierId ?: 0,
+        sellerId = this.sellerId ?: 0,
+        createDate = this.createDate ?: "",
+        modifiedDate = this.modifiedDate ?: "",
+        userId = this.userId ?: 0,
+        scomId = this.scomId ?: 0,
+        storeId = this.storeId ?: 0,
+        ws = this.ws ?:0,
+        numPrint = this.numPrint ?: 0,
+        pointId = this.pointId ?: 0,
+        soId = this.soId ?: 0,
+        sourceType = this.sourceType ?: "",
+        voidReasonId = this.voidReasonId ?: 0,
+        eUuid = this.eUuid ?: "",
+        ePreviousUuid = this.ePreviousUuid ?: "",
+        eSubmissionId = this.eSubmissionId ?: "",
+        eStatus = this.eStatus ?: "",
     )
 }

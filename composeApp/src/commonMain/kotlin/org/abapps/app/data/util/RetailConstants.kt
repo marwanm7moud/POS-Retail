@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import org.abapps.app.util.LanguageCode
 
 object AppLanguage {
-    val code: MutableStateFlow<String> = MutableStateFlow(LanguageCode.AR.value)
+    val code: MutableStateFlow<String> = MutableStateFlow(LanguageCode.EN.value)
 }
 
 object RetailSetup {

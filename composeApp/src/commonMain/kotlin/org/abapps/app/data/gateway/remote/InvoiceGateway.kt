@@ -7,6 +7,7 @@ import org.abapps.app.data.gateway.BaseGateway
 import org.abapps.app.data.remote.mapper.toEntity
 import org.abapps.app.data.remote.model.CustomerDto
 import org.abapps.app.data.remote.model.DiscountDto
+import org.abapps.app.data.remote.model.InvoiceDto
 import org.abapps.app.data.remote.model.ItemDto
 import org.abapps.app.data.remote.model.PaginationResponse
 import org.abapps.app.data.remote.model.ServerResponse
@@ -14,6 +15,7 @@ import org.abapps.app.data.remote.model.StoreDto
 import org.abapps.app.data.remote.model.UserDto
 import org.abapps.app.domain.entities.Customer
 import org.abapps.app.domain.entities.Discount
+import org.abapps.app.domain.entities.Invoice
 import org.abapps.app.domain.entities.Item
 import org.abapps.app.domain.entities.PaginationItems
 import org.abapps.app.domain.entities.Store
@@ -78,6 +80,28 @@ class InvoiceGateway(client: HttpClient) : BaseGateway(client), IInvoiceGateway 
                 parameter("subCompanyId", sComId)
             }
         }.data?.map { it.toEntity() } ?: throw NotFoundException("Users not found")
+    }
+
+    override suspend fun getAllInvoices(
+        storeId: Int,
+        sComId: Int,
+        page: Int,
+        pageSize: Int
+    ): PaginationItems<Invoice> {
+        val result = tryToExecute<ServerResponse<PaginationResponse<InvoiceDto>>> {
+            get("invoices") {
+                parameter("storeId", storeId)
+                parameter("subCompanyId", sComId)
+                parameter("page", page)
+                parameter("pageSize", pageSize)
+            }
+        }.data
+        return paginateData(
+            result = result?.items?.map { it.toEntity() }
+                ?: throw NotFoundException("Items not found"),
+            page = result.page ?: 0,
+            total = result.total ?: 0
+        )
     }
 
 }

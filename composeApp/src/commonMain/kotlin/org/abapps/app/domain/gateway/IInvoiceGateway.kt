@@ -2,6 +2,7 @@ package org.abapps.app.domain.gateway
 
 import org.abapps.app.domain.entities.Customer
 import org.abapps.app.domain.entities.Discount
+import org.abapps.app.domain.entities.Invoice
 import org.abapps.app.domain.entities.Item
 import org.abapps.app.domain.entities.PaginationItems
 import org.abapps.app.domain.entities.Store
@@ -22,4 +23,11 @@ interface IInvoiceGateway {
     suspend fun getStoresBySubCompanyId(subCompanyId: Int): List<Store>
     suspend fun getAllDiscounts(subCompanyId: Int): List<Discount>
     suspend fun getAllSalePersons(storeId: Int, sComId: Int): List<User>
+
+    suspend fun getAllInvoices(
+        storeId: Int,
+        sComId: Int,
+        page: Int,
+        pageSize: Int,
+    ) : PaginationItems<Invoice>
 }
