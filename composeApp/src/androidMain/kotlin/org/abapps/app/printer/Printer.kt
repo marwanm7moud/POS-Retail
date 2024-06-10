@@ -6,8 +6,9 @@ import net.posprinter.IConnectListener
 import net.posprinter.IDeviceConnection
 import net.posprinter.POSConnect
 import net.posprinter.TSPLPrinter
+import org.abapps.app.util.Printer
 
-class Printer(context: Context) {
+class AndroidPrinter(val context: Context) : Printer {
 
     init {
         POSConnect.init(context)
@@ -37,7 +38,11 @@ class Printer(context: Context) {
         }
     }
 
-    fun connectBt(macAddress: String) {
+
+    override fun init(){
+        POSConnect.init(this.context)
+    }
+    override fun connectBt(macAddress: String) {
         curConnect?.close()
         curConnect = POSConnect.createDevice(POSConnect.DEVICE_TYPE_BLUETOOTH)
         curConnect!!.connect(macAddress, connectListener)

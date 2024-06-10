@@ -1,18 +1,14 @@
 package org.abapps.app
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.app.Application
-import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.platform.LocalContext
-import com.dantsu.escposprinter.connection.bluetooth.BluetoothConnection
-import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnections
-import org.abapps.app.printer.Printer
+import org.abapps.app.presentation.app.App
+import org.abapps.app.printer.AndroidPrinter
 
 
 class AndroidApp : Application() {
@@ -33,8 +29,8 @@ class AppActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val context = LocalContext.current
-            val printer = Printer(context)
-            //App()
+            val printer = AndroidPrinter(context)
+            App()
 //            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
 //                Row(modifier = Modifier) {
 //                    Button(onClick = {
@@ -60,35 +56,5 @@ class AppActivity : ComponentActivity() {
 //                }
 //            }
         }
-    }
-}
-
-@SuppressLint("MissingPermission")
-fun browseBluetoothDevices(context: Context, onSelectDevice: (BluetoothConnection?) -> Unit) {
-    val bluetoothDevicesList = BluetoothPrintersConnections().list
-    if (bluetoothDevicesList != null) {
-        val items = arrayOfNulls<String>(bluetoothDevicesList.size + 1)
-        items[0] = "Default printer"
-        var i = 0
-        for (device in bluetoothDevicesList) {
-            items[++i] = device.device.name
-        }
-
-        val alertDialog = AlertDialog.Builder(context)
-        alertDialog.setTitle("Bluetooth printer selection")
-        alertDialog.setItems(
-            items
-        ) { dialogInterface: DialogInterface?, i1: Int ->
-            val index = i1 - 1
-            if (index == -1) {
-                onSelectDevice(null)
-            } else {
-                onSelectDevice(bluetoothDevicesList[index])
-            }
-        }
-
-        val alert = alertDialog.create()
-        alert.setCanceledOnTouchOutside(false)
-        alert.show()
     }
 }
