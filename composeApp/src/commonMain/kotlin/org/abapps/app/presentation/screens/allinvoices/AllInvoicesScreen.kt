@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import app.cash.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.core.screen.Screen
 import com.beepbeep.designSystem.ui.composable.StAppBar
 import com.beepbeep.designSystem.ui.composable.animate.FadeAnimation
@@ -44,6 +45,8 @@ class AllInvoicesScreen : Screen {
 
         val screenModel = getScreenModel<AllInvoicesScreenModel>()
         val state by screenModel.state.collectAsState()
+        val items = state.invoicesList.collectAsLazyPagingItems()
+
 
         EventHandler(screenModel.effect){effect, navigator ->
             when(effect){
@@ -119,11 +122,10 @@ class AllInvoicesScreen : Screen {
             AnimatedVisibility(!state.isLoading){
                 InvoicesItemTable(
                     modifier = Modifier.padding(top = it.calculateTopPadding()),
-                    invoiceItems = state.invoicesList,
+                    invoiceItems = items,
                     selectedItemIndex = state.selectedInvoiceIndex,
                     onClickItem = screenModel::onClickItem,
                     onClickItemEdit = {},
-                    onClickItemDelete = screenModel::onClickItemDelete,
                     onClickItemCopy = {}
                 )
             }

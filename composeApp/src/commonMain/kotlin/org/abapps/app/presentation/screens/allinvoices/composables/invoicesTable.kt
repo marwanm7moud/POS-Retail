@@ -32,7 +32,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import app.cash.paging.compose.LazyPagingItems
 import org.abapps.app.presentation.screens.allinvoices.InvoiceUiState
+import org.abapps.app.presentation.screens.composable.convertLazyPagingItemsToList
 import org.abapps.app.presentation.screens.composable.itemBox
 import org.abapps.app.resource.Resources
 import org.abapps.app.util.calculateBiggestWidthOnEveryRow
@@ -40,16 +42,16 @@ import org.abapps.app.util.calculateBiggestWidthOnEveryRow
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun InvoicesItemTable(
-    invoiceItems: List<InvoiceUiState>,
+    invoiceItems: LazyPagingItems<InvoiceUiState>,
     selectedItemIndex: Int,
     onClickItem: (Int) -> Unit,
-    onClickItemDelete: (Int) -> Unit,
     onClickItemEdit: (Int) -> Unit,
     onClickItemCopy: (Int) -> Unit,
     modifier: Modifier
 ) {
     val headers = InvoicesHeaders.entries.toTypedArray()
-    val biggestColumnWidths = calculateBiggestWidths(invoiceItems)
+    val items = convertLazyPagingItemsToList(invoiceItems)
+    val biggestColumnWidths = calculateBiggestWidths(items)
 
 
 
@@ -75,8 +77,8 @@ fun InvoicesItemTable(
                 )
             }
         }
-        repeat(invoiceItems.size) { index ->
-            val item = invoiceItems[index]
+        repeat(items.size) { index ->
+            val item = items[index]
             var expanded by remember { mutableStateOf(false) }
             Box {
                 DropdownMenu(
@@ -85,15 +87,6 @@ fun InvoicesItemTable(
                         expanded = false
                     }
                 ) {
-                    DropdownMenuItem(
-                        onClick = {
-                            expanded = false
-                            onClickItemDelete(index)
-                        },
-                        text = {
-                            Text(text = Resources.strings.delete)
-                        },
-                    )
                     DropdownMenuItem(
                         onClick = {
                             expanded = false

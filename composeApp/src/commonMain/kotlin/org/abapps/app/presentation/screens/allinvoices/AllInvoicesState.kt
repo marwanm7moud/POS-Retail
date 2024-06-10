@@ -1,5 +1,11 @@
 package org.abapps.app.presentation.screens.allinvoices
 
+import androidx.paging.PagingData
+import androidx.paging.map
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.map
+import org.abapps.app.domain.entities.Invoice
 import org.abapps.app.presentation.base.ErrorState
 
 data class AllInvoicesState(
@@ -7,19 +13,17 @@ data class AllInvoicesState(
     val errorState: ErrorState? = null,
     val isLoading: Boolean = false,
     val showErrorScreen: Boolean = false,
-    val invoicesList: List<InvoiceUiState> = listOf(
-        InvoiceUiState(),
-        InvoiceUiState(),
-        InvoiceUiState(),
-        InvoiceUiState(),
-    ),
-    val selectedInvoiceIndex: Int = -1,
+    val invoicesList: Flow<PagingData<InvoiceUiState>> = emptyFlow(),
+    val selectedInvoiceIndex: Int = -1
 
-    )
+)
+
+val list = mutableListOf<InvoiceUiState>()
+
 
 data class InvoiceUiState(
-    val invId: Long = 100006,
-    val invNumber: Long = 100006,
+    val invId: Int = 100006,
+    val invNumber: Int = 100006,
     val invType: String = "cc",
     val status: String = "cc",
     val sourceType: String = "cc",
@@ -28,16 +32,51 @@ data class InvoiceUiState(
     val invDate: String = "cc",
     val post: Boolean = true,
     val postedDate: String = "cc",
-    val custId: Long = 100006,
+    val custId: Int = 100006,
     val firstName: String = "cc",
-    val cashierId: Long = 100006,
+    val cashierId: Int = 100006,
     val cashierName: String = "cc",
     val amt: String = "cc",
     val createDate: String = "cc",
-    val sComId: Long = 1,
-    val storeId: Long = 1,
-    val ws: Long = 1,
-    val soId: Long = 0,
-    val reverse: Long = 0,
-    val indexId: Long = 0,
+    val sComId: Int = 1,
+    val storeId: Int = 1,
+    val ws: Int = 1,
+    val soId: Int = 0,
+    val reverse: Int = 0,
+    val indexId: Int = 0,
 )
+
+fun Invoice.toUiState(): InvoiceUiState {
+    return InvoiceUiState(
+        invId = this.invcId,
+        invNumber = this.invcNo,
+        invType = this.invcType,
+        status = status,
+        sourceType = sourceType,
+        comment = comment,
+        hold = hold,
+        invDate = invcDate,
+        post = post,
+        postedDate = postedDate,
+        custId = custId,
+        firstName = "coming soon",
+        cashierId = cashierId,
+        cashierName = "coming soon",
+        amt = "coming soon",
+        createDate = createDate,
+        sComId = scomId,
+        storeId = storeId,
+        ws = ws,
+        soId = soId,
+        reverse = reverse,
+        indexId = -88,
+    )
+}
+fun Flow<PagingData<Invoice>>.toUIState(): Flow<PagingData<InvoiceUiState>> {
+    return this.map { pagingData ->
+        pagingData.map {
+            list.add(it.toUiState())
+            it.toUiState()
+        }
+    }
+}
