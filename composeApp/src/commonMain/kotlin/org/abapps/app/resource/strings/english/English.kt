@@ -98,4 +98,13 @@ data class English(
     override val storeId: String = "StoreID",
     override val soId: String = "SOID",
     override val reverse: String = "Reverse",
+    override val alu: String ="Alu",
+    override val qty: String = "Qty",
+    override val orgPrice: String = "OrgPrice",
+    override val itemDisc: String = "ItemDisc",
+    override val extPrice: String = "ExtPrice",
+    override val priceWOT: String = "PriceWOT",
+    override val taxPercentage: String = "TaxPercentage",
+    override val taxAmount: String = "TaxAmount",
+    override val itemSerial: String = "ItemSerial",
 ) : IStringResources

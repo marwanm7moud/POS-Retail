@@ -94,4 +94,13 @@ data class Arabic(
     override val storeId: String = "storeId",
     override val soId: String = "soId",
     override val reverse: String = "ارجاع",
+    override val alu: String = "Alu",
+    override val qty: String = "الكميه",
+    override val orgPrice: String = "السعر الاصلي",
+    override val itemDisc: String = "وصف الصنف",
+    override val extPrice: String = "extPrice",
+    override val priceWOT: String = "سعر بدون ضريبه",
+    override val taxPercentage: String = "نسبه الضريبه",
+    override val taxAmount: String = "قيمه الضريبه",
+    override val itemSerial: String = "سيريال الصنف",
 ) : IStringResources

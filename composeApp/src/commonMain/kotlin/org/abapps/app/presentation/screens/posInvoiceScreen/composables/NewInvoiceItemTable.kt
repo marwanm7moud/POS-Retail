@@ -69,7 +69,7 @@ fun NewInvoiceItemTable(
         ) {
             headers.forEach { header ->
                 itemBox(
-                    content = header.title,
+                    content = getTitleByHeader(header),
                     modifier = Modifier
                         .padding(4.dp)
                         .width(with(LocalDensity.current) {
@@ -139,7 +139,6 @@ fun NewInvoiceItemTable(
                             NewInvoiceItemHeaders.TaxPercentage -> item.taxPerc.toString()
                             NewInvoiceItemHeaders.TaxAmount -> item.taxAmount.toString()
                             NewInvoiceItemHeaders.ItemSerial -> item.itemSerial.toString()
-                            NewInvoiceItemHeaders.Number -> (index + 1).toString()
                         }
                         if (header == NewInvoiceItemHeaders.Qty) {
                             Box(
@@ -191,47 +190,61 @@ fun NewInvoiceItemTable(
 private fun calculateBiggestWidths(invoiceItems: List<NewInvoiceItemUiState>): SnapshotStateMap<NewInvoiceItemHeaders, Int> {
     val biggestColumnWidths = remember { mutableStateMapOf<NewInvoiceItemHeaders, Int>() }
     biggestColumnWidths[NewInvoiceItemHeaders.ItemCode] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemCode.toString() } + NewInvoiceItemHeaders.ItemCode.title)
-    biggestColumnWidths[NewInvoiceItemHeaders.Number] =
-        calculateBiggestWidthOnEveryRow(listOf(NewInvoiceItemHeaders.Number.title, "19"))
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemCode.toString() } + getTitleByHeader(NewInvoiceItemHeaders.ItemCode))
     biggestColumnWidths[NewInvoiceItemHeaders.Alu] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.alu.toString() } + NewInvoiceItemHeaders.Alu.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.alu.toString() } + getTitleByHeader(NewInvoiceItemHeaders.Alu))
     biggestColumnWidths[NewInvoiceItemHeaders.Name] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.name.toString() } + NewInvoiceItemHeaders.Name.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.name.toString() } + getTitleByHeader(NewInvoiceItemHeaders.Name))
     biggestColumnWidths[NewInvoiceItemHeaders.Qty] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.qty } + NewInvoiceItemHeaders.Qty.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.qty } + getTitleByHeader(NewInvoiceItemHeaders.Qty))
     biggestColumnWidths[NewInvoiceItemHeaders.OrgPrice] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.orgPrice.toString() } + NewInvoiceItemHeaders.OrgPrice.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.orgPrice.toString() } + getTitleByHeader(NewInvoiceItemHeaders.OrgPrice))
     biggestColumnWidths[NewInvoiceItemHeaders.ItemDisc] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemDisc.toString() } + NewInvoiceItemHeaders.ItemDisc.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemDisc.toString() } + getTitleByHeader(NewInvoiceItemHeaders.ItemDisc))
     biggestColumnWidths[NewInvoiceItemHeaders.Price] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.price.toString() } + NewInvoiceItemHeaders.Price.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.price.toString() } + getTitleByHeader(NewInvoiceItemHeaders.Price))
     biggestColumnWidths[NewInvoiceItemHeaders.ExtPrice] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.extPrice.toString() } + NewInvoiceItemHeaders.ExtPrice.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.extPrice.toString() } + getTitleByHeader(NewInvoiceItemHeaders.ExtPrice))
     biggestColumnWidths[NewInvoiceItemHeaders.PriceWOT] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.priceWOT.toString() } + NewInvoiceItemHeaders.PriceWOT.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.priceWOT.toString() } + getTitleByHeader(NewInvoiceItemHeaders.PriceWOT))
     biggestColumnWidths[NewInvoiceItemHeaders.TaxPercentage] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.taxPerc.toString() } + NewInvoiceItemHeaders.TaxPercentage.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.taxPerc.toString() } + getTitleByHeader(NewInvoiceItemHeaders.TaxPercentage))
     biggestColumnWidths[NewInvoiceItemHeaders.TaxAmount] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.taxAmount.toString() } + NewInvoiceItemHeaders.TaxAmount.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.taxAmount.toString() } + getTitleByHeader(NewInvoiceItemHeaders.TaxAmount))
     biggestColumnWidths[NewInvoiceItemHeaders.ItemSerial] =
-        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemSerial.toString() } + NewInvoiceItemHeaders.ItemSerial.title)
+        calculateBiggestWidthOnEveryRow(invoiceItems.map { it.itemSerial.toString() } + getTitleByHeader(NewInvoiceItemHeaders.ItemSerial))
     return biggestColumnWidths
 }
 
+@Composable
+private fun getTitleByHeader(header: NewInvoiceItemHeaders): String {
+    return when (header) {
+        NewInvoiceItemHeaders.ItemCode -> Resources.strings.itemCode
+        NewInvoiceItemHeaders.Alu -> Resources.strings.alu
+        NewInvoiceItemHeaders.Name -> Resources.strings.name
+        NewInvoiceItemHeaders.Qty -> Resources.strings.qty
+        NewInvoiceItemHeaders.OrgPrice -> Resources.strings.orgPrice
+        NewInvoiceItemHeaders.ItemDisc -> Resources.strings.itemDisc
+        NewInvoiceItemHeaders.Price -> Resources.strings.price
+        NewInvoiceItemHeaders.ExtPrice -> Resources.strings.extPrice
+        NewInvoiceItemHeaders.PriceWOT -> Resources.strings.priceWOT
+        NewInvoiceItemHeaders.TaxPercentage -> Resources.strings.taxPercentage
+        NewInvoiceItemHeaders.TaxAmount -> Resources.strings.taxAmount
+        NewInvoiceItemHeaders.ItemSerial -> Resources.strings.itemSerial
+    }
+}
 
-private enum class NewInvoiceItemHeaders(val title: String) {
-    Number("No."),
-    ItemCode("Item Code"),
-    Alu("Alu"),
-    Name("Name"),
-    Qty("Qty"),
-    OrgPrice("OrgPrice"),
-    ItemDisc("ItemDisc"),
-    Price("Price"),
-    ExtPrice("ExtPrice"),
-    PriceWOT("PriceWOT"),
-    TaxPercentage("TaxPerc"),
-    TaxAmount("TaxAmount"),
-    ItemSerial("ItemSerial")
+private enum class NewInvoiceItemHeaders {
+    ItemCode,
+    Alu,
+    Name,
+    Qty,
+    OrgPrice,
+    ItemDisc,
+    Price,
+    ExtPrice,
+    PriceWOT,
+    TaxPercentage,
+    TaxAmount,
+    ItemSerial
 }

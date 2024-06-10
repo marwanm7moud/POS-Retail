@@ -96,4 +96,13 @@ interface IStringResources {
     val storeId: String
     val soId: String
     val reverse: String
+    val alu: String
+    val qty: String
+    val orgPrice: String
+    val itemDisc: String
+    val extPrice: String
+    val priceWOT: String
+    val taxPercentage: String
+    val taxAmount: String
+    val itemSerial: String
 }
