@@ -65,6 +65,9 @@ kotlin {
             implementation(libs.mongodb.realm)
             implementation(libs.paging.compose)
             implementation(libs.paging.common)
+
+            implementation ("com.github.DantSu:ESCPOS-ThermalPrinter-Android:3.3.0")
+
         }
 
         commonTest.dependencies {
@@ -83,6 +86,9 @@ kotlin {
             implementation ("androidx.camera:camera-lifecycle:1.3.3")
             implementation ("androidx.camera:camera-view:1.3.3")
             implementation ("com.google.mlkit:barcode-scanning:17.2.0")
+
+            implementation ("com.github.DantSu:ESCPOS-ThermalPrinter-Android:3.3.0")
+
         }
 
         jvmMain.dependencies {
@@ -136,6 +142,12 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.11"
+    }
+    dependencies{
+        implementation ("com.github.DantSu:ESCPOS-ThermalPrinter-Android:3.3.0")
+        implementation(files("./libs/printer-lib-3.2.0.aar"))
+
+
     }
 }
 
