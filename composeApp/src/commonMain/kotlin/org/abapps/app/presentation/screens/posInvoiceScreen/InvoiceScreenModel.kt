@@ -157,7 +157,7 @@ class InvoiceScreenModel(
                         isLoading = false,
                         errorState = null,
                         errorMessage = "",
-                        allItemsList = items.toUIState(),
+                            allItemsList = items.toUIState(),
                     )
                 }
             },
