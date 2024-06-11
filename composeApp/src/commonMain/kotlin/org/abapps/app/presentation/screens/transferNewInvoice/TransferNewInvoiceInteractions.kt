@@ -15,7 +15,6 @@ interface TransferNewInvoiceInteractions {
     fun onDismissErrorDialogue()
     fun onChangeTransferNumber(text: String)
     fun onChangeComment(text: String)
-    fun onChangeTransDate(text: String)
     fun onChangeTranstype(text: String)
     fun onChooseFromStore(index: Long)
     fun onChooseToStore(index: Long)

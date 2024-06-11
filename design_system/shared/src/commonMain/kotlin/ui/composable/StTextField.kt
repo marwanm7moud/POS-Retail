@@ -1,6 +1,7 @@
 package com.beepbeep.designSystem.ui.composable
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -56,6 +57,7 @@ fun StTextField(
     readOnly: Boolean = false,
     minLines: Int = 1,
     trailingIcon: @Composable (() -> Unit)? = null,
+    onClickTextField: () -> Unit = {},
 ) {
     var showPassword by remember { mutableStateOf(false) }
 
@@ -65,13 +67,13 @@ fun StTextField(
     ) {
         Text(
             text = label,
-            modifier = Modifier.padding(bottom = 8.dp),
+            modifier = Modifier.padding(bottom = 8.dp).clickable { onClickTextField.invoke() },
             style = typography.title,
             color = colors.contentPrimary
         )
 
         OutlinedTextField(
-            modifier = textFieldModifier,
+            modifier = textFieldModifier.clickable { onClickTextField.invoke() },
             value = text,
             enabled = enabled,
             readOnly = readOnly,

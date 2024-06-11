@@ -104,9 +104,6 @@ class TransferNewInvoiceScreenModel(
         updateState { it.copy(comment = text) }
     }
 
-    override fun onChangeTransDate(text: String) {
-        updateState { it.copy(transDate = text) }
-    }
 
     override fun onChangeTranstype(text: String) {
         updateState { it.copy(transType = text) }

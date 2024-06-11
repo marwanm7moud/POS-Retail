@@ -26,10 +26,20 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DatePickerState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerDefaults
+import androidx.compose.material3.TimePickerState
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -49,14 +59,17 @@ import androidx.compose.ui.unit.dp
 import app.cash.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.core.screen.Screen
 import com.beepbeep.designSystem.ui.composable.StAppBar
+import com.beepbeep.designSystem.ui.composable.StButton
 import com.beepbeep.designSystem.ui.composable.StTextField
 import com.beepbeep.designSystem.ui.composable.animate.FadeAnimation
 import com.beepbeep.designSystem.ui.theme.Theme
+import io.ktor.util.date.GMTDate
 import org.abapps.app.presentation.base.ErrorState
 import org.abapps.app.presentation.screens.composable.DropDownTextField
 import org.abapps.app.presentation.screens.composable.ErrorDialogue
 import org.abapps.app.presentation.screens.composable.HandleErrorState
 import org.abapps.app.presentation.screens.composable.SetLayoutDirection
+import org.abapps.app.presentation.screens.composable.TimePickerDialog
 import org.abapps.app.presentation.screens.posInvoiceScreen.composables.AllItemTable
 import org.abapps.app.presentation.screens.posInvoiceScreen.composables.CalculationItem
 import org.abapps.app.presentation.screens.posInvoiceScreen.composables.ExpandableCard
@@ -67,6 +80,7 @@ import org.abapps.app.resource.Resources
 import org.abapps.app.util.getScreenModel
 import org.jetbrains.compose.resources.painterResource
 import pos_retail.composeapp.generated.resources.Res
+import pos_retail.composeapp.generated.resources.baseline_date_range_24
 import pos_retail.composeapp.generated.resources.ic_back
 
 class TransferNewInvoiceScreen : Screen {
@@ -324,12 +338,59 @@ class TransferNewInvoiceScreen : Screen {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun BrandonCard(
     modifier: Modifier = Modifier,
     state: TransferNewInvoiceUiState,
     listener: TransferNewInvoiceInteractions
 ) {
+
+    var visibleDateTime by remember { mutableStateOf(false) }
+    val transDateState = rememberDatePickerState()
+
+    val timePickerState = rememberTimePickerState()
+    var showTimePicker by remember { mutableStateOf(false) }
+
+    AnimatedVisibility(visibleDateTime) {
+        DatePickerDialog(onDismissRequest = {
+            visibleDateTime = false
+            showTimePicker = false
+        }, {
+            StButton("Done", onClick = {
+                visibleDateTime = false
+                showTimePicker = true
+            })
+        }
+        ) {
+            DatePicker(
+                transDateState, colors = DatePickerDefaults.colors(
+                    selectedDayContainerColor = Theme.colors.primary,
+                    todayDateBorderColor = Theme.colors.primary
+                )
+            )
+        }
+    }
+    AnimatedVisibility(showTimePicker) {
+        TimePickerDialog(
+            onDismissRequest = {
+                visibleDateTime = false
+                showTimePicker = false
+            },
+            confirmButton = {
+                StButton("Done", onClick = {
+                    visibleDateTime = false
+                    showTimePicker = false
+                })
+            }
+        ) {
+            TimePicker(
+                timePickerState, colors = TimePickerDefaults.colors(
+
+                )
+            )
+        }
+    }
     Column(
         modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -366,10 +427,20 @@ private fun BrandonCard(
             }
             Box(modifier = Modifier.weight(1f)) {
                 StTextField(
+                    modifier = Modifier,
                     label = Resources.strings.transDate,
-                    text = state.transDate,
-                    onValueChange = listener::onChangeTransDate,
-                    //readOnly = true
+                    text = dateTimeText(transDateState, timePickerState),
+                    onValueChange = {},
+                    trailingIcon = {
+                        IconButton(onClick = { visibleDateTime = true }) {
+                            Icon(
+                                painter = painterResource(Res.drawable.baseline_date_range_24),
+                                contentDescription = null,
+                                tint = Color.White
+                            )
+                        }
+                    },
+                    readOnly = true
                 )
             }
             DropDownTextField(
@@ -387,4 +458,19 @@ private fun BrandonCard(
             //readOnly = true
         )
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+private fun dateTimeText(
+    transDateState: DatePickerState,
+    timePickerState: TimePickerState
+): String {
+    val date = transDateState.selectedDateMillis?.let { millis ->
+        val date = GMTDate(millis)
+        "${date.year}/${date.month.ordinal + 1}/${date.dayOfMonth}"
+    } ?: ""
+
+    val time = " ${timePickerState.hour}:${timePickerState.minute}"
+
+    return date + time
 }

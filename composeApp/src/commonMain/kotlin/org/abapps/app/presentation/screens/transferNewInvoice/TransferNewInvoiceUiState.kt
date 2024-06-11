@@ -28,7 +28,6 @@ data class TransferNewInvoiceUiState(
     val calculationItem: Calculations = calculations,
     val transferNumber: String = "",
     val transType: String = "",
-    val transDate: String = "",
     val comment: String = "",
     val fromStoreOptions: List<TransferDataState> = listOf(
         TransferDataState(name = "GGdsa" , id = 17),TransferDataState(name = "GGgg" , id = 18),
