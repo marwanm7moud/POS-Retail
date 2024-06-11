@@ -68,7 +68,7 @@ fun Invoice.toUiState(): InvoiceUiState {
         ws = ws,
         soId = soId,
         reverse = reverse,
-        indexId = -indexId,
+        indexId = indexId,
     )
 }
 
