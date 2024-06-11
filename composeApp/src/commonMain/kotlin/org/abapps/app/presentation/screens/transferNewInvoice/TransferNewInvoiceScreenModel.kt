@@ -36,7 +36,7 @@ class TransferNewInvoiceScreenModel(
         updateState { it.copy(calculations = newCalc) }
     }
 
-    override fun onChangeComment(text: String, itemID: Long) {
+    override fun onChangeCommentInItem(text: String, itemID: Long) {
         updateState {
             it.copy(
                 invoiceItemList = it.invoiceItemList.map { item ->
@@ -94,6 +94,43 @@ class TransferNewInvoiceScreenModel(
 
     override fun onDismissErrorDialogue() {
         updateState { it.copy(errorDialogueIsVisible = false) }
+    }
+
+    override fun onChangeTransferNumber(text: String) {
+        updateState { it.copy(transferNumber = text) }
+    }
+
+    override fun onChangeComment(text: String) {
+        updateState { it.copy(comment = text) }
+    }
+
+    override fun onChangeTransDate(text: String) {
+        updateState { it.copy(transDate = text) }
+    }
+
+    override fun onChangeTranstype(text: String) {
+        updateState { it.copy(transType = text) }
+    }
+
+    override fun onChooseFromStore(index: Long) {
+        updateState {
+            it.copy(selectedFromStore = it.fromStoreOptions.find { f -> f.id == index }
+                ?: TransferDataState())
+        }
+    }
+
+    override fun onChooseToStore(index: Long) {
+        updateState {
+            it.copy(selectedToStore = it.toStoreOptions.find { f -> f.id == index }
+                ?: TransferDataState())
+        }
+    }
+
+    override fun onChooseStatus(index: Long) {
+        updateState {
+            it.copy(selectedStatus = it.statusOptions.find { f -> f.id == index }
+                ?: TransferDataState())
+        }
     }
 
     override fun onClickDone() {

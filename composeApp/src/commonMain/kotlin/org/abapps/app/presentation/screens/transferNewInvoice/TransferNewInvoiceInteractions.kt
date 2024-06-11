@@ -2,7 +2,7 @@ package org.abapps.app.presentation.screens.transferNewInvoice
 
 interface TransferNewInvoiceInteractions {
     fun onChangeQty(text:String , itemID:Long)
-    fun onChangeComment(text:String , itemID:Long)
+    fun onChangeCommentInItem(text:String, itemID:Long)
 
     fun onClickAddItem()
     fun onClickDone()
@@ -13,5 +13,12 @@ interface TransferNewInvoiceInteractions {
     fun onClickItemDelete(index: Int)
     fun showErrorScreen()
     fun onDismissErrorDialogue()
+    fun onChangeTransferNumber(text: String)
+    fun onChangeComment(text: String)
+    fun onChangeTransDate(text: String)
+    fun onChangeTranstype(text: String)
+    fun onChooseFromStore(index: Long)
+    fun onChooseToStore(index: Long)
+    fun onChooseStatus(index: Long)
 
 }

@@ -1,5 +1,6 @@
 package org.abapps.app.presentation.screens.transferNewInvoice
 
+import androidx.compose.runtime.Immutable
 import androidx.paging.PagingData
 import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
@@ -7,6 +8,7 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
 import org.abapps.app.domain.entities.Item
 import org.abapps.app.presentation.base.ErrorState
+import org.abapps.app.presentation.screens.composable.DropDownState
 import org.abapps.app.presentation.screens.posInvoiceScreen.ItemUiState
 import org.abapps.app.presentation.screens.posInvoiceScreen.toUiState
 
@@ -24,6 +26,36 @@ data class TransferNewInvoiceUiState(
     val expandedCardStatus: ExpandedCardStatus? = null,
     val calculations: Calculations = Calculations(),
     val calculationItem: Calculations = calculations,
+    val transferNumber: String = "",
+    val transType: String = "",
+    val transDate: String = "",
+    val comment: String = "",
+    val fromStoreOptions: List<TransferDataState> = listOf(
+        TransferDataState(name = "GGdsa" , id = 17),TransferDataState(name = "GGgg" , id = 18),
+        TransferDataState(name = "GGdf" , id = 1),TransferDataState(name = "GGdsfsd" , id = 15)
+    ),
+    val toStoreOptions: List<TransferDataState> = listOf(
+        TransferDataState(name = "GGdsa" , id = 17),TransferDataState(name = "GGgg" , id = 18),
+        TransferDataState(name = "GGdf" , id = 1),TransferDataState(name = "GGdsfsd" , id = 15)
+    ),
+    val statusOptions: List<TransferDataState> = listOf(
+        TransferDataState(name = "GGdsa" , id = 17),TransferDataState(name = "GGgg" , id = 18),
+        TransferDataState(name = "GGdf" , id = 1),TransferDataState(name = "GGdsfsd" , id = 15)
+    ),
+    val selectedFromStore: TransferDataState = TransferDataState(),
+    val selectedToStore: TransferDataState = TransferDataState(),
+    val selectedStatus: TransferDataState = TransferDataState()
+
+)
+
+@Immutable
+data class TransferDataState(
+    val id: Long = 0L,
+    val name: String = ""
+)
+
+fun TransferDataState.toDropDownState(): DropDownState = DropDownState(
+    id, name
 )
 
 data class Calculations(

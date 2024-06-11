@@ -53,7 +53,6 @@ import com.beepbeep.designSystem.ui.composable.StTextField
 import com.beepbeep.designSystem.ui.composable.animate.FadeAnimation
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.abapps.app.presentation.base.ErrorState
-import org.abapps.app.presentation.screens.composable.DropDownState
 import org.abapps.app.presentation.screens.composable.DropDownTextField
 import org.abapps.app.presentation.screens.composable.ErrorDialogue
 import org.abapps.app.presentation.screens.composable.HandleErrorState
@@ -297,77 +296,10 @@ class TransferNewInvoiceScreen : Screen {
                             screenModel.onClickExpandedCard(ExpandedCardStatus.Brandon)
                         }
                     ) {
-                        Column(
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                Box(modifier = Modifier.weight(1f)) {
-                                    StTextField(
-                                        label = Resources.strings.transferNumber,
-                                        text = "",
-                                        onValueChange = {},
-                                    )
-                                }
-                                DropDownTextField(
-                                    modifier = Modifier.weight(1f),
-                                    options = listOf(
-                                        DropDownState(0, "gg"),
-                                        DropDownState(1, "gg"),
-                                        DropDownState(2, "gg")
-                                    ),
-                                    selectedItem = DropDownState(0, "gg"),
-                                    label = Resources.strings.fromStore
-                                ) {}
-                                DropDownTextField(
-                                    modifier = Modifier.weight(1f),
-                                    options = listOf(
-                                        DropDownState(0, "gg"),
-                                        DropDownState(1, "gg"),
-                                        DropDownState(2, "gg")
-                                    ),
-                                    selectedItem = DropDownState(0, "gg"),
-                                    label = Resources.strings.toStore
-                                ) {}
-                            }
-                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                Box(modifier = Modifier.weight(1f)) {
-                                    StTextField(
-                                        label = Resources.strings.transType,
-                                        text = "",
-                                        onValueChange = {},
-                                        readOnly = true
-                                    )
-                                }
-                                Box(modifier = Modifier.weight(1f)) {
-                                    StTextField(
-                                        label = Resources.strings.transDate,
-                                        text = "",
-                                        onValueChange = {},
-                                        readOnly = true
-                                    )
-                                }
-                                DropDownTextField(
-                                    modifier = Modifier.weight(1f),
-                                    options = listOf(
-                                        DropDownState(0, "gg"),
-                                        DropDownState(1, "gg"),
-                                        DropDownState(2, "gg")
-                                    ),
-                                    selectedItem = DropDownState(0, "gg"),
-                                    label = Resources.strings.status
-                                ) {
-
-                                }
-                            }
-                            StTextField(
-                                label = Resources.strings.comment,
-                                textFieldModifier = Modifier.fillMaxWidth().height(96.dp),
-                                text = "",
-                                onValueChange = {},
-                                readOnly = true
-                            )
-                        }
+                        BrandonCard(
+                            state = state,
+                            listener = screenModel
+                        )
                     }
                     ExpandableCard(
                         title = Resources.strings.items,
@@ -383,11 +315,76 @@ class TransferNewInvoiceScreen : Screen {
                             onClickItem = screenModel::onClickItemFromInvoice,
                             onClickItemDelete = screenModel::onClickItemDelete,
                             onChangeQty = screenModel::onChangeQty,
-                            onChangeComment = screenModel::onChangeComment
+                            onChangeComment = screenModel::onChangeCommentInItem
                         )
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun BrandonCard(
+    modifier: Modifier = Modifier,
+    state: TransferNewInvoiceUiState,
+    listener: TransferNewInvoiceInteractions
+) {
+    Column(
+        modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Box(modifier = Modifier.weight(1f)) {
+                StTextField(
+                    label = Resources.strings.transferNumber,
+                    text = state.transferNumber,
+                    onValueChange = listener::onChangeTransferNumber,
+                )
+            }
+            DropDownTextField(
+                modifier = Modifier.weight(1f),
+                options = state.fromStoreOptions.map { it.toDropDownState() },
+                selectedItem = state.selectedFromStore.toDropDownState(),
+                label = Resources.strings.fromStore
+            ) { listener.onChooseFromStore(it) }
+            DropDownTextField(
+                modifier = Modifier.weight(1f),
+                options = state.toStoreOptions.map { it.toDropDownState() },
+                selectedItem = state.selectedToStore.toDropDownState(),
+                label = Resources.strings.toStore
+            ) { listener.onChooseToStore(it) }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Box(modifier = Modifier.weight(1f)) {
+                StTextField(
+                    label = Resources.strings.transType,
+                    text = state.transType,
+                    onValueChange = listener::onChangeTranstype,
+                    //readOnly = true
+                )
+            }
+            Box(modifier = Modifier.weight(1f)) {
+                StTextField(
+                    label = Resources.strings.transDate,
+                    text = state.transDate,
+                    onValueChange = listener::onChangeTransDate,
+                    //readOnly = true
+                )
+            }
+            DropDownTextField(
+                modifier = Modifier.weight(1f),
+                options = state.statusOptions.map { it.toDropDownState() },
+                selectedItem = state.selectedStatus.toDropDownState(),
+                label = Resources.strings.status
+            ) { listener.onChooseStatus(it) }
+        }
+        StTextField(
+            label = Resources.strings.comment,
+            textFieldModifier = Modifier.fillMaxWidth().height(96.dp),
+            text = state.comment,
+            onValueChange = listener::onChangeComment,
+            //readOnly = true
+        )
     }
 }
