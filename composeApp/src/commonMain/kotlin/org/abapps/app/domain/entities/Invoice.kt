@@ -29,5 +29,9 @@ data class Invoice(
     val eUuid: String,
     val ePreviousUuid: String,
     val eSubmissionId: String,
-    val eStatus: String
+    val eStatus: String,
+    val firstName: String,
+    val cashierName: String,
+    val indexId: Int,
+    val amount: Float,
 )

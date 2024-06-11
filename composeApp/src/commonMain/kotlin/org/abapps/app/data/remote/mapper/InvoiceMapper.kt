@@ -146,7 +146,7 @@ fun UserDto.toEntity(): User {
 fun InvoiceDto.toEntity(): Invoice {
     return Invoice(
         invcId = this.invcId ?: 0,
-        invcNo = this.invcNo ?:0,
+        invcNo = this.invcNo ?: 0,
         invcType = this.invcType ?: "",
         invcDate = this.invcDate ?: "",
         status = this.status ?: "",
@@ -164,7 +164,7 @@ fun InvoiceDto.toEntity(): Invoice {
         userId = this.userId ?: 0,
         scomId = this.scomId ?: 0,
         storeId = this.storeId ?: 0,
-        ws = this.ws ?:0,
+        ws = this.ws ?: 0,
         numPrint = this.numPrint ?: 0,
         pointId = this.pointId ?: 0,
         soId = this.soId ?: 0,
@@ -174,5 +174,9 @@ fun InvoiceDto.toEntity(): Invoice {
         ePreviousUuid = this.ePreviousUuid ?: "",
         eSubmissionId = this.eSubmissionId ?: "",
         eStatus = this.eStatus ?: "",
+        firstName = this.firstName ?: "",
+        cashierName = this.cashierName ?: "",
+        indexId = this.indexId ?: 0,
+        amount = this.amount ?: 0f,
     )
 }

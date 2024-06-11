@@ -32,5 +32,9 @@ data class InvoiceDto(
     val eUuid: String? = null,
     val ePreviousUuid: String? = null,
     val eSubmissionId: String? = null,
-    val eStatus: String? = null
+    val eStatus: String? = null,
+    val firstName: String? = null,
+    val cashierName: String? = null,
+    val indexId: Int? = null,
+    val amount: Float? = null,
 )

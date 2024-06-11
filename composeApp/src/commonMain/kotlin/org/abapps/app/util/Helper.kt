@@ -3,7 +3,6 @@ package org.abapps.app.util
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.abapps.app.util.Constants
 
 fun getDateNow() = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 

@@ -20,7 +20,6 @@ data class AllInvoicesState(
 
 val list = mutableListOf<InvoiceUiState>()
 
-
 data class InvoiceUiState(
     val invId: Int = 100006,
     val invNumber: Int = 100006,
@@ -48,9 +47,9 @@ data class InvoiceUiState(
 
 fun Invoice.toUiState(): InvoiceUiState {
     return InvoiceUiState(
-        invId = this.invcId,
-        invNumber = this.invcNo,
-        invType = this.invcType,
+        invId = invcId,
+        invNumber = invcNo,
+        invType = invcType,
         status = status,
         sourceType = sourceType,
         comment = comment,
@@ -59,19 +58,20 @@ fun Invoice.toUiState(): InvoiceUiState {
         post = post,
         postedDate = postedDate,
         custId = custId,
-        firstName = "coming soon",
+        firstName = firstName,
         cashierId = cashierId,
-        cashierName = "coming soon",
-        amt = "coming soon",
+        cashierName = cashierName,
+        amt = amount.toString(),
         createDate = createDate,
         sComId = scomId,
         storeId = storeId,
         ws = ws,
         soId = soId,
         reverse = reverse,
-        indexId = -88,
+        indexId = -indexId,
     )
 }
+
 fun Flow<PagingData<Invoice>>.toUIState(): Flow<PagingData<InvoiceUiState>> {
     return this.map { pagingData ->
         pagingData.map {
