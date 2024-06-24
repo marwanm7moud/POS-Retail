@@ -57,7 +57,7 @@ class CalculationInvoiceUseCase {
                 (!RetailSetup.VAT && (RetailSetup.TAX_EFFECT || RetailSetup.TAX_EFFECT_WITH_ITEM))
             ) {
                 val priceWOT =
-                    item.orgPrice.roundToDecimals(2) * (calculations.discountAmount / 100)
+                    item.orgPrice.roundToDecimals(2)-  (item.orgPrice.roundToDecimals(2) * (calculations.discountAmount / 100))
                 val taxAmount = if (!RetailSetup.TAX_EFFECT || !RetailSetup.TAX_EFFECT_WITH_ITEM)
                     calculations.totalTax
                 else (item.taxPerc.div(100f) * priceWOT).roundToDecimals(RetailSetup.LEN_DECIMAL) * (calculations.discountAmount / 100)
@@ -113,7 +113,7 @@ class CalculationInvoiceUseCase {
             else tax
         val discountTotal =
             if (calculations.discountAmount != 0f)
-                (subTotal - (subTotal * (calculations.discountAmount / 100))).roundToDecimals(3)
+                    ((calculations.discountAmount / 100) * (calculations.subTotal + calculations.totalTax)).roundToDecimals(3)
             else (subTotal * (calculations.discountAmount / 100)).roundToDecimals(3)
         val netTotal =
             if (RetailSetup.VAT && calculations.discountAmount != 0f) discountTotal.roundToDecimals(
