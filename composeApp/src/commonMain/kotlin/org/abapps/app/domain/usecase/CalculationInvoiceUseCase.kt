@@ -112,7 +112,7 @@ class CalculationInvoiceUseCase {
                     (tax - (tax * (calculations.discountAmount / 100))).roundToDecimals(RetailSetup.LEN_DECIMAL)
             else tax
         val discountTotal =
-            if (calculations.discountAmount != 0f)
+            if (RetailSetup.VAT && calculations.discountAmount != 0f)
                     ((calculations.discountAmount / 100) * (calculations.subTotal + calculations.totalTax)).roundToDecimals(3)
             else (subTotal * (calculations.discountAmount / 100)).roundToDecimals(3)
         val netTotal =
